@@ -1,0 +1,10 @@
+{
+  "extends": "react-app",
+  "parserOptions": {
+    "ecmaVersion": 2017
+  },
+  "env": {
+    "es6": true
+  },
+  "ignorePatterns": "*.json, .gitignore"
+}

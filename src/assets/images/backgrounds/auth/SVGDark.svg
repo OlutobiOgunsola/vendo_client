@@ -1,0 +1,24 @@
+<svg width="300" height="400" viewBox="0 0 300 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0)">
+<rect opacity="0.1" x="204" y="400" width="97" height="50" transform="rotate(-90 204 400)" fill="#182A30"/>
+<rect opacity="0.1" x="255" y="400" width="68" height="45" transform="rotate(-90 255 400)" fill="#182A30"/>
+<rect opacity="0.1" x="51" y="400" width="123" height="50" transform="rotate(-90 51 400)" fill="#182A30"/>
+<rect opacity="0.1" y="400" width="80" height="50" transform="rotate(-90 0 400)" fill="#182A30"/>
+<rect opacity="0.1" x="102" y="400" width="45" height="50" transform="rotate(-90 102 400)" fill="#182A30"/>
+<rect opacity="0.1" x="153" y="400" width="80" height="50" transform="rotate(-90 153 400)" fill="#182A30"/>
+<circle opacity="0.1" cx="88.9447" cy="109.69" r="16.2569" transform="rotate(42.969 88.9447 109.69)" fill="#182A30"/>
+<circle opacity="0.1" cx="14.0043" cy="234.365" r="8.49371" transform="rotate(42.969 14.0043 234.365)" fill="#182A30"/>
+<circle opacity="0.1" cx="284.004" cy="297.004" r="8.49371" transform="rotate(42.969 284.004 297.004)" fill="#182A30"/>
+<circle opacity="0.1" cx="173.004" cy="128.004" r="8.49371" transform="rotate(42.969 173.004 128.004)" fill="#182A30"/>
+<path opacity="0.1" d="M25 143L32 155L25 167L18 155L25 143Z" fill="#182A30"/>
+<path opacity="0.1" d="M146 19L161 46.5L146 74L131 46.5L146 19Z" fill="#182A30"/>
+<path opacity="0.1" d="M103 239L108 249L103 259L98 249L103 239Z" fill="#182A30"/>
+<ellipse opacity="0.1" cx="161.23" cy="228.701" rx="22.9459" ry="12.3826" transform="rotate(42.969 161.23 228.701)" fill="#182A30"/>
+<ellipse opacity="0.1" cx="263.23" cy="127.701" rx="22.9459" ry="12.3826" transform="rotate(42.969 263.23 127.701)" fill="#182A30"/>
+</g>
+<defs>
+<clipPath id="clip0">
+<rect width="300" height="400" fill="white"/>
+</clipPath>
+</defs>
+</svg>
