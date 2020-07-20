@@ -20,15 +20,16 @@ const loadUserFailure = (error) => {
   };
 };
 
-export const loadUser = (id = '') => {
+export const loadUser = (id) => {
   return (dispatch) => {
     dispatch(loadUserStarted());
-    console.log('Loading user');
 
     return axios
       .get(`/api/users/${id}`)
       .then((res) => {
-        console.log('res', res);
+        const user = res.data.data;
+        dispatch(loadUserSuccess(user));
+        return user;
       })
       .catch((err) => {
         dispatch(loadUserFailure(err));

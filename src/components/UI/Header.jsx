@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-// import withUser from '@/components/higher-order/withUser';
+import withUser from '@/components/higher-order/withUser';
 
 import HeaderProfile from '@/components/UI/interface/HeaderProfile.jsx';
 import HeaderSignIn from '@/components/UI/buttons/Header_Sign_In.jsx';
@@ -101,32 +101,25 @@ const FloatRight = styled.div`
 `;
 
 const Header = (props) => {
-  const cookies = {
-    user: false,
-  };
-
-  const [f_name, setf_name] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
+  const [userObj, setUserObj] = useState({});
   const [user, setUser] = useState(
     props.user || {
       user: {},
     },
   );
   useEffect(() => {
-    // AOS.init({ duration: 2000 });
-    // AOS.refresh();
-    if (user) {
-      setLoggedIn(false);
-      setUser({
-        user: {
-          name: user.name,
-          photo: user.userPhoto,
-        },
+    console.log('props', props);
+    if (props.user.loggedIn) {
+      setLoggedIn(true);
+      setUserObj({
+        name: props.user.user.firstname,
+        photo: props.user.user.userPhoto,
       });
     }
-  }, []);
+  }, [props.user]);
 
-  const firstName = user.user.name ? user.user.name.split(' ')[0] : 'User';
+  const firstName = userObj.name || 'User';
 
   return (
     <ParentContainer>
@@ -151,7 +144,7 @@ const Header = (props) => {
               <Transaction src={TransactionIcon} />
             </IconsBox>
             <HeaderProfile
-              username={user.user.name}
+              username={firstName}
               profilePhoto={user.user.photo}
             />
           </FloatRight>
@@ -161,5 +154,12 @@ const Header = (props) => {
     </ParentContainer>
   );
 };
-// export default withUser(Header);
-export default Header;
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
+export default withUser(Header);
+// export default withUser(connect(mapStateToProps)(Header));
+// export default Header;

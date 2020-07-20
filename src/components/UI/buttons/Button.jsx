@@ -32,9 +32,9 @@ const Container = styled(Link)`
 const Button = (props) => {
   const color = () => {
     if (props.theme.scheme === 'dark') {
-      return 'white';
+      return props.color || 'white';
     } else {
-      return props.theme.colors.font_high_contrast;
+      return props.color;
     }
   };
 

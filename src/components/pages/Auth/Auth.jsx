@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import styled, { withTheme } from 'styled-components';
+import styled, { withTheme, keyframes } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 import BackgroundLight from '@/assets/images/backgrounds/auth/SVGLight.svg';
 import BackgroundDark from '@/assets/images/backgrounds/auth/SVGDark.svg';
 import Logo from '@/components/UI/interface/Logo';
 import Button from '@/components/UI/buttons/Button';
+
+const Spin = keyframes`
+  from{
+    transform: rotate(0deg)
+  }
+  to{
+    transform: rotate(360deg)
+  }
+`;
 
 const ParentContainer = styled.div`
   width: 100%;
@@ -146,11 +156,14 @@ const SubHeader = styled.p`
 
 const FormGroup = styled.form`
   width: 300px;
-  height: 300px;
+  height: auto;
   margin: 20px auto;
   box-sizing: border-box;
   padding: 10px 20px;
   input[type='checkbox']:checked + label {
+    color: ${(props) => props.theme.colors.dark_background};
+  }
+  input[type='radio']:checked + label {
     color: ${(props) => props.theme.colors.dark_background};
   }
 `;
@@ -169,7 +182,14 @@ const Input = styled.input`
   height: 40px;
   background: ${(props) => props.theme.colors.alternate_light_background_10};
   border-radius: 4px;
-  border: none;
+  border: ${(props) => {
+    const col = props.pwdCol;
+    if (col) {
+      return `2px solid ${col}`;
+    } else {
+      return props.valid ? 'none' : '1px solid #ff9494';
+    }
+  }};
   box-sizing: border-box;
   padding: 8px 32px;
   transition: all 0.25s ease-in-out;
@@ -186,7 +206,14 @@ const Input = styled.input`
   &:focus {
     outline: none;
     border-radius: 8px;
-    border: 0.5px solid ${(props) => props.theme.colors.dark_background};
+    border: ${(props) => {
+      const col = props.pwdCol;
+      if (col) {
+        return `2px solid ${col}`;
+      } else {
+        return `0.5px solid ${props.theme.colors.dark_background}`;
+      }
+    }};
     background: ${(props) => props.theme.colors.light_background_10};
     color: ${(props) => props.theme.colors.dark_background};
   }
@@ -217,6 +244,12 @@ const InputGroup = styled.span`
   margin: 8px 0px;
   box-sizing: border-box;
   transition: all 0.25s ease-in-out;
+  .valid {
+    border-color: '#4bb543';
+  }
+  .invalid {
+    border-color: '#ff9494';
+  }
   .fa-icon {
     transition: all 0.25s ease-in-out;
 
@@ -236,20 +269,49 @@ const InputGroup = styled.span`
   }
 `;
 
+const Spinner = styled.span`
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  border-style: dashed hidden;
+  border-color: ${(props) => props.theme.colors.dark_background};
+  border-width: 1px;
+  margin: 8px;
+  display: ${(props) => (props.displayProp ? '' : 'none')};
+  animation: ${Spin} 2s linear infinite;
+`;
+
+const ErrorMsg = styled.p`
+  color: #ff9494;
+  font-size: 14px;
+  font-family: 'Josefin Sans Light';
+  width: 200px;
+  margin: 0 auto;
+  text-align: center;
+`;
+
 const Auth = (props) => {
   const [login, setLogin] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
   const [pwdType, setPwdType] = useState('password');
-  const [AcctType, setAcctType] = useState('');
+  const [acctType, setAcctType] = useState('Client');
   const [persist, setPersist] = useState(false);
-
-  const focusClass = document.querySelectorAll('.focus');
+  const [validating, setValidating] = useState(false);
+  const [usernameValid, setUsernameValid] = useState(true);
+  const [passwordValid, setPasswordValid] = useState(true);
+  const [error, setError] = useState('');
+  const [pwdStrength, setPwdStrength] = useState('weak');
 
   const toggle = () => {
     const items = document.querySelectorAll('.toggle');
 
+    //clear password state
+    setPassword('');
+    setRepeatPassword('');
+
+    //get all items and perform transform in a loop
     items.forEach((item) => {
       item.style.transform = 'translatey(-20px)';
       item.style.opacity = 0;
@@ -279,11 +341,37 @@ const Auth = (props) => {
   };
   const loginSubmit = (e) => {
     e.preventDefault();
-    const value = e.target.value;
+    const user = {};
+    user.username = username;
+    user.password = password;
+    user.persist_login = persist;
+    console.log('login', user);
   };
   const signupSubmit = (e) => {
     e.preventDefault();
-    const value = e.target.value;
+    const headers = {
+      'Content-Type': 'application/json',
+      Accept: '*/*',
+    };
+    const user = {};
+    user.username = username;
+    user.password = password;
+    user.accountType = acctType;
+    user.validateLogout = true;
+    if (usernameValid && passwordValid && acctType) {
+      setValidating(true);
+      axios
+        .post('/api/auth/signup', user, headers)
+        .then((res) => {
+          setValidating(false);
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setError('Invalid details, please correct details in red.');
+    }
   };
 
   const inputColor = () => {
@@ -297,17 +385,85 @@ const Auth = (props) => {
     return pwdType === 'password' ? setPwdType('text') : setPwdType('password');
   };
 
-  const accountType = (e) => {
-    return setAcctType(e.target.value);
-  };
-
   const persistSignin = (e) => {
-    return setPersist(e.target.value);
+    return setPersist(!persist);
   };
 
-  const signin = (data) => {
-    const copy = Object.assign({}, data);
+  const validateUsername = (e) => {
+    if (username) {
+      setValidating(true);
+      const regex = /^[A-Za-z0-9_]+$/;
+      const u_name = username.toString();
+      const valid = regex.test(u_name);
+      if (valid) {
+        return axios
+          .post('/api/users/verify/', { username: u_name })
+          .then((res) => {
+            if (res.data.data) {
+              setUsernameValid(false);
+              setError('Username is taken. Try another');
+            } else {
+              setUsernameValid(true);
+              setError('');
+            }
+            setValidating(false);
+          });
+      } else {
+        return setError('Username can only contain letters and numbers');
+      }
+    }
   };
+
+  const testPassword = () => {
+    const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
+    const mediumRegex = /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/;
+    const strong = strongRegex.test(password);
+    const medium = mediumRegex.test(password);
+
+    console.log(pwdStrength);
+
+    if (strong) {
+      setPwdStrength('strong');
+    } else if (medium) {
+      setPwdStrength('medium');
+    } else {
+      setPwdStrength('weak');
+    }
+  };
+
+  const pwdColor = () => {
+    if (password) {
+      if (pwdStrength === 'strong') {
+        return '#4bb543';
+      } else if (pwdStrength === 'medium') {
+        return '#ffa500';
+      } else {
+        return '#ff9494';
+      }
+    } else {
+      return ``;
+    }
+  };
+
+  const validatePassword = () => {
+    if (password) {
+      if (password === repeatPassword) {
+        setError('');
+        return setPasswordValid(true);
+      } else {
+        setError('Passwords do not match!');
+        return setPasswordValid(false);
+      }
+    }
+  };
+
+  const setVendor = () => {
+    setAcctType('Vendor');
+  };
+  const setClient = () => {
+    setAcctType('Client');
+  };
+
   return (
     <ParentContainer>
       <Container>
@@ -345,23 +501,33 @@ const Auth = (props) => {
           </Button>
         </Presentation>
         <Inputs>
-          {login && <Header className="toggle">Sign back into Vendo</Header>}
+          {login && (
+            <>
+              <Header className="toggle">Sign back into Vendo</Header>
+              <Spinner displayProp={validating} className="toggle" />
+            </>
+          )}
+
           {!login && (
-            <Header className="toggle">
-              Create a{' '}
-              <b
-                style={{
-                  fontWeight: 700,
-                  color: `${props.theme.colors.yellow}`,
-                }}
-              >
-                FREE
-              </b>{' '}
-              account
-            </Header>
+            <>
+              {' '}
+              <Header className="toggle">
+                Create a{' '}
+                <b
+                  style={{
+                    fontWeight: 700,
+                    color: `${props.theme.colors.yellow}`,
+                  }}
+                >
+                  FREE
+                </b>{' '}
+                account
+              </Header>
+              <Spinner displayProp={validating} className="toggle" />
+            </>
           )}
           {login && (
-            <FormGroup onSubmit={loginSubmit}>
+            <FormGroup>
               <InputGroup>
                 <Label htmlFor="Username" display={'none'}>
                   Username
@@ -374,6 +540,7 @@ const Auth = (props) => {
                   type="text"
                   name="Username"
                   value={username}
+                  valid={true}
                   placeholder="Username"
                   onChange={usernameChange}
                   color={inputColor()}
@@ -398,6 +565,7 @@ const Auth = (props) => {
                   placeholder="Password"
                   onChange={passwordChange}
                   color={inputColor()}
+                  valid={true}
                 />
               </InputGroup>
               <Checkbox
@@ -418,20 +586,23 @@ const Auth = (props) => {
                 width={250}
                 height={40}
                 fill={props.theme.colors.dark_background}
+                color={props.theme.colors.white}
                 className="toggle"
                 display={'block'}
                 transition_fill={props.theme.colors.yellow}
-                transition_fill_color={props.theme.colors.dark_background}
+                transition_color={props.theme.colors.white}
                 border={'none'}
+                onClick={loginSubmit}
                 margin={'16px 0px'}
                 to={'#'}
               >
-                {login ? 'Submit' : 'Proceed'}
+                Submit
               </Button>
             </FormGroup>
           )}
           {!login && (
-            <FormGroup onSubmit={signupSubmit}>
+            <FormGroup>
+              {error && <ErrorMsg>{error}</ErrorMsg>}
               <InputGroup>
                 <Label htmlFor="Username" display={'none'}>
                   Username
@@ -444,9 +615,11 @@ const Auth = (props) => {
                   type="text"
                   name="Username"
                   value={username}
+                  onBlur={validateUsername}
                   placeholder="Username"
                   onChange={usernameChange}
                   color={inputColor()}
+                  valid={usernameValid}
                 />
               </InputGroup>
               <InputGroup>
@@ -467,7 +640,10 @@ const Auth = (props) => {
                   value={password}
                   placeholder="Password"
                   onChange={passwordChange}
+                  onKeyUp={testPassword}
                   color={inputColor()}
+                  pwdCol={pwdColor()}
+                  valid={true}
                 />
               </InputGroup>
               <InputGroup>
@@ -484,23 +660,32 @@ const Auth = (props) => {
                   placeholder="Repeat Password"
                   onChange={onRepeatPassword}
                   color={inputColor()}
+                  valid={passwordValid}
+                  onKeyUp={validatePassword}
                 />
               </InputGroup>
               <Checkbox
                 type="radio"
                 name="client_account"
+                value="client"
                 className="toggle"
-                onChange={accountType}
+                onChange={setVendor}
               />
               <Label
                 htmlFor="vendor_account"
                 display={'inline-block'}
                 className="toggle"
-                onChange={accountType}
+                value="vendor"
               >
                 Vendor account
               </Label>
-              <Checkbox type="radio" name="client_account" className="toggle" />
+              <Checkbox
+                type="radio"
+                name="client_account"
+                className="toggle"
+                defaultChecked
+                onClick={setClient}
+              />
               <Label
                 htmlFor="client_account"
                 display={'inline-block'}
@@ -513,13 +698,16 @@ const Auth = (props) => {
                 height={40}
                 fill={props.theme.colors.dark_background}
                 className="toggle"
+                color={props.theme.colors.white}
                 display={'block'}
                 transition_fill={props.theme.colors.yellow}
-                transition_fill_color={props.theme.colors.dark_background}
+                transition_color={props.theme.colors.white}
                 border={'none'}
                 margin={'16px 0px'}
+                onClick={signupSubmit}
+                to={'#'}
               >
-                {login ? 'Submit' : 'Proceed'}
+                Proceed
               </Button>
             </FormGroup>
           )}
