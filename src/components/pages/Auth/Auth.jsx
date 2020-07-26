@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
 import styled, { withTheme, keyframes } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import { setUser } from '@/actions/user';
 
 import BackgroundLight from '@/assets/images/backgrounds/auth/SVGLight.svg';
 import BackgroundDark from '@/assets/images/backgrounds/auth/SVGDark.svg';
@@ -286,7 +289,7 @@ const ErrorMsg = styled.p`
   font-size: 14px;
   font-family: 'Josefin Sans Light';
   width: 200px;
-  margin: 0 auto;
+  margin: 16px auto 0px auto;
   text-align: center;
 `;
 
@@ -303,13 +306,40 @@ const Auth = (props) => {
   const [passwordValid, setPasswordValid] = useState(true);
   const [error, setError] = useState('');
   const [pwdStrength, setPwdStrength] = useState('weak');
+  const [loginValid, setLoginValid] = useState(true);
 
+  // cleanup after unmounting from dom
+  useEffect(() => {
+    return () => {
+      setLogin(true);
+      setUsername('');
+      setPassword('');
+      setRepeatPassword('');
+      setPwdType('password');
+      setAcctType('Client');
+      setPersist(false);
+      setValidating(false);
+      setUsernameValid(true);
+      setPasswordValid(true);
+      setError('');
+      setPwdStrength('weak');
+      setLoginValid(true);
+    };
+  }, []);
+
+  // function for toggling between login and signup states
   const toggle = () => {
     const items = document.querySelectorAll('.toggle');
 
     //clear password state
     setPassword('');
     setRepeatPassword('');
+    setError('');
+    setValidating(false);
+
+    setUsernameValid(true);
+    setPasswordValid(true);
+    setLoginValid(true);
 
     //get all items and perform transform in a loop
     items.forEach((item) => {
@@ -339,38 +369,91 @@ const Auth = (props) => {
     const value = e.target.value;
     return setRepeatPassword(value);
   };
+
   const loginSubmit = (e) => {
     e.preventDefault();
+    setError('');
+    setLoginValid(true);
     const user = {};
-    user.username = username;
-    user.password = password;
+    user.username = username.toString();
+    user.password = password.toString();
     user.persist_login = persist;
-    console.log('login', user);
+
+    const headers = {
+      'Content-Type': 'application/json',
+      Accept: '*/*',
+    };
+
+    if (username && password) {
+      setValidating(true);
+      return axios
+        .post(
+          `${process.env.REACT_APP_API_PREFIX}/api/auth/login`,
+          user,
+          headers,
+        )
+        .then((result) => {
+          setValidating(false);
+          if (result.status === 200) {
+            localStorage.setItem('vendo_id', result.data.data._id);
+            console.log('setting user into state from login');
+            props.setUser(result.data.data);
+            props.history.push('/account');
+          } else {
+            setError('Invalid credentials');
+          }
+        })
+        .catch((err) => {
+          setValidating(false);
+          setLoginValid(false);
+          setError('Invalid credentials');
+        });
+    } else {
+      setError('Invalid details. Please correct highlighted fields');
+      setLoginValid(false);
+    }
   };
   const signupSubmit = (e) => {
     e.preventDefault();
+    setUsernameValid(true);
+    setPasswordValid(true);
     const headers = {
       'Content-Type': 'application/json',
       Accept: '*/*',
     };
     const user = {};
-    user.username = username;
-    user.password = password;
-    user.accountType = acctType;
+    user.username = username.toString();
+    user.password = password.toString();
+    user.accountType = acctType.toString();
     user.validateLogout = true;
-    if (usernameValid && passwordValid && acctType) {
+    if (!username) {
+      return setUsernameValid(false);
+    }
+    if (!password) {
+      return setPasswordValid(false);
+    }
+    validateUsername();
+    if (username && password && usernameValid && passwordValid && acctType) {
       setValidating(true);
-      axios
-        .post('/api/auth/signup', user, headers)
+      return axios
+        .post(
+          `${process.env.REACT_APP_API_PREFIX}/api/auth/signup`,
+          user,
+          headers,
+        )
         .then((res) => {
           setValidating(false);
-          console.log(res);
+          localStorage.setItem('vendo_id', res.data.data._id);
+          setUser(res.data.data);
+          props.history.push('/account');
         })
         .catch((err) => {
-          console.log(err);
+          setValidating(false);
+          // display error message to user
+          setError('Error signing up. Please try again');
         });
     } else {
-      setError('Invalid details, please correct details in red.');
+      setError('Invalid details. Please correct highlighted fields');
     }
   };
 
@@ -397,7 +480,15 @@ const Auth = (props) => {
       const valid = regex.test(u_name);
       if (valid) {
         return axios
-          .post('/api/users/verify/', { username: u_name })
+          .post(
+            `${process.env.REACT_APP_API_PREFIX}/api/users/verify/`,
+            { username: u_name },
+            {
+              'Content-Type': 'application/json',
+              'Content-Transfer-Encoding': 'application/json',
+              Accept: '*/*',
+            },
+          )
           .then((res) => {
             if (res.data.data) {
               setUsernameValid(false);
@@ -406,6 +497,12 @@ const Auth = (props) => {
               setUsernameValid(true);
               setError('');
             }
+            setValidating(false);
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+          .finally(() => {
             setValidating(false);
           });
       } else {
@@ -526,6 +623,7 @@ const Auth = (props) => {
               <Spinner displayProp={validating} className="toggle" />
             </>
           )}
+          {error && <ErrorMsg>{error}</ErrorMsg>}
           {login && (
             <FormGroup>
               <InputGroup>
@@ -544,6 +642,7 @@ const Auth = (props) => {
                   placeholder="Username"
                   onChange={usernameChange}
                   color={inputColor()}
+                  valid={loginValid}
                 />
               </InputGroup>
               <InputGroup>
@@ -565,7 +664,7 @@ const Auth = (props) => {
                   placeholder="Password"
                   onChange={passwordChange}
                   color={inputColor()}
-                  valid={true}
+                  valid={loginValid}
                 />
               </InputGroup>
               <Checkbox
@@ -602,7 +701,6 @@ const Auth = (props) => {
           )}
           {!login && (
             <FormGroup>
-              {error && <ErrorMsg>{error}</ErrorMsg>}
               <InputGroup>
                 <Label htmlFor="Username" display={'none'}>
                   Username
@@ -643,7 +741,7 @@ const Auth = (props) => {
                   onKeyUp={testPassword}
                   color={inputColor()}
                   pwdCol={pwdColor()}
-                  valid={true}
+                  valid={passwordValid}
                 />
               </InputGroup>
               <InputGroup>
@@ -717,4 +815,11 @@ const Auth = (props) => {
   );
 };
 
-export default withTheme(Auth);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setUser: (user) => dispatch(setUser(user)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(withRouter(withTheme(Auth)));
+// export default withTheme(Auth);

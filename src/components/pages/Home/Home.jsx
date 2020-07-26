@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 import LandingScreen from './Sections/LandingScreen';
@@ -13,6 +13,8 @@ import Footer from '@/components/UI/Footer';
 // import Loading from '@/components/UI/interface/Loading';
 
 import Users from '@/assets/fixtures/users';
+import withUser from '@/components/higher-order/withUser';
+import { withRouter } from 'react-router-dom';
 
 const HomeContainer = styled.div`
   width: 100%;
@@ -24,6 +26,11 @@ const HomeContainer = styled.div`
 `;
 
 const Home = (props) => {
+  useEffect(() => {
+    if (props.user.loggedIn) {
+      return props.history.push('/account');
+    }
+  });
   return (
     <HomeContainer>
       <LandingScreen />
@@ -39,4 +46,4 @@ const Home = (props) => {
   );
 };
 
-export default Home;
+export default withRouter(withUser(Home));

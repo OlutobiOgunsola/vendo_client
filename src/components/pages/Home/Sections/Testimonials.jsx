@@ -94,7 +94,6 @@ const Testimonials = (props) => {
   const [selected, setSelected] = useState({});
   const [open, setOpen] = useState(true);
   let [count, setCount] = useState(0);
-  const [slide, setSlide] = useState(true);
 
   //dirty hack gives the user a flash of "undefined" upon immediate load. Check
   const setActive = (id) => {
@@ -109,23 +108,22 @@ const Testimonials = (props) => {
     }, 500);
   };
 
-  const stopSlide = () => {
-    setSlide(false);
-  };
   useEffect(() => {
     AOS.init({ duration: 2000 });
     AOS.refresh();
-    if (slide) {
-      setInterval(() => {
-        if (count === 3) {
-          setCount((count -= 3));
-        } else {
-          setCount(count++);
-        }
-        return setActive(count);
-      }, 5000);
-    }
+
     setActive(0);
+
+    const slider = setInterval(() => {
+      if (count === 3) {
+        setCount((count -= 3));
+      } else {
+        setCount(count++);
+      }
+      return setActive(count);
+    }, 5000);
+
+    return () => clearInterval(slider);
   }, []);
 
   return (
@@ -137,7 +135,7 @@ const Testimonials = (props) => {
       <Span2 data-aos="fade-up-left" data-aos-duration="4000" />
       <Container data-aos="fade-up-right">
         <TestimonialCard open={open} testimonial={selected} />
-        <Ellipsis setId={setActive} stopSlide={stopSlide} />
+        <Ellipsis setId={setActive} />
       </Container>
     </ParentContainer>
   );

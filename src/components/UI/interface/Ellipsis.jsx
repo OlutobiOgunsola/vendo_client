@@ -45,8 +45,6 @@ export default function Ellipsis(props) {
   const setCircle = (e) => {
     // props.setActive(e.target.dataset.id);
     // check which childs id matches active and remove 'active' class from child
-
-    props.stopSlide();
     children.forEach((child) => {
       child.classList.remove('active');
     });

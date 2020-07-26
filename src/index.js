@@ -6,8 +6,11 @@ import * as serviceWorker from './serviceWorker';
 import { ThemeProvider } from 'styled-components';
 import { Provider } from 'react-redux';
 import store from '@/store/index.js';
-
+import dotenv from 'dotenv';
 import theme from '@/assets/theme/theme.js';
+
+dotenv.config();
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>

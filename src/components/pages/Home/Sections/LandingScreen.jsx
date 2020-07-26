@@ -201,7 +201,7 @@ const LandingScreen = () => {
   return (
     <ParentContainer>
       <Modal>
-        <Header />
+        <Header usePagePadding />
         <CopyContainer>
           <Headline>Shop</Headline> <Jumbo>Smart</Jumbo>
           <SubHeading>

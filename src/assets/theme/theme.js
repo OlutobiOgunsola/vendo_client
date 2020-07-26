@@ -6,6 +6,7 @@ const theme = {
       high_contrast: '#C4CFD4',
       font_primary: '#182a30',
       font_dark_grey: '#7A7A7A',
+      saturated_font_darker: '#6C8693',
       saturated_contrast: '#C4CFD4',
       dark_background_20: 'rgba(24,42,48,0.2)',
       dark_background_40: 'rgba(24,42,48,0.4)',
@@ -41,6 +42,7 @@ const theme = {
       footer_background: '#212121',
       auth_background_1: '#2B363B',
       auth_background_2: '#212429',
+      page_background: '#F6F8F8',
     },
   },
   light: {
@@ -48,9 +50,10 @@ const theme = {
     colors: {
       font_high_contrast: '#182a30',
       high_contrast: '#182a30',
-      font_primary: '#182a30',
+      font_primary: '#497E8F',
       font_dark_grey: '#7A7A7A',
       saturated_contrast: '#C4CFD4',
+      saturated_font_darker: '#6C8693',
       dark_background_20: 'rgba(76,123,146,0.2)',
       dark_background_40: 'rgba(76,123,146,0.4)',
       dark_background_60: 'rgba(76,123,146,0.6)',
@@ -84,6 +87,7 @@ const theme = {
       footer_background: '#212121',
       auth_background_1: '#F6F8F8',
       auth_background_2: '#E1F8FF',
+      page_background: '#F6F8F8',
     },
   },
 };

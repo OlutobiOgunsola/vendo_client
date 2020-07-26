@@ -9,6 +9,9 @@ import Loading from '@/components/UI/interface/Loading';
 function App() {
   const Home = React.lazy(() => import('./components/pages/Home/Home'));
   const Auth = React.lazy(() => import('./components/pages/Auth/Auth'));
+  const Account = React.lazy(() =>
+    import('./components/pages/Account/Account'),
+  );
   return (
     <div>
       <GlobalStyles />
@@ -22,6 +25,11 @@ function App() {
           <Route path="/auth">
             <Suspense fallback={<Loading />}>
               <Auth />
+            </Suspense>
+          </Route>
+          <Route path="/account">
+            <Suspense fallback={<Loading />}>
+              <Account />
             </Suspense>
           </Route>
         </Switch>

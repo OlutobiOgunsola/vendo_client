@@ -54,6 +54,19 @@ const user = (state = initialState, action) => {
         ...state.user,
         email: action.payload,
       };
+    case 'SET_USER_BEGIN':
+      return {
+        ...state,
+        loading: true,
+      };
+    case 'SET_USER_SUCCESS':
+      console.log('payload', action.payload);
+      return {
+        ...state,
+        user: action.payload,
+        loading: false,
+        loggedIn: true,
+      };
     default:
       return state;
   }

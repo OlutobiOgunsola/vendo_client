@@ -6,15 +6,18 @@ import ProfilePin from '@/assets/images/icons/profile/ProfilePin.svg';
 const Container = styled.span`
   position: relative;
 `;
-const Pin = styled.img``;
+const Pin = styled.img`
+  height: 35px;
+  width: 35px;
+`;
 const ProfilePhoto = styled.img`
-  height: 44px;
-  width: 44px;
+  height: 30px;
+  width: 30px;
   border-radius: 50%;
   position: absolute;
   z-index: 2;
-  left: 3px;
-  top: 2px;
+  left: 2.5px;
+  top: 0.5px;
 `;
 
 const HeaderProfile = (props) => {

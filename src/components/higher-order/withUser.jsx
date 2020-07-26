@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { loadUser } from '@/actions/user';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
-function withUser(WrappedComponent) {
+function withUser(WrappedComponent, authRequired = false) {
   class withUserComponent extends Component {
     constructor(props) {
       super(props);
@@ -20,18 +21,22 @@ function withUser(WrappedComponent) {
         const id = localStorage.getItem('vendo_id');
         if (id && this.state.mounted) {
           const userObj = await this.props.loadUser(id);
+          if (!userObj && authRequired) {
+            this.props.history.push('/auth');
+          }
           this.setState((state) => {
             return {
               user: {
                 ...state.user,
                 user: userObj,
+                loggedIn: true,
               },
             };
           });
+        } else if (!id && this.state.mounted && authRequired) {
+          this.props.history.push('/auth');
         }
       }
-
-      console.log('state', this.state);
     };
     componentDidMount() {
       return this.getUser();
@@ -42,7 +47,7 @@ function withUser(WrappedComponent) {
           ...state,
           mounted: false,
         };
-      });  
+      });
     }
     render() {
       return <WrappedComponent user={this.state.foundUser} {...this.props} />;
@@ -59,7 +64,10 @@ function withUser(WrappedComponent) {
       user: state.user,
     };
   };
-  return connect(mapStateToProps, mapDispatchToProps)(withUserComponent);
+  return connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(withRouter(withUserComponent));
 }
 
 export default withUser;

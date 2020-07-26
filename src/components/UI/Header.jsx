@@ -6,7 +6,7 @@ import withUser from '@/components/higher-order/withUser';
 
 import HeaderProfile from '@/components/UI/interface/HeaderProfile.jsx';
 import HeaderSignIn from '@/components/UI/buttons/Header_Sign_In.jsx';
-import userPhoto from '@/assets/images/user/SergiePhoto.png';
+import defaultPhoto from '@/assets/images/user/defaultUser.png';
 import Logo from '@/components/UI/interface/Logo.jsx';
 import AddIcon from '@/assets/images/icons/Add.svg';
 import NotificationIcon from '@/assets/images/icons/Notification.svg';
@@ -14,12 +14,29 @@ import TransactionIcon from '@/assets/images/icons/Transaction.svg';
 
 const ParentContainer = styled.div`
   width: 100%;
+  height: 70px;
   display: flex;
   align-items: center;
   box-sizing: border-box;
+  margin: 0;
+  /* position: absolute;
+  top: 0;
+  left: 0; */
+  padding: ${(props) => (props.usePagePadding ? '' : '10px 200px')};
+  @media (max-width: 900px) {
+    padding: ${(props) => (props.usePagePadding ? '' : '10px 100px')};
+  }
+  @media (max-width: 700px) {
+    padding: ${(props) => (props.usePagePadding ? '' : '10px 500px')};
+  }
+  @media (max-width: 500px) {
+    padding: ${(props) => (props.usePagePadding ? '' : '10px 20px')};
+  }
   @media (max-width: 400px) {
     width: 100%;
   }
+  background: ${(props) =>
+    props.useOwnBackground ? props.theme.colors.dark_background : ''};
 `;
 
 const LogoContainer = styled.svg`
@@ -45,8 +62,17 @@ const SearchBox = styled.input`
   outline: none;
   margin: 0;
   display: inline-block;
+  color: white;
+
+  ::placeholder,
+  ::-webkit-input-placeholder {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  :-ms-input-placeholder {
+    color: rgba(255, 255, 255, 0.7);
+  }
   @media (max-width: 970px) {
-    width: 250px;
+    width: 300px;
   }
   @media (max-width: 740px) {
     margin-right: 32px;
@@ -59,11 +85,12 @@ const SearchBox = styled.input`
 const NameBox = styled.span`
   transition: all 1s ease-in-out;
   font-size: 1em;
-  color: #c4cfd4;
+  color: white;
   margin: 0px 16px 0px 0px;
   @media (max-width: 970px) {
     margin: 0px 8px 0px 0px;
   }
+
   @media (max-width: 740px) {
     display: none;
   }
@@ -109,20 +136,23 @@ const Header = (props) => {
     },
   );
   useEffect(() => {
-    console.log('props', props);
     if (props.user.loggedIn) {
       setLoggedIn(true);
       setUserObj({
-        name: props.user.user.firstname,
+        name: props.user.user.firstname || props.user.user.username,
         photo: props.user.user.userPhoto,
       });
     }
   }, [props.user]);
 
   const firstName = userObj.name || 'User';
+  const photo = userObj.photo || defaultPhoto;
 
   return (
-    <ParentContainer>
+    <ParentContainer
+      usePagePadding={props.usePagePadding}
+      useOwnBackground={props.useOwnBackground}
+    >
       {window.location.pathname === '/' && (
         <LogoContainer data-aos="fade-right">
           <Logo />
@@ -143,10 +173,7 @@ const Header = (props) => {
               <Notification src={NotificationIcon} />
               <Transaction src={TransactionIcon} />
             </IconsBox>
-            <HeaderProfile
-              username={firstName}
-              profilePhoto={user.user.photo}
-            />
+            <HeaderProfile username={firstName} profilePhoto={photo} />
           </FloatRight>
         </>
       )}
