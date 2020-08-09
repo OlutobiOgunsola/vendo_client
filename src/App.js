@@ -1,17 +1,19 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
 import GlobalStyles from '@/assets/theme/fonts.js';
 import './App.css';
 import '@/assets/theme/fontawesome';
 
 import Loading from '@/components/UI/interface/Loading';
 
-function App() {
+function App(props) {
   const Home = React.lazy(() => import('./components/pages/Home/Home'));
   const Auth = React.lazy(() => import('./components/pages/Auth/Auth'));
   const Account = React.lazy(() =>
     import('./components/pages/Account/Account'),
   );
+
   return (
     <div>
       <GlobalStyles />
@@ -38,4 +40,10 @@ function App() {
   );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    alerts: state.alerts,
+  };
+};
+
+export default connect(mapStateToProps)(App);

@@ -34,25 +34,16 @@ const user = (state = initialState, action) => {
         ...state,
         loading: true,
       };
-    case 'EDIT_USERNAME':
+    case 'BEGIN_EDIT_USER':
       return {
-        ...state.user,
-        username: action.payload,
+        ...state,
+        loading: true,
       };
-    case 'EDIT_F_NAME':
+    case 'EDIT_USER_SUCCESS':
+      console.log('payload', action.payload);
       return {
-        ...state.user,
-        f_name: action.payload,
-      };
-    case 'EDIT_L_NAME':
-      return {
-        ...state.user,
-        l_name: action.payload,
-      };
-    case 'EDIT_EMAIL':
-      return {
-        ...state.user,
-        email: action.payload,
+        ...state,
+        user: { ...state.user, ...action.payload },
       };
     case 'SET_USER_BEGIN':
       return {
@@ -60,12 +51,50 @@ const user = (state = initialState, action) => {
         loading: true,
       };
     case 'SET_USER_SUCCESS':
-      console.log('payload', action.payload);
       return {
         ...state,
         user: action.payload,
         loading: false,
         loggedIn: true,
+      };
+    case 'CLEAR_USER_BEGIN':
+      return {
+        ...state,
+        loading: true,
+      };
+    case 'CLEAR_USER_SUCCESS':
+      return {
+        ...state,
+        user: [],
+        loading: false,
+        loggedIn: false,
+      };
+    case 'USER_LOGIN_BEGIN':
+      state = initialState;
+      return {
+        ...state,
+        loading: true,
+      };
+    case 'USER_LOGIN_SUCCESS':
+      return {
+        ...state,
+        user: action.payload,
+        loading: false,
+        loggedIn: true,
+      };
+    case 'SET_USER_PHOTO_BEGIN':
+      return {
+        ...state,
+        loading: true,
+      };
+    case 'SET_USER_PHOTO_SUCCESS':
+      return {
+        ...state,
+        loading: false,
+        user: {
+          ...state.user,
+          photo: action.payload,
+        },
       };
     default:
       return state;

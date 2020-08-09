@@ -1,16 +1,20 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
 import withUser from '@/components/higher-order/withUser';
+import axios from 'axios';
 
 import HeaderProfile from '@/components/UI/interface/HeaderProfile.jsx';
 import HeaderSignIn from '@/components/UI/buttons/Header_Sign_In.jsx';
-import defaultPhoto from '@/assets/images/user/defaultUser.png';
+import defaultPhoto from '@/assets/images/icons/account/Profile.svg';
 import Logo from '@/components/UI/interface/Logo.jsx';
 import AddIcon from '@/assets/images/icons/Add.svg';
 import NotificationIcon from '@/assets/images/icons/Notification.svg';
 import TransactionIcon from '@/assets/images/icons/Transaction.svg';
+import setAlert from '@/assets/helperFunctions/alerts';
+import Alert from '../widgets/UI/Alert';
+import { clearUser } from '@/actions/user';
+import { connect } from 'react-redux';
 
 const ParentContainer = styled.div`
   width: 100%;
@@ -19,15 +23,12 @@ const ParentContainer = styled.div`
   align-items: center;
   box-sizing: border-box;
   margin: 0;
-  /* position: absolute;
-  top: 0;
-  left: 0; */
   padding: ${(props) => (props.usePagePadding ? '' : '10px 200px')};
   @media (max-width: 900px) {
     padding: ${(props) => (props.usePagePadding ? '' : '10px 100px')};
   }
   @media (max-width: 700px) {
-    padding: ${(props) => (props.usePagePadding ? '' : '10px 500px')};
+    padding: ${(props) => (props.usePagePadding ? '' : '10px 50px')};
   }
   @media (max-width: 500px) {
     padding: ${(props) => (props.usePagePadding ? '' : '10px 20px')};
@@ -130,20 +131,58 @@ const FloatRight = styled.div`
 const Header = (props) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [userObj, setUserObj] = useState({});
-  const [user, setUser] = useState(
-    props.user || {
-      user: {},
-    },
-  );
+  const [alerts, addAlert] = useState([]);
+  const [mounted, setMounted] = useState(true);
+
+  const cancel = axios.CancelToken;
+  const source = cancel.source();
+
   useEffect(() => {
     if (props.user.loggedIn) {
-      setLoggedIn(true);
-      setUserObj({
-        name: props.user.user.firstname || props.user.user.username,
-        photo: props.user.user.userPhoto,
-      });
+      if (mounted) {
+        setLoggedIn(true);
+        setUserObj({
+          name: props.user.user.firstname || props.user.user.username,
+          photo: props.user.user.photo,
+        });
+      }
     }
+    return () => {
+      source.cancel();
+    };
   }, [props.user]);
+
+  useEffect(() => {
+    return () => {
+      setMounted(false);
+    };
+  }, []);
+
+  const logout = () => {
+    console.log('logout clicked');
+    return axios
+      .get(`${process.env.REACT_APP_API_PREFIX}/api/auth/logout`, {
+        cancelToken: source.token,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          localStorage.clear();
+          props.clearUser();
+          if (mounted) {
+            setAlert(addAlert, 'success', 'Successfully logged out');
+          }
+          return props.history.push('/');
+        }
+      })
+      .catch((err) => {
+        if (axios.isCancel(err)) {
+          console.log('Request cancelled', err.message);
+        }
+        if (mounted) {
+          setAlert(addAlert, 'error', 'An error occured. Please try again');
+        }
+      });
+  };
 
   const firstName = userObj.name || 'User';
   const photo = userObj.photo || defaultPhoto;
@@ -153,6 +192,13 @@ const Header = (props) => {
       usePagePadding={props.usePagePadding}
       useOwnBackground={props.useOwnBackground}
     >
+      {alerts.map((alert) => {
+        return (
+          <Alert type={alert.type} key={alert.text}>
+            {alert.text}
+          </Alert>
+        );
+      })}
       {window.location.pathname === '/' && (
         <LogoContainer data-aos="fade-right">
           <Logo />
@@ -173,7 +219,11 @@ const Header = (props) => {
               <Notification src={NotificationIcon} />
               <Transaction src={TransactionIcon} />
             </IconsBox>
-            <HeaderProfile username={firstName} profilePhoto={photo} />
+            <HeaderProfile
+              username={firstName}
+              profilePhoto={photo}
+              click={logout}
+            />
           </FloatRight>
         </>
       )}
@@ -182,11 +232,12 @@ const Header = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    user: state.user,
+    clearUser: () => {
+      dispatch(clearUser());
+    },
   };
 };
-export default withUser(Header);
-// export default withUser(connect(mapStateToProps)(Header));
-// export default Header;
+
+export default connect(null, mapDispatchToProps)(withRouter(withUser(Header)));

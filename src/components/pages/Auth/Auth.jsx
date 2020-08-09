@@ -5,7 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { setUser } from '@/actions/user';
+import { setUser, loadUser } from '@/actions/user';
+
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 import BackgroundLight from '@/assets/images/backgrounds/auth/SVGLight.svg';
 import BackgroundDark from '@/assets/images/backgrounds/auth/SVGDark.svg';
@@ -41,6 +44,8 @@ const Container = styled.div`
   display: flex;
   flex-flow: row nowrap;
   margin: 0 auto;
+  position: relative;
+  z-index: 99;
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.25);
   @media (max-width: 880px) {
     width: 600px;
@@ -293,6 +298,40 @@ const ErrorMsg = styled.p`
   text-align: center;
 `;
 
+const BigCircle = styled.span`
+  position: absolute;
+  left: -100px;
+  top: 60%;
+  z-index: 1;
+  width: 400px;
+  height: 400px;
+  background: ${(props) => props.theme.colors.yellow_80};
+  border: none;
+  border-radius: 50%;
+`;
+const Big2Circle = styled.span`
+  position: absolute;
+  left: 20px;
+  top: 5%;
+  z-index: 1;
+  width: 60px;
+  height: 100px;
+  background: ${(props) => props.theme.colors.yellow_40};
+  border: none;
+  border-radius: 50%;
+`;
+const Big4Circle = styled.span`
+  position: absolute;
+  left: 80%;
+  top: 5px;
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  background: ${(props) => props.theme.colors.alternate_light_background_40};
+  border: none;
+  border-radius: 50%;
+`;
+
 const Auth = (props) => {
   const [login, setLogin] = useState(true);
   const [username, setUsername] = useState('');
@@ -325,6 +364,10 @@ const Auth = (props) => {
       setPwdStrength('weak');
       setLoginValid(true);
     };
+  }, []);
+  useEffect(() => {
+    AOS.init({ duration: 500 });
+    AOS.refresh();
   }, []);
 
   // function for toggling between login and signup states
@@ -392,12 +435,14 @@ const Auth = (props) => {
           user,
           headers,
         )
-        .then((result) => {
+        .then(async (result) => {
           setValidating(false);
           if (result.status === 200) {
-            localStorage.setItem('vendo_id', result.data.data._id);
-            console.log('setting user into state from login');
+            if (persist) {
+              localStorage.setItem('vendo_id', result.data.data._id);
+            }
             props.setUser(result.data.data);
+            props.loadUser(result.data.data._id);
             props.history.push('/account');
           } else {
             setError('Invalid credentials');
@@ -444,8 +489,9 @@ const Auth = (props) => {
         .then((res) => {
           setValidating(false);
           localStorage.setItem('vendo_id', res.data.data._id);
-          setUser(res.data.data);
-          props.history.push('/account');
+          props.setUser(res.data.data);
+          props.loadUser(res.data.data._id);
+          return props.history.push('/account');
         })
         .catch((err) => {
           setValidating(false);
@@ -588,7 +634,7 @@ const Auth = (props) => {
             position={'relative'}
             z-index={9}
             transition_fill={'white'}
-            transition_fill_color={props.theme.colors.font_primary}
+            transition_color={props.theme.colors.font_primary}
             onClick={toggle}
             margin={'0 auto'}
             to={'#'}
@@ -811,6 +857,9 @@ const Auth = (props) => {
           )}
         </Inputs>
       </Container>
+      <BigCircle data-aos="fade-up-right" data-aos-duration="3000" />
+      <Big2Circle data-aos="fade-up" data-aos-duration="2000" />
+      <Big4Circle data-aos="fade-down" data-aos-duration="3000" />
     </ParentContainer>
   );
 };
@@ -818,6 +867,7 @@ const Auth = (props) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setUser: (user) => dispatch(setUser(user)),
+    loadUser: (id) => dispatch(loadUser(id)),
   };
 };
 

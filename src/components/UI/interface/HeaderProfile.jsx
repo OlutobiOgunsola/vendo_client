@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import ProfilePin from '@/assets/images/icons/profile/ProfilePin.svg';
+import { useState } from 'react';
 
 const Container = styled.span`
   position: relative;
@@ -21,12 +22,16 @@ const ProfilePhoto = styled.img`
 `;
 
 const HeaderProfile = (props) => {
+  const logout = () => {
+    props.click();
+  };
   return (
     <Container>
       <Pin src={ProfilePin} />
       <ProfilePhoto
         src={props.profilePhoto}
         alt={`A photo of ${props.username}`}
+        onClick={logout}
       />
     </Container>
   );

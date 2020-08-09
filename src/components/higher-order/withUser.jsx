@@ -24,7 +24,8 @@ function withUser(WrappedComponent, authRequired = false) {
           if (!userObj && authRequired) {
             this.props.history.push('/auth');
           }
-          this.setState((state) => {
+          // if (this.state.mounted) {
+          return this.setState((state) => {
             return {
               user: {
                 ...state.user,
@@ -33,6 +34,7 @@ function withUser(WrappedComponent, authRequired = false) {
               },
             };
           });
+          // }
         } else if (!id && this.state.mounted && authRequired) {
           this.props.history.push('/auth');
         }

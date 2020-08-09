@@ -176,7 +176,6 @@ const DataPlate = styled.div`
   height: ${(props) => (props.big ? '111px' : '60px')};
   display: inline-block;
   margin: 0;
-  // background: red;
   padding: ${(props) => (props.big ? '2px 16px' : '2px 12px')};
   box-sizing: border-box;
   display: flex;
