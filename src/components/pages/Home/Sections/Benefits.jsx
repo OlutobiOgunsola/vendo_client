@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import SectionTitle from '@/components/UI/interface/SectionTitle';
+import SectionTitle from '@/components/UI/interface/home/SectionTitle';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 

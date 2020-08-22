@@ -15,7 +15,7 @@ const ParentContainer = styled.div`
 `;
 const Container = styled.div`
   width: fit-content;
-  height: 30px;
+  height: 40px;
   margin: 0px 0px 30px auto;
   border-bottom: 0.5px solid ${(props) => props.theme.colors.dark_background_40};
   .active {
@@ -36,7 +36,7 @@ const LinkItem = styled(NavLink)`
     margin: 0px;
   }
   width: auto;
-  height: 30px;
+  height: 40px;
   display: inline-flex;
   flex-flow: row nowrap;
   text-decoration: none;

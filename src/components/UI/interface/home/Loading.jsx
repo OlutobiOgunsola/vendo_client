@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { keyframes, withTheme } from 'styled-components';
 
-import Logo from '@/components/UI/interface/Logo';
+import Logo from '@/components/UI/interface/home/Logo';
 
 const rotate = keyframes`
 0% {

@@ -4,7 +4,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 import Num_array from '@/assets/fixtures/numbers';
-import Logo from '@/components/UI/interface/NumbersLogo';
+import Logo from '@/components/UI/interface/home/NumbersLogo';
 
 const ParentContainer = styled.div`
   background: ${(props) => props.theme.colors.light_background};

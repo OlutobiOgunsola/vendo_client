@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-import SandboxLogo from '@/components/UI/interface/SandboxLogo';
+import SandboxLogo from '@/components/UI/interface/home/SandboxLogo';
 import PadLogoSmall from '@/assets/images/icons/sandbox/Padlock_2.svg';
 import PadLogoBig from '@/assets/images/icons/sandbox/Padlock.svg';
 

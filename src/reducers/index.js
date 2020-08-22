@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
 import user from './user.js';
-import alerts from './alerts.js';
+import review from './review.js';
 
-export default combineReducers({ user, alerts });
+export default combineReducers({ user, review });

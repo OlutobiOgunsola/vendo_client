@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import Logo from '@/components/UI/interface/Logo.jsx';
+import Logo from '@/components/UI/interface/home/Logo.jsx';
 
 const ParentContainer = styled.div`
   background: ${(props) => props.theme.colors.footer_background};

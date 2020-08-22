@@ -48,6 +48,11 @@ const theme = {
       alert_text_red: 'rgba(120,14,14,1)',
       alert_background_green: 'rgba(208,250,201,1)',
       alert_text_green: 'rgba(33,109,21, 1)',
+      review_text_background: '#F8FDFF',
+      review_background: '#FCFDFD',
+      comment_background: '#F4F7F9',
+      upvote_highlight: '#97AEB6',
+      dark_10: 'rgba(56,192,237,0.06)',
     },
   },
   light: {
@@ -98,6 +103,11 @@ const theme = {
       alert_text_red: 'rgba(120,14,14,1)',
       alert_background_green: 'rgba(208,250,201,1)',
       alert_text_green: 'rgba(33,109,21, 1)',
+      review_text_background: '#F8FDFF',
+      review_background: '#FCFDFD',
+      comment_background: '#F4F7F9',
+      upvote_highlight: '#97AEB6',
+      dark_10: 'rgba(56,192,237,0.06)',
     },
   },
 };

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import SectionTitle from '@/components/UI/interface/SectionTitle';
-import Ellipsis from '@/components/UI/interface/Ellipsis.jsx';
-import TestimonialCard from '@/components/UI/interface/TestimonialCard.jsx';
+import SectionTitle from '@/components/UI/interface/home/SectionTitle';
+import Ellipsis from '@/components/UI/interface/home/Ellipsis.jsx';
+import TestimonialCard from '@/components/UI/interface/home/TestimonialCard.jsx';
 import t_array from '@/assets/fixtures/testimonials';
 import AOS from 'aos';
 import 'aos/dist/aos.css';

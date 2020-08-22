@@ -12,7 +12,7 @@ import 'aos/dist/aos.css';
 
 import BackgroundLight from '@/assets/images/backgrounds/auth/SVGLight.svg';
 import BackgroundDark from '@/assets/images/backgrounds/auth/SVGDark.svg';
-import Logo from '@/components/UI/interface/Logo';
+import Logo from '@/components/UI/interface/home/Logo';
 import Button from '@/components/UI/buttons/Button';
 
 const Spin = keyframes`
@@ -339,7 +339,7 @@ const Auth = (props) => {
   const [repeatPassword, setRepeatPassword] = useState('');
   const [pwdType, setPwdType] = useState('password');
   const [acctType, setAcctType] = useState('Client');
-  const [persist, setPersist] = useState(false);
+  const [persist, setPersist] = useState(true);
   const [validating, setValidating] = useState(false);
   const [usernameValid, setUsernameValid] = useState(true);
   const [passwordValid, setPasswordValid] = useState(true);
@@ -443,7 +443,7 @@ const Auth = (props) => {
             }
             props.setUser(result.data.data);
             props.loadUser(result.data.data._id);
-            props.history.push('/account');
+            props.history.push('/account/overview');
           } else {
             setError('Invalid credentials');
           }
@@ -491,7 +491,7 @@ const Auth = (props) => {
           localStorage.setItem('vendo_id', res.data.data._id);
           props.setUser(res.data.data);
           props.loadUser(res.data.data._id);
-          return props.history.push('/account');
+          return props.history.push('/account/settings');
         })
         .catch((err) => {
           setValidating(false);
@@ -718,6 +718,7 @@ const Auth = (props) => {
                 name="persist_signin"
                 className="toggle"
                 onClick={persistSignin}
+                defaultChecked
               />
               <Label
                 htmlFor="persist_signin"

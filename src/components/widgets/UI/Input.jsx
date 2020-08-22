@@ -16,8 +16,8 @@ const InputGroup = styled.span`
   width: auto;
   height: auto;
   position: relative;
-  margin: ${(props) => props.margins || '8px 0px'};
-  padding: ${(props) => props.padding || '8px'};
+  margin: ${(props) => props.grp_margin || '8px 0px'};
+  padding: ${(props) => props.grp_padding || '8px'};
   /* border: ${(props) => {
     if (props.useLabelAnimation) {
       return (
@@ -57,7 +57,16 @@ const InputGroup = styled.span`
 `;
 
 const Textarea = styled.textarea`
-  width: ${(props) => (props.width ? `${props.width}px` : '295px')};
+  resize: none;
+  width: ${(props) => {
+    if (props.width_per) {
+      return `${props.width_per}%`;
+    } else if (props.width) {
+      return `${props.width}px`;
+    } else {
+      return '';
+    }
+  }};
   height: ${(props) => `${props.height}px` || '40px'};
   z-index: 99;
   position: relative;
@@ -75,12 +84,16 @@ const Textarea = styled.textarea`
     }
   }};
   box-sizing: border-box;
+  margin: ${(props) => props.margin || 0};
   padding: ${(props) => props.padding || '8px 32px'};
   transition: all 0.25s ease-in-out;
   color: ${(props) => props.color || props.theme.colors.saturated_contrast};
-  font-family: 'Oxygen Bold';
+  font-family: ${(props) => props.font_family || 'Oxygen Bold'};
   font-size: 14px;
   font-weight: 500px;
+
+  /* for adding newline when enter key is pressed */
+  white-space: pre-wrap;
   &::-webkit-input-placeholder {
     opacity: ${(props) => (props.useLabelAnimation ? 0 : 1)};
     color: ${(props) => props.p_color || props.theme.colors.font_primary};
@@ -93,7 +106,13 @@ const Textarea = styled.textarea`
   &:focus {
     width: ${(props) => {
       if (!props.readOnly) {
-        return props.width ? `${props.width}px` : '300px';
+        if (props.focus_width_per) {
+          return `${props.focus_width_per}%`;
+        } else if (props.focus_width) {
+          return `${props.focus_width}px`;
+        } else {
+          return '';
+        }
       }
     }};
     outline: none;
@@ -104,19 +123,34 @@ const Textarea = styled.textarea`
         if (col) {
           return `2px solid ${col}`;
         } else {
-          return `0.5px solid ${props.theme.colors.dark_background}`;
+          return `0px solid ${props.theme.colors.dark_background}`;
         }
       }
     }};
-    background: ${(props) =>
-      props.readOnly ? '' : props.theme.colors.light_background_10};
+    background: ${(props) => {
+      if (props.readOnly) {
+        return `${props.theme.colors.light_background_10}`;
+      } else {
+        if (props.fill) {
+          return `${props.fill}`;
+        }
+      }
+    }};
     color: ${(props) =>
       props.readOnly ? '' : props.theme.colors.dark_background};
   }
 `;
 
 const InputField = styled.input`
-  width: ${(props) => (props.width ? `${props.width}px` : '295px')};
+  width: ${(props) => {
+    if (props.width_per) {
+      return `${props.width_per}%`;
+    } else if (props.width) {
+      return `${props.width}px`;
+    } else {
+      return '295px';
+    }
+  }};
   height: ${(props) => `${props.height}px` || '40px'};
   z-index: 99;
   position: relative;
@@ -133,11 +167,13 @@ const InputField = styled.input`
       return props.borders;
     }
   }};
+  border: none;
   box-sizing: border-box;
+  margin: ${(props) => props.margin || 0};
   padding: ${(props) => props.padding || '8px 32px'};
   transition: all 0.25s ease-in-out;
   color: ${(props) => props.color || props.theme.colors.saturated_contrast};
-  font-family: 'Oxygen Bold';
+  font-family: ${(props) => props.font_family || 'Oxygen Bold'};
   font-size: 14px;
   font-weight: 500px;
   &::-webkit-input-placeholder {
@@ -152,7 +188,13 @@ const InputField = styled.input`
   &:focus {
     width: ${(props) => {
       if (!props.readOnly) {
-        return props.width ? `${props.width}px` : '300px';
+        if (props.focus_width_per) {
+          return `${props.focus_width_per}%`;
+        } else if (props.focus_width) {
+          return `${props.focus_width}px`;
+        } else {
+          return '300px';
+        }
       }
     }};
     outline: none;
@@ -163,12 +205,21 @@ const InputField = styled.input`
         if (col) {
           return `2px solid ${col}`;
         } else {
-          return `0.5px solid ${props.theme.colors.dark_background}`;
+          return `0px solid ${props.theme.colors.dark_background}`;
+        }
+      } else {
+        return `none`;
+      }
+    }};
+    background: ${(props) => {
+      if (props.readOnly) {
+        return `${props.theme.colors.light_background_10}`;
+      } else {
+        if (props.fill) {
+          return `${props.fill}`;
         }
       }
     }};
-    background: ${(props) =>
-      props.readOnly ? '' : props.theme.colors.light_background_10};
     color: ${(props) =>
       props.readOnly ? '' : props.theme.colors.dark_background};
   }
@@ -264,8 +315,8 @@ const Spacer = styled.span`
   z-index: 100;
 `;
 
-const Input = (props) => {
-  const [value, setValue] = useState('');
+const Input = React.forwardRef((props, ref) => {
+  const [value, setValue] = useState(props.value);
   const p_holderRef = useRef(null);
   const i_putRef = useRef(null);
   const spaceRef = useRef(null);
@@ -300,18 +351,9 @@ const Input = (props) => {
     `${props.class.name}-image-delete`,
   );
 
-  // grab inputgroup element
-  const i_group = document.getElementById(`${props.class.name}-group`);
-
-  // grab input element
-  const i_put = document.getElementById(`${props.class.name}-input`);
-
-  // grab spacer element
-  const space = document.getElementById(`${props.class.name}-spacer`);
-
   //use Effect to slide up on render if there is a value
   useLayoutEffect(() => {
-    if (value) {
+    if (value && props.useLabelAnimation === true) {
       slideUp();
     }
   }, []);
@@ -321,6 +363,14 @@ const Input = (props) => {
       props.handleChange(value);
     }
   }, [value]);
+
+  const submitted = props.submitted;
+  // function to clear input if the form has been submitted for comments mostly, then maybe reviews or whatever other possible use cases
+  useEffect(() => {
+    if (submitted) {
+      setValue('');
+    }
+  }, [submitted]);
 
   // function to animate
   const slideUp = () => {
@@ -357,8 +407,10 @@ const Input = (props) => {
   // onchange
   const handleChange = (e) => {
     const newValue = e.target.value;
-    if (value.length === 0 || p_holder.style.top === '16px') {
-      slideUp();
+    if (props.useLabelAnimation === true) {
+      if (value.length === 0 || p_holder.style.top === '16px') {
+        slideUp();
+      }
     }
     return setValue(newValue);
   };
@@ -413,26 +465,34 @@ const Input = (props) => {
     }
   };
 
+  // console.log('refs');
+
   return (
     <InputGroup
       useLabelAnimation={props.useLabelAnimation}
       id={`${props.class.name}-group`}
+      grp_margin={props.class.grp_margin}
+      grp_padding={props.class.grp_padding}
     >
       <Label
         htmlFor={props.class.name || ''}
         display={props.class.label.display || 'none '}
-      />
-
-      {/* mock placeholder margin with props.left */}
-      <Placeholder
-        ref={p_holderRef}
-        id={props.class.name}
-        labelLeft={props.left}
-        value={value}
       >
         {props.class.placeholder}
-        <Spacer ref={spaceRef} id={`${props.class.name}-spacer`} />
-      </Placeholder>
+      </Label>
+
+      {/* mock placeholder margin with props.left */}
+      {props.useLabelAnimation === true && (
+        <Placeholder
+          ref={p_holderRef}
+          id={props.class.name}
+          labelLeft={props.left}
+          value={value}
+        >
+          {props.class.placeholder}
+          <Spacer ref={spaceRef} id={`${props.class.name}-spacer`} />
+        </Placeholder>
+      )}
 
       {/* Give spaceholder space */}
       {props.inputType === 'input' && (
@@ -443,8 +503,13 @@ const Input = (props) => {
           {...props.class}
           onBlur={slideDown}
           onChange={handleChange}
+          width={props.width}
+          fill={props.class.fill}
+          width_per={props.width_per}
+          focus_width={props.focus_width}
+          focus_width_per={props.focus_width_per}
           value={value}
-          ref={i_putRef}
+          ref={ref}
           type={props.class.type || 'text'}
           valid={props.valid}
           onBlur={verify}
@@ -458,8 +523,11 @@ const Input = (props) => {
           {...props.class}
           onBlur={slideDown}
           onChange={handleChange}
+          width={props.width}
+          width_per={props.width_per}
+          fill={props.class.fill}
           value={value}
-          ref={i_putRef}
+          ref={ref}
           valid={props.valid}
           onBlur={verify}
         />
@@ -486,5 +554,5 @@ const Input = (props) => {
       )}
     </InputGroup>
   );
-};
+});
 export default withTheme(Input);

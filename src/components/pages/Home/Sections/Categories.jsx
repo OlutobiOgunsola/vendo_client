@@ -3,7 +3,7 @@ import styled, { withTheme } from 'styled-components';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-import SectionTitle from '@/components/UI/interface/SectionTitle';
+import SectionTitle from '@/components/UI/interface/home/SectionTitle';
 
 import categoriesArray from '@/assets/fixtures/categories';
 

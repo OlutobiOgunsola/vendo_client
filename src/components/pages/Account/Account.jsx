@@ -16,6 +16,7 @@ import P_Details from './components/p_details';
 import ProfileWidget from '@/components/widgets/UI/Profile';
 import Loader from '@/components/widgets/UI/Loader';
 import Alert from '@/components/widgets/UI/Alert';
+import Reviews from './components/reviews';
 
 const ParentContainer = styled.div`
   width: 100%;
@@ -92,7 +93,7 @@ const Account = (props) => {
     // get active state from params
     const currentLocation = pathname.split('/')[2];
     setDisplay(currentLocation);
-  }, []);
+  }, [display]);
 
   const getDisplayForm = () => {
     switch (display) {
@@ -100,6 +101,14 @@ const Account = (props) => {
         return (
           <P_Details
             store={alerts}
+            updater={addAlert}
+            loading={toggleLoading}
+            user={props.user}
+          />
+        );
+      case 'reviews':
+        return (
+          <Reviews
             updater={addAlert}
             loading={toggleLoading}
             user={props.user}

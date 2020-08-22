@@ -6,6 +6,7 @@ import OxygenRegular from '@/assets/fonts/Oxygen/Oxygen-Regular.ttf';
 import JosefinSansLight from '@/assets/fonts/Josefin_Sans/static/JosefinSans-Light.ttf';
 import JosefinSansRegular from '@/assets/fonts/Josefin_Sans/static/JosefinSans-Regular.ttf';
 import JosefinSansLightItalic from '@/assets/fonts/Josefin_Sans/static/JosefinSans-LightItalic.ttf';
+import JosefinSansMediumItalic from '@/assets/fonts/Josefin_Sans/static/JosefinSans-MediumItalic.ttf';
 import NotoSansRegular from '@/assets/fonts/Noto_Sans/NotoSans-Regular.ttf';
 import NotoSansBold from '@/assets/fonts/Noto_Sans/NotoSans-Bold.ttf';
 import Mali from '@/assets/fonts/Mali/Mali-Regular.ttf';
@@ -34,6 +35,10 @@ const GlobalStyle = createGlobalStyle`
     @font-face{
         font-family: 'Josefin Sans Light Italic';
         src: url(${JosefinSansLightItalic}) format('truetype');
+    }
+    @font-face{
+        font-family: 'Josefin Sans Medium Italic';
+        src: url(${JosefinSansMediumItalic}) format('truetype');
     }
     @font-face{
         font-family: 'Mali';

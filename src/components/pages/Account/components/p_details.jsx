@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import styled, { withTheme } from 'styled-components';
-import Input from '@/components/UI/interface/Input';
+import Input from '@/components/widgets/UI/Input';
 import Button from '@/components/UI/buttons/Button';
 import Edit from '@/assets/images/icons/account/Edit.svg';
 import { editUser, setUserPhoto } from '@/actions/user';
@@ -11,6 +11,8 @@ import axios from 'axios';
 import setAlert from '@/assets/helperFunctions/alerts';
 import InputRow from '@/components/widgets/UI/InputRow';
 import storesArray from '@/assets/fixtures/stores';
+import DefaultImage from '@/assets/images/store/DefaultImage.png';
+import ReactTooltip from 'react-tooltip';
 
 const ParentContainer = styled.div`
   width: 100%;
@@ -22,10 +24,11 @@ const Container = styled.div`
 
   hr {
     width: 100%;
-    height: 0.5px;
-    margin: 12px auto 32px auto;
+    height: 0.1px;
+    margin: 32px auto;
     border: none;
-    background: ${(props) => props.theme.colors.saturated_contrast};
+    opacity: 0;
+    background: ${(props) => props.theme.colors.alternate_light_background_10};
   }
 `;
 // section headlines
@@ -49,7 +52,10 @@ const Header = styled.span`
   display: inline-flex;
   width: 100%;
   justify-content: space-between;
-  margin-top: 32px;
+  margin-top: 60px;
+  &:first-child {
+    margin-top: 32px;
+  }
 `;
 
 const EditIcon = styled.img`
@@ -68,23 +74,97 @@ const EditIcon = styled.img`
 const Stores = styled.div`
   width: 100%;
   height: auto;
-  background: #ccc;
+`;
+
+const Store = styled.img`
+  width: 95px;
+  height: 95px;
+  box-sizing: border-box;
+  border: 5px solid
+    ${(props) => {
+      switch (props.platform) {
+        case 'facebook':
+          return '#395185';
+
+        case 'twitter':
+          return '#55acee';
+
+        case 'instagram':
+          return '#d53f90';
+
+        default:
+          return `${props.theme.colors.yellow}`;
+      }
+    }};
+  display: inline-block;
+  margin-left: 16px;
+  &:first-child {
+    margin-left: 0px;
+  }
+  &:nth-child(6) {
+    margin-left: 0px;
+  }
+  border-radius: 50%;
 `;
 
 const P_Details = (props) => {
   const [f_name, setF_name] = useState('');
   const [l_name, setL_name] = useState('');
+  const [u_name, setU_name] = useState('');
+  const [u_nameValid, setU_NameValid] = useState(true);
   const [bio, setBio] = useState('');
   const [email, setEmail] = useState('');
   const [validatedEmail, setValidatedEmail] = useState('');
   const [emailValid, setEmailValid] = useState(true);
   const [p_photo, setP_Photo] = useState('');
-  const [formActive, setFormActive] = useState(false);
+  const [p_detailsActive, setP_Details] = useState(false);
+  const [acctActive, setAcctActive] = useState(false);
 
   // const storesArray = props.user.user.stores || [];
+  const toggleP_DetailsActive = (active) => {
+    return setP_Details(!p_detailsActive);
+  };
+  const toggleAcctActive = (active) => {
+    return setAcctActive(!acctActive);
+  };
 
-  const toggleActive = (active) => {
-    return setFormActive(!formActive);
+  const setUname = (uname) => {
+    return setU_name(uname);
+  };
+
+  const handleU_Name = (u_name) => {
+    if (u_name === props.user.user.username) {
+      return null;
+    }
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    const data = {
+      username: u_name,
+    };
+    return axios
+      .post(
+        `${process.env.REACT_APP_API_PREFIX}/api/users/verify/`,
+        data,
+        {
+          'Content-Type': 'application/json',
+          'Content-Transfer-Encoding': 'application/json',
+          Accept: '*/*',
+        },
+        { headers },
+      )
+      .then((res) => {
+        if (res.data.data) {
+          setU_NameValid(false);
+          setAlert(props.updater, 'error', 'Username is taken. Try another');
+        } else {
+          setU_NameValid(true);
+          setAlert(props.updater, 'success', 'Username valid');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleF_Name = (fname) => {
@@ -159,12 +239,19 @@ const P_Details = (props) => {
   };
 
   const submit = () => {
-    const userObj = {
-      firstname: f_name,
-      lastname: l_name,
-      bio,
-      email,
-    };
+    console.log('submitting form');
+    const userObj = {};
+    // console.log(f_name, l_name, bio, email);
+
+    if (f_name !== props.user.user.firstname) {
+      userObj.firstname = f_name;
+    } else if (l_name !== props.user.user.lastname) {
+      userObj.lastname = l_name;
+    } else if (bio !== props.user.user.bio) {
+      userObj.bio = bio;
+    } else if (email && emailValid) {
+      userObj.email = validatedEmail.toLowerCase();
+    }
 
     axios.defaults.withCredentials = true;
 
@@ -174,7 +261,7 @@ const P_Details = (props) => {
       authorization: `Bearer ${props.user.user.jwt}`,
     };
 
-    if (!formActive) {
+    if (!p_detailsActive && !u_name) {
       return setAlert(
         props.updater,
         'info',
@@ -191,6 +278,11 @@ const P_Details = (props) => {
       if (typeof p_photo === 'object') {
         uploadImage();
       }
+      if (u_name && u_nameValid) {
+        console.log('setting username');
+        userObj.username = u_name.toLowerCase();
+      }
+
       return axios
         .put(
           `${process.env.REACT_APP_API_PREFIX}/api/users/edit/${props.user.user._id}`,
@@ -198,6 +290,7 @@ const P_Details = (props) => {
           { headers, withCredentials: true },
         )
         .then((res) => {
+          console.log('response reveived');
           if (res.status === 200) {
             props.editUser(userObj);
             props.loading(false);
@@ -218,7 +311,11 @@ const P_Details = (props) => {
         })
         .finally(() => {
           props.loading(false);
-          return setFormActive(false);
+          if (p_detailsActive) {
+            return setP_Details(false);
+          } else if (acctActive) {
+            return setAcctActive(false);
+          }
         });
     }
   };
@@ -239,7 +336,7 @@ const P_Details = (props) => {
     const vendo_id = localStorage.getItem('vendo_id');
     return axios
       .put(
-        `${process.env.REACT_APP_API_PREFIX}/api/users/edit/addP_Photo/${vendo_id}`,
+        `${process.env.REACT_APP_API_PREFIX}/api/users/edit/addP_Photo/${props.user.user._id}`,
         formData,
         { headers },
       )
@@ -255,38 +352,87 @@ const P_Details = (props) => {
         );
       })
       .catch((err) => {
-        setAlert(
-          props.store,
-          props.updater,
-          'error',
-          'Error updating profile photo!',
-        );
+        setAlert(props.updater, 'error', 'Error updating profile photo!');
       });
   };
 
   return (
     <ParentContainer>
       <Container>
+        <ReactTooltip effect={'solid'} />
         <Header>
           <S_Head>LINKED STORES</S_Head>
         </Header>
+        <hr />
         <Stores>
           {storesArray.map((store) => {
-            return;
+            return (
+              <Store
+                key={store.id}
+                src={store.photo || DefaultImage}
+                platform={store.platform}
+                data-tip={store.name}
+              />
+            );
           })}
         </Stores>
         <Header>
-          <S_Head>PERSONAL DETAILS</S_Head>
-          <EditIcon src={Edit} onClick={toggleActive} />
+          <S_Head>ACCOUNT</S_Head>
+          <EditIcon src={Edit} onClick={toggleAcctActive} />
         </Header>
         <hr />
-        <Form active={formActive}>
+        <Form active={acctActive}>
+          <InputRow label="Username">
+            <Input
+              useLabelAnimation={true}
+              inputType={'input'}
+              left="14px"
+              readOnly={!acctActive}
+              verify={handleU_Name}
+              handleChange={setUname}
+              value={props.user.user.username || ''}
+              // pass setalert down to file picker component so it can alert if file is large or wrong format
+              setAlert={setAlert}
+              // pass "updater" function from Account component down for use by input picker component
+              updater={props.updater}
+              class={{
+                name: 'u_name',
+                type: 'text',
+                fill: `${props.theme.colors.alternate_light_background_10}`,
+                color: `${props.theme.colors.dark_background_60}`,
+                p_color: `${props.theme.colors.dark_background_20}`,
+                padding: '8px',
+                placeholder: 'Username',
+                label: { display: 'none' },
+              }}
+            />
+          </InputRow>
+          <InputRow>
+            <Button
+              to={'#'}
+              height="40"
+              width="100"
+              fill={props.theme.colors.dark_background}
+              transition_color={'white'}
+              margin="16px 0 0 auto"
+              onClick={submit}
+            >
+              Done
+            </Button>
+          </InputRow>
+        </Form>
+        <Header>
+          <S_Head>PERSONAL DETAILS</S_Head>
+          <EditIcon src={Edit} onClick={toggleP_DetailsActive} />
+        </Header>
+        <hr />
+        <Form active={p_detailsActive}>
           <InputRow label="Profile Photo">
             <Input
               useLabelAnimation={true}
               inputType={'imagepicker'}
               left="14px"
-              readOnly={!formActive}
+              readOnly={!p_detailsActive}
               handleChange={null}
               // pass setalert down to file picker component so it can alert if file is large or wrong format
               setAlert={setAlert}
@@ -315,7 +461,7 @@ const P_Details = (props) => {
               useLabelAnimation={true}
               inputType={'input'}
               left="14px"
-              readOnly={!formActive}
+              readOnly={!p_detailsActive}
               handleChange={handleF_Name}
               value={props.user.user.firstname || ''}
               class={{
@@ -335,7 +481,7 @@ const P_Details = (props) => {
               useLabelAnimation={true}
               inputType={'input'}
               left="14px"
-              readOnly={!formActive}
+              readOnly={!p_detailsActive}
               handleChange={handleL_Name}
               value={props.user.user.lastname || ''}
               class={{
@@ -355,7 +501,7 @@ const P_Details = (props) => {
               useLabelAnimation={true}
               inputType={'input'}
               left="14px"
-              readOnly={!formActive}
+              readOnly={!p_detailsActive}
               verify={validateEmail}
               handleChange={handle_Email}
               value={props.user.user.email || ''}
@@ -378,7 +524,7 @@ const P_Details = (props) => {
               inputType={'textarea'}
               useLabelAnimation={true}
               left="14px"
-              readOnly={!formActive}
+              readOnly={!p_detailsActive}
               handleChange={handleBio}
               value={props.user.user.bio || ''}
               class={{

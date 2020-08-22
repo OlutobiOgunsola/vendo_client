@@ -5,7 +5,7 @@ import GlobalStyles from '@/assets/theme/fonts.js';
 import './App.css';
 import '@/assets/theme/fontawesome';
 
-import Loading from '@/components/UI/interface/Loading';
+import Loading from '@/components/UI/interface/home/Loading';
 
 function App(props) {
   const Home = React.lazy(() => import('./components/pages/Home/Home'));

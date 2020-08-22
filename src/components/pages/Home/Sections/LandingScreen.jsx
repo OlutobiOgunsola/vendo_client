@@ -2,11 +2,11 @@ import React, { Suspense } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { slideInUp, slideInDown, fadeIn } from 'react-animations';
 
-import Loading from '@/components/UI/interface/Loading';
+import Loading from '@/components/UI/interface/home/Loading';
 import desktopLanding from '@/assets/images/backgrounds/desktopLandingMainSnipped.jpg';
 import Header from '@/components/UI/Header';
-import Pen from '@/components/UI/interface/RectanglePen.jsx';
-import DownChevronIcon from '@/components/UI/interface/DownChevron.jsx';
+import Pen from '@/components/UI/interface/home/RectanglePen.jsx';
+import DownChevronIcon from '@/components/UI/interface/home/DownChevron.jsx';
 
 const fadeInAnimation = keyframes`${fadeIn}`;
 const slideInUpAnimation = keyframes`${slideInUp}`;

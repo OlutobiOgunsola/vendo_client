@@ -4,10 +4,10 @@ import { Link, withRouter } from 'react-router-dom';
 import withUser from '@/components/higher-order/withUser';
 import axios from 'axios';
 
-import HeaderProfile from '@/components/UI/interface/HeaderProfile.jsx';
+import HeaderProfile from '@/components/UI/interface/home/HeaderProfile.jsx';
 import HeaderSignIn from '@/components/UI/buttons/Header_Sign_In.jsx';
 import defaultPhoto from '@/assets/images/icons/account/Profile.svg';
-import Logo from '@/components/UI/interface/Logo.jsx';
+import Logo from '@/components/UI/interface/home/Logo.jsx';
 import AddIcon from '@/assets/images/icons/Add.svg';
 import NotificationIcon from '@/assets/images/icons/Notification.svg';
 import TransactionIcon from '@/assets/images/icons/Transaction.svg';

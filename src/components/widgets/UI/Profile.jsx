@@ -100,7 +100,7 @@ const Bio = styled.p`
 const Header = styled.p`
   font-family: 'Noto Sans Regular';
   font-size: 12px;
-  margin: 4px 0px;
+  margin: 8px 0px;
   color: ${(props) => props.theme.colors.saturated_contrast};
   @media (max-width: 700px) {
     display: none;

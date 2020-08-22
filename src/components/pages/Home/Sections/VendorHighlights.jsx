@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-import SectionTitle from '@/components/UI/interface/SectionTitle';
+import SectionTitle from '@/components/UI/interface/home/SectionTitle';
 
-import Card from '@/components/UI/interface/HighlightCards';
+import Card from '@/components/UI/interface/home/HighlightCards';
 
 const ParentContainer = styled.div`
   width: 100%;
