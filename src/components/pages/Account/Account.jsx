@@ -12,14 +12,17 @@ import Navbar from './components/navbar';
 
 import withUser from '@/components/higher-order/withUser';
 import Footer from '@/components/UI/Footer';
-import P_Details from './components/p_details';
 import ProfileWidget from '@/components/widgets/UI/Profile';
 import Loader from '@/components/widgets/UI/Loader';
 import Alert from '@/components/widgets/UI/Alert';
+
 import Reviews from './components/reviews';
+import P_Details from './components/p_details';
+import Transactions from './components/transactions';
 
 const ParentContainer = styled.div`
   width: 100%;
+  /* background: red; */
   background: ${(props) => props.theme.colors.page_background};
   height: auto;
   display: flex;
@@ -42,7 +45,18 @@ const Container = styled.div`
   }
   @media (max-width: 700px) {
     flex-flow: column nowrap;
-    width: 600px;
+    padding: 0px 50px;
+    width: 100%;
+  }
+  @media (max-width: 500px) {
+    flex-flow: column nowrap;
+    padding: 0px 10px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  @media (max-width: 400px) {
+    flex-flow: column nowrap;
+    width: 100%;
   }
 `;
 
@@ -55,6 +69,7 @@ const ActionContainer = styled.div`
   border-radius: 4px;
   position: relative;
   z-index: 1;
+  background: ${(props) => props.theme.colors.white};
   @media (max-width: 900px) {
     width: 500px;
   }
@@ -63,6 +78,14 @@ const ActionContainer = styled.div`
   }
   @media (max-width: 700px) {
     width: 100%;
+  }
+  @media (max-width: 500px) {
+    width: 100%;
+    padding: 40px 16px;
+  }
+  @media (max-width: 400px) {
+    width: 100%;
+    padding: 40px 8px;
   }
 `;
 
@@ -109,6 +132,14 @@ const Account = (props) => {
       case 'reviews':
         return (
           <Reviews
+            updater={addAlert}
+            loading={toggleLoading}
+            user={props.user}
+          />
+        );
+      case 'transactions':
+        return (
+          <Transactions
             updater={addAlert}
             loading={toggleLoading}
             user={props.user}

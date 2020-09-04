@@ -6,6 +6,12 @@ import { useState } from 'react';
 
 const Container = styled.span`
   position: relative;
+  opacity: 0.8;
+  transition: all 0.25s ease-in-out;
+  &:hover {
+    cursor: pointer;
+    opacity: 1;
+  }
 `;
 const Pin = styled.img`
   height: 35px;

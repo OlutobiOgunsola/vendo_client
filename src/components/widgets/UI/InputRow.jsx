@@ -17,6 +17,7 @@ const Label = styled.p`
   display: inline-block;
   font-family: 'Noto Sans Regular';
   font-size: 14px;
+  color: ${(props) => props.theme.colors.saturated_contrast};
   @media (max-width: 800px) {
     width: 30%;
   }

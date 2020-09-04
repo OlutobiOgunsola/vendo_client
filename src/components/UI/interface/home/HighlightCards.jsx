@@ -204,7 +204,7 @@ const StoreName = styled.h5`
   width: ${(props) => (props.big ? '225px' : '120px')};
   height: ${(props) => (props.big ? '28px' : '18px')};
   margin: ${(props) => (props.big ? ' 0px 0px 4px 0px' : ' 0px 0px 4px 0px')};
-  color: ${(props) => props.theme.colors.white};
+  color: ${(props) => props.theme.colors.saturated_contrast};
   &:hover {
   }
   font-size: ${(props) => (props.big ? '22px' : '14px')};

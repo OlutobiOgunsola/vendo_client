@@ -17,16 +17,23 @@ const Container = styled.div`
   width: fit-content;
   height: 40px;
   margin: 0px 0px 30px auto;
-  border-bottom: 0.5px solid ${(props) => props.theme.colors.dark_background_40};
+  border-bottom: 0.5px solid
+    ${(props) => props.theme.colors.saturated_contrast_40};
   .active {
     font-size: 12.5px;
     font-family: 'Josefin Sans Regular';
     text-decoration: none;
-    color: ${(props) => props.theme.colors.dark_background};
+    color: ${(props) => props.theme.colors.saturated_contrast};
     border-bottom: 2px solid ${(props) => props.theme.colors.yellow};
   }
   .active .fa-icon {
-    color: ${(props) => props.theme.colors.dark_background};
+    color: ${(props) => props.theme.colors.saturated_contrast};
+  }
+  @media (max-width: 480px) {
+    .active {
+      font-size: 10px;
+      font-family: 'Josefin Sans Regular';
+    }
   }
 `;
 
@@ -46,18 +53,23 @@ const LinkItem = styled(NavLink)`
   font-size: 12px;
   line-height: 16px;
   transition: all 0.25s ease-in-out;
-  color: ${(props) => props.theme.colors.dark_background_80};
+  color: ${(props) => props.theme.colors.saturated_contrast_80};
   .fa-icon {
     transition: all 0.25s ease-in-out;
     margin-right: 4px;
-    color: ${(props) => props.theme.colors.dark_background_20};
+    color: ${(props) => props.theme.colors.saturated_contrast_20};
   }
 
   &:hover {
     font-size: 12.5px;
     text-decoration: none;
-    color: ${(props) => props.theme.colors.dark_background};
+    color: ${(props) => props.theme.colors.saturated_contrast};
     border-bottom: 1px solid ${(props) => props.theme.colors.yellow};
+  }
+
+  @media (max-width: 480px) {
+    font-size: 10px;
+    padding: 8px 2px;
   }
 `;
 const Navbar = (props) => {

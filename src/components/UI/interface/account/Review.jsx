@@ -36,18 +36,21 @@ const ParentContainer = styled.div`
   height: auto;
   position: relative;
   z-index: 9;
-  border-style: hidden hidden hidden solid;
+  /* border-style: hidden hidden hidden solid;
   border-width: 2px;
+  border-color: ${(props) => props.theme.colors.saturated_contrast_20}; */
   border-radius: 2px;
-  border-color: ${(props) => props.theme.colors.dark_background};
-  /* border-radius: 4px;
-  border: none; */
   box-sizing: border-box;
   transition: all 0.25s ease-in-out;
   margin: 32px 0px 0px 0px;
   animation: 0.5s ${slideInUpAnimation};
   padding: 32px;
-  /* box-shadow: 0px 2px 8px rgba(0,0,0,0.1); */
+  @media (max-width: 500px) {
+    padding: 16px;
+  }
+  @media (max-width: 400px) {
+    padding: 16px 8px;
+  }
 `;
 
 const Container = styled.div`
@@ -70,7 +73,9 @@ const Text = styled.p`
   color: ${(props) => props.theme.colors.saturated_font_darker};
   margin: 0;
   margin-bottom: 16px;
-  /* background: ${(props) => props.theme.colors.review_text_background}; */
+  @media (max-width: 500px) {
+    font-size: 12px;
+  }
 `;
 
 const Details = styled.div`
@@ -96,6 +101,10 @@ const Votes = styled.span`
     padding: 0px;
     color: ${(props) => props.theme.colors.saturated_contrast};
   }
+  @media (max-width: 500px) {
+    width: 26px;
+    margin-right: 8px;
+  }
 `;
 
 const Spacer = styled.span`
@@ -103,6 +112,10 @@ const Spacer = styled.span`
   width: 10px;
   margin: 0;
   margin-right: 30px;
+  @media (max-width: 500px) {
+    width: 10px;
+    margin-right: 14px;
+  }
 `;
 
 const Author = styled.span`
@@ -118,13 +131,19 @@ const AuthorName = styled.p`
   color: ${(props) => props.theme.colors.saturated_font_darker};
   margin: 0;
   margin-bottom: 4px;
+  @media (max-width: 500px) {
+    font-size: 9px;
+  }
 `;
 
 const DateContainer = styled.p`
   font-family: 'Josefin Sans Medium Italic';
   font-size: 10px;
-  color: ${(props) => props.theme.colors.dark_background_60};
+  color: ${(props) => props.theme.colors.saturated_contrast_60};
   margin: 0;
+  @media (max-width: 500px) {
+    font-size: 8px;
+  }
 `;
 
 const Thumb = styled.svg`
@@ -168,7 +187,7 @@ const OtherVoters = styled.p`
   height: 12px;
   font-size: 10px;
   font-family: 'Josefin Sans Light';
-  color: ${(props) => props.theme.colors.dark_background_60};
+  color: ${(props) => props.theme.colors.saturated_contrast_60};
   font-weight: 300px;
   margin: 0;
   display: inline-block;
@@ -220,7 +239,7 @@ const SendSVG = styled.svg`
   box-sizing: border-box;
   margin: 6px 0px 6px 12px;
   display: inline-block;
-  color: ${(props) => props.theme.colors.dark_background};
+  color: ${(props) => props.theme.colors.saturated_contrast};
 `;
 
 const SendButton = styled.span`
@@ -294,18 +313,9 @@ const ReviewItem = (props) => {
   const [showCommentGroup, setShowCommentGroup] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  console.log(review);
   useEffect(() => {
     const fetchReview = async () => {
       const foundReview = await props.getReview(_id);
-
-      if (
-        foundReview &&
-        foundReview.upvotes.indexOf(props.user_id) > -1 &&
-        mounted
-      ) {
-        setUpvoted(true);
-      }
       if (mounted) {
         setReview(foundReview);
       }
@@ -317,6 +327,20 @@ const ReviewItem = (props) => {
       setMounted(false);
     };
   }, [_id]);
+
+  useEffect(() => {
+    const upvotefilter = review.upvotes.filter((upvote) => {
+      return upvote._id === props.user_id;
+    });
+    const downvotefilter = review.downvotes.filter((downvote) => {
+      return downvote._id === props.user_id;
+    });
+    if (upvotefilter.length > 0) {
+      setUpvoted(true);
+    } else if (downvotefilter.length > 0) {
+      setDownvoted(true);
+    }
+  }, [review]);
 
   const getAuthor = (e) => {
     // logic to navigate to author page here
@@ -332,13 +356,13 @@ const ReviewItem = (props) => {
   const getThumbfill = (arg) => {
     if (arg === 'upvote') {
       if (upvoted) {
-        return `#38C0ED`;
+        return `${props.theme.colors.yellow}`;
       } else {
         return `${props.theme.colors.upvote_highlight}`;
       }
     } else if (arg === 'downvote') {
       if (downvoted) {
-        return `#38C0ED`;
+        return `${props.theme.colors.yellow}`;
       } else {
         return `${props.theme.colors.upvote_highlight}`;
       }
@@ -407,65 +431,118 @@ const ReviewItem = (props) => {
       });
   };
 
-  const showVotes = () => {
-    if (votes === 'upvotes') {
-      return (
-        <VotesContainer>
-          <VotesDiv>
-            {selectVoters(review.upvotes).map((upvote, index) => {
-              return (
-                <Voter
-                  src={upvote.photo || DefaultImage}
-                  key={upvote._id}
-                  index={index}
-                />
-              );
-            })}
-          </VotesDiv>
-          {review.upvotes.length > 5 && (
-            <OtherVoters>
-              <b
-                style={{
-                  fontWeight: 700,
-                }}
-              >
-                and {review.upvotes.length - 5} other users
-              </b>{' '}
-              {/* have upvoted this review */}
-            </OtherVoters>
-          )}
-        </VotesContainer>
-      );
-    } else if (votes === 'downvotes') {
-      return (
-        <VotesContainer>
-          <VotesDiv>
-            {selectVoters(review.downvotes).map((downvote, index) => {
-              return (
-                <Voter
-                  src={downvote.photo || DefaultImage}
-                  key={downvote._id}
-                  index={index}
-                />
-              );
-            })}
-          </VotesDiv>
-          {review.downvotes.length > 5 && (
-            <OtherVoters>
-              <b
-                style={{
-                  fontWeight: 700,
-                }}
-              >
-                and {review.downvotes.length - 5} other users
-              </b>{' '}
-              {/* have downvoted this review */}
-            </OtherVoters>
-          )}
-        </VotesContainer>
-      );
+  const addVote = (type = 'upvote') => {
+    const headers = {
+      Authorization: `Bearer ${props.user_token}`,
+    };
+    if (type === 'upvote') {
+      return axios
+        .put(
+          `${process.env.REACT_APP_API_PREFIX}/api/reviews/${review._id}/upvote`,
+          null,
+          { headers },
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            setReview(res.data.data);
+            setUpvoted(!upvoted);
+            return setRender(!render);
+          } else {
+            return null;
+          }
+        })
+        .catch((err) => {
+          return setAlert(
+            props.updater,
+            'error',
+            'Error while upvoting review!',
+          );
+        });
+    } else {
+      return axios
+        .put(
+          `${process.env.REACT_APP_API_PREFIX}/api/reviews/${review._id}/downvote`,
+          null,
+          { headers },
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            setDownvoted(!downvoted);
+            setReview(res.data.data);
+            return setRender(!render);
+          } else {
+            return null;
+          }
+        })
+        .catch((err) => {
+          return setAlert(
+            props.updater,
+            'error',
+            'Error while downvoting review!',
+          );
+        });
     }
   };
+
+  // const showVotes = () => {
+  //   if (votes === 'upvotes') {
+  //     return (
+  //       <VotesContainer>
+  //         <VotesDiv>
+  //           {selectVoters(review.upvotes).map((upvote, index) => {
+  //             return (
+  //               <Voter
+  //                 src={upvote.photo || DefaultImage}
+  //                 key={upvote._id}
+  //                 index={index}
+  //               />
+  //             );
+  //           })}
+  //         </VotesDiv>
+  //         {review.upvotes.length > 5 && (
+  //           <OtherVoters>
+  //             <b
+  //               style={{
+  //                 fontWeight: 700,
+  //               }}
+  //             >
+  //               and {review.upvotes.length - 5} other users
+  //             </b>{' '}
+  //             {/* have upvoted this review */}
+  //           </OtherVoters>
+  //         )}
+  //       </VotesContainer>
+  //     );
+  //   } else if (votes === 'downvotes') {
+  //     return (
+  //       <VotesContainer>
+  //         <VotesDiv>
+  //           {selectVoters(review.downvotes).map((downvote, index) => {
+  //             return (
+  //               <Voter
+  //                 src={downvote.photo || DefaultImage}
+  //                 key={downvote._id}
+  //                 index={index}
+  //               />
+  //             );
+  //           })}
+  //         </VotesDiv>
+  //         {review.downvotes.length > 5 && (
+  //           <OtherVoters>
+  //             <b
+  //               style={{
+  //                 fontWeight: 700,
+  //               }}
+  //             >
+  //               and {review.downvotes.length - 5} other users
+  //             </b>{' '}
+  //             {/* have downvoted this review */}
+  //           </OtherVoters>
+  //         )}
+  //       </VotesContainer>
+  //     );
+  //   }
+  // };
   const date = new Date();
   return (
     <>
@@ -475,7 +552,7 @@ const ReviewItem = (props) => {
             <Votes>
               <Thumb
                 onClick={() => {
-                  return setUpvoted(!upvoted);
+                  return addVote('upvote');
                 }}
               >
                 <Upvote fillCol={getThumbfill('upvote')} />
@@ -483,7 +560,7 @@ const ReviewItem = (props) => {
               <p>{review.upvotes.length > 99 ? 99 : review.upvotes.length}</p>
               <Thumb
                 onClick={() => {
-                  return setDownvoted(!downvoted);
+                  return addVote('downvote');
                 }}
               >
                 <Downvote fillCol={getThumbfill('downvote')} />
@@ -651,6 +728,4 @@ ReviewItem.propTypes = {
   getReview: PropTypes.func,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps, null, {
-  forwardRef: true,
-})(withTheme(ReviewItem));
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(ReviewItem));

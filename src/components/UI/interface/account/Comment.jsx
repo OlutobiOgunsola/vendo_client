@@ -53,7 +53,7 @@ const Container = styled.div`
 
 const Text = styled.p`
   display: inline-block;
-  font-family: 'Noto Sans Regular';
+  font-family: 'Josefin Sans Light';
   width: calc(100% - 40px);
   font-size: 12px;
   font-weight: 300;
@@ -97,6 +97,7 @@ const Votes = styled.span`
     font-family: 'Noto Sans Regular';
     margin: 2px 0px;
     padding: 0px;
+    color: ${(props) => props.theme.colors.saturated_contrast};
   }
 `;
 
@@ -116,7 +117,7 @@ const VotesContainer = styled.span`
   width: auto;
   height: 12px;
   display: block;
-  margin-top: 8px;
+  margin: 8px 0px;
 `;
 
 const VotesDiv = styled.span`
@@ -130,7 +131,7 @@ const Voter = styled.img`
   height: 12px;
   width: 12px;
   border-radius: 50%;
-  border: solid 1px ${(props) => props.theme.colors.review_background};
+  border: solid 1px ${(props) => props.theme.colors.dark_background};
   margin: 0;
   display: inline-block;
   transition: all 0.25s ease-in-out;
@@ -148,7 +149,7 @@ const OtherVoters = styled.p`
   height: 12px;
   font-size: 10px;
   font-family: 'Noto Sans Regular';
-  color: ${(props) => props.theme.colors.dark_background_60};
+  color: ${(props) => props.theme.colors.saturated_contrast_60};
   font-weight: 300px;
   margin: 0;
   display: inline-block;
@@ -184,7 +185,7 @@ const SendSVG = styled.svg`
   box-sizing: border-box;
   margin: 6px 0px 6px 12px;
   display: inline-block;
-  color: ${(props) => props.theme.colors.dark_background};
+  color: ${(props) => props.theme.colors.saturated_contrast};
 `;
 
 const SendButton = styled.span`
@@ -223,7 +224,7 @@ const AuthorName = styled.p`
 const DateContainer = styled.p`
   font-family: 'Josefin Sans Medium Italic';
   font-size: 8px;
-  color: ${(props) => props.theme.colors.dark_background_60};
+  color: ${(props) => props.theme.colors.saturated_contrast_60};
   margin: 0;
 `;
 
@@ -269,7 +270,7 @@ const Reply = styled.span`
 
 const ReplyText = styled.p`
   display: inline-block;
-  font-family: 'Noto Sans Regular';
+  font-family: 'Josefin Sans Light';
   width: calc(100% - 100px);
   font-size: 10px;
   font-weight: 300;
@@ -297,14 +298,15 @@ const ReplyAuthorName = styled.p`
 const ReplyDateContainer = styled.p`
   font-family: 'Josefin Sans Medium Italic';
   font-size: 7px;
-  color: ${(props) => props.theme.colors.dark_background_60};
+  color: ${(props) => props.theme.colors.saturated_contrast_60};
   margin: 0;
   width: 100%;
 `;
 
 const Comment = (props) => {
   const author_id = props.comment.author_id;
-  const comment = props.comment;
+  const commentProp = props.comment;
+  const [comment, setComment] = useState(commentProp);
   const [votes, setVotes] = useState('upvotes');
   const [opacity, setOpacity] = useState(0.6);
   const [upvoted, setUpvoted] = useState(false);
@@ -341,13 +343,13 @@ const Comment = (props) => {
   const getThumbfill = (arg) => {
     if (arg === 'upvote') {
       if (upvoted) {
-        return `#38C0ED`;
+        return `${props.theme.colors.yellow}`;
       } else {
         return `${props.theme.colors.upvote_highlight}`;
       }
     } else if (arg === 'downvote') {
       if (downvoted) {
-        return `#38C0ED`;
+        return `${props.theme.colors.yellow}`;
       } else {
         return `${props.theme.colors.upvote_highlight}`;
       }
@@ -416,65 +418,118 @@ const Comment = (props) => {
       });
   };
 
-  const showVotes = () => {
-    if (votes === 'upvotes') {
-      return (
-        <VotesContainer>
-          <VotesDiv>
-            {selectVoters(comment.upvotes).map((upvote, index) => {
-              return (
-                <Voter
-                  src={upvote.photo || DefaultImage}
-                  key={upvote._id}
-                  index={index}
-                />
-              );
-            })}
-          </VotesDiv>
-          {comment.upvotes.length > 5 && (
-            <OtherVoters>
-              <b
-                style={{
-                  fontWeight: 700,
-                }}
-              >
-                and {comment.upvotes.length - 5} other users
-              </b>{' '}
-              {/* have upvoted this review */}
-            </OtherVoters>
-          )}
-        </VotesContainer>
-      );
-    } else if (votes === 'downvotes') {
-      return (
-        <VotesContainer>
-          <VotesDiv>
-            {selectVoters(comment.downvotes).map((downvote, index) => {
-              return (
-                <Voter
-                  src={downvote.photo || DefaultImage}
-                  key={downvote._id}
-                  index={index}
-                />
-              );
-            })}
-          </VotesDiv>
-          {comment.downvotes.length > 5 && (
-            <OtherVoters>
-              <b
-                style={{
-                  fontWeight: 700,
-                }}
-              >
-                and {comment.downvotes.length - 5} other users
-              </b>{' '}
-              {/* have downvoted this review */}
-            </OtherVoters>
-          )}
-        </VotesContainer>
-      );
+  const addVote = (type = 'upvote') => {
+    const headers = {
+      Authorization: `Bearer ${props.user_token}`,
+    };
+    if (type === 'upvote') {
+      return axios
+        .put(
+          `${process.env.REACT_APP_API_PREFIX}/api/comments/${comment._id}/upvote`,
+          null,
+          { headers },
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            setComment(res.data.data);
+            setUpvoted(!upvoted);
+            return setRender(!render);
+          } else {
+            return null;
+          }
+        })
+        .catch((err) => {
+          return setAlert(
+            props.updater,
+            'error',
+            'Error while upvoting review!',
+          );
+        });
+    } else {
+      return axios
+        .put(
+          `${process.env.REACT_APP_API_PREFIX}/api/comments/${comment._id}/downvote`,
+          null,
+          { headers },
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            setDownvoted(!downvoted);
+            setComment(res.data.data);
+            return setRender(!render);
+          } else {
+            return null;
+          }
+        })
+        .catch((err) => {
+          return setAlert(
+            props.updater,
+            'error',
+            'Error while downvoting review!',
+          );
+        });
     }
   };
+
+  // const showVotes = () => {
+  //   if (votes === 'upvotes') {
+  //     return (
+  //       <VotesContainer>
+  //         <VotesDiv>
+  //           {selectVoters(comment.upvotes).map((upvote, index) => {
+  //             return (
+  //               <Voter
+  //                 src={upvote.photo || DefaultImage}
+  //                 key={upvote._id}
+  //                 index={index}
+  //               />
+  //             );
+  //           })}
+  //         </VotesDiv>
+  //         {comment.upvotes.length > 5 && (
+  //           <OtherVoters>
+  //             <b
+  //               style={{
+  //                 fontWeight: 700,
+  //               }}
+  //             >
+  //               and {comment.upvotes.length - 5} other users
+  //             </b>{' '}
+  //             {/* have upvoted this review */}
+  //           </OtherVoters>
+  //         )}
+  //       </VotesContainer>
+  //     );
+  //   } else if (votes === 'downvotes') {
+  //     return (
+  //       <VotesContainer>
+  //         <VotesDiv>
+  //           {selectVoters(comment.downvotes).map((downvote, index) => {
+  //             return (
+  //               <Voter
+  //                 src={downvote.photo || DefaultImage}
+  //                 key={downvote._id}
+  //                 index={index}
+  //               />
+  //             );
+  //           })}
+  //         </VotesDiv>
+  //         {comment.downvotes.length > 5 && (
+  //           <OtherVoters>
+  //             <b
+  //               style={{
+  //                 fontWeight: 700,
+  //               }}
+  //             >
+  //               and {comment.downvotes.length - 5} other users
+  //             </b>{' '}
+  //             {/* have downvoted this review */}
+  //           </OtherVoters>
+  //         )}
+  //       </VotesContainer>
+  //     );
+  //   }
+  // };
   const date = new Date();
 
   return (
@@ -485,7 +540,7 @@ const Comment = (props) => {
             <Votes>
               <Thumb
                 onClick={() => {
-                  return setUpvoted(!upvoted);
+                  return addVote('upvote');
                 }}
               >
                 <Upvote fillCol={getThumbfill('upvote')} />
@@ -493,7 +548,7 @@ const Comment = (props) => {
               <p>{comment.upvotes.length > 99 ? 99 : comment.upvotes.length}</p>
               <Thumb
                 onClick={() => {
-                  return setDownvoted(!downvoted);
+                  return addVote('downvote');
                 }}
               >
                 <Downvote fillCol={getThumbfill('downvote')} />
@@ -503,7 +558,7 @@ const Comment = (props) => {
           <Text>{comment.comment}</Text>
         </TextContainer>
         <Details>
-          <Spacer />
+          {expanded && <Spacer />}
           <VotesContainer>
             <VotesDiv>
               {selectVoters(comment.upvotes).map((upvote, index) => {
@@ -523,7 +578,11 @@ const Comment = (props) => {
                     fontWeight: 700,
                   }}
                 >
-                  and {comment.upvotes.length - 5} other users
+                  {upvoted && 'You, '} and{' '}
+                  {upvoted
+                    ? comment.upvotes.length - 5
+                    : comment.upvotes.length - 1}{' '}
+                  other users
                 </b>{' '}
                 {/* have upvoted this review */}
               </OtherVoters>
@@ -544,26 +603,25 @@ const Comment = (props) => {
           <FontAwesomeIcon className="fa-icon" icon={faReply} />
           Reply
         </ExpandGroup>
-        {comment.comments.length > 0 && (
-          <ExpandGroup
-            onClick={() => {
-              return setExpanded(!expanded);
+
+        <ExpandGroup
+          onClick={() => {
+            return setExpanded(!expanded);
+          }}
+        >
+          {!expanded && <FontAwesomeIcon className="fa-icon" icon={faPlus} />}
+          {expanded && <FontAwesomeIcon className="fa-icon" icon={faMinus} />}
+          {!expanded && 'Expand'}
+          {expanded && 'Collapse'}{' '}
+          <b
+            style={{
+              fontWeight: 700,
             }}
           >
-            {!expanded && <FontAwesomeIcon className="fa-icon" icon={faPlus} />}
-            {expanded && <FontAwesomeIcon className="fa-icon" icon={faMinus} />}
-            {!expanded && 'Expand'}
-            {expanded && 'Collapse'}{' '}
-            <b
-              style={{
-                fontWeight: 700,
-              }}
-            >
-              {comment.comments.length}{' '}
-              {comment.comments.length === 1 ? 'comment' : 'comments'}
-            </b>
-          </ExpandGroup>
-        )}
+            {comment.comments.length > 0 ? comment.comments.length : ''}{' '}
+            {comment.comments.length <= 1 ? 'comment' : 'comments'}
+          </b>
+        </ExpandGroup>
 
         {showCommentGroup && (
           <CommentGroup>
@@ -586,8 +644,8 @@ const Comment = (props) => {
                   type: 'text',
                   font_family: 'Josefin Sans Regular',
                   fill: `${props.theme.colors.alternate_light_background_10}`,
-                  color: `${props.theme.colors.dark_background_60}`,
-                  p_color: `${props.theme.colors.dark_background_20}`,
+                  color: `${props.theme.colors.saturated_contrast_60}`,
+                  p_color: `${props.theme.colors.saturated_contrast_20}`,
                   padding: '8px',
                   grp_margin: '0px',
                   grp_padding: '0px',

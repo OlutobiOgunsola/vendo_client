@@ -9,7 +9,7 @@ const setReview = (review) => {
 
 const beginGetReview = () => {
   return {
-    type: 'BEGIN_SET_REVIEW',
+    type: 'BEGIN_GET_REVIEW',
   };
 };
 

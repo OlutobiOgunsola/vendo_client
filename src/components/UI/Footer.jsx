@@ -20,7 +20,7 @@ const ParentContainer = styled.div`
     height: 496px;
   }
   @media (max-width: 480px) {
-    padding: 0px 20px;
+    padding: 0px 10px;
     height: 600px;
   }
 `;
@@ -39,6 +39,7 @@ const Container = styled.div`
   }
   @media (max-width: 480px) {
     height: 600px;
+    width: 300px;
     flex-flow: row wrap;
     .order-1 {
       order: 1;
@@ -146,6 +147,21 @@ const LinkBar = styled.div`
     width: 500px;
     height: 306px;
   }
+  @media (max-width: 700px) {
+    flex-flow: row wrap;
+    width: 400px;
+    height: 306px;
+  }
+  @media (max-width: 600px) {
+    flex-flow: row wrap;
+    width: 100%;
+    height: 306px;
+  }
+  @media (max-width: 400px) {
+    flex-flow: row wrap;
+    width: 300px;
+    height: 306px;
+  }
 `;
 
 const Links = styled.div`
@@ -162,6 +178,7 @@ const Links = styled.div`
   @media (max-width: 480px) {
     width: 100%;
     height: 306px;
+    padding: 0px;
   }
 `;
 

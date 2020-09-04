@@ -6,7 +6,7 @@ const slideInAnimation = keyframes`${slideInLeft}`;
 
 const ParentContainer = styled.div`
   width: 40%;
-  height: 40px;
+  height: 30px;
   position: fixed;
   top: 36px;
   left: 30%;
@@ -30,15 +30,24 @@ const Container = styled.div`
 
 const Text = styled.p`
   font-size: 14px;
-  font-family: 'Josefin Sans Regular';
+  line-height: 30px;
+  font-family: 'Josefin Sans Light';
   color: ${(props) => {
     switch (props.type) {
       case 'error':
         return `${props.theme.colors.alert_text_red}`;
       case 'success':
         return `${props.theme.colors.alert_text_green}`;
+      case 'warning':
+        return `${props.theme.colors.alert_text_amber}`;
     }
   }};
+  @media (max-width: 700px) {
+    font-size: 12px;
+  }
+  @media (max-width: 500px) {
+    font-size: 9px;
+  }
 `;
 
 const Alert = (props) => {

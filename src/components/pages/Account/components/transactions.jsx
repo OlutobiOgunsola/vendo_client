@@ -6,11 +6,13 @@ import { useState } from 'react';
 
 import Loader from '@/components/widgets/UI/Loader';
 import defaultPhoto from '@/assets/images/icons/account/Profile.svg';
-import ReviewItem from '@/components/UI/interface/account/Review';
+import TransactionItem from '@/components/UI/interface/account/Transaction';
 import emptyReview from '@/assets/images/lottie/emptyReview.json';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignInAlt, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import InputRow from '@/components/widgets/UI/InputRow';
+import Button from '@/components/UI/buttons/Button';
 
 const ParentContainer = styled.div`
   width: 100%;
@@ -70,10 +72,11 @@ const EmptyStateSubtext = styled.p`
   margin: 2px 0px;
   color: ${(props) => props.theme.colors.saturated_contrast};
 `;
-const Reviews = (props) => {
+
+const Transactions = (props) => {
   const [collection, setCollection] = useState('received');
-  const [r_reviews, setR_Reviews] = useState([]);
-  const [i_reviews, setI_Reviews] = useState([]);
+  const [r_transactions, setR_Transactions] = useState([]);
+  const [i_transactions, setI_Transactions] = useState([]);
   const [mounted, setMounted] = useState(true);
   const [isLoading, setLoading] = useState(false);
   const [g_opacity, setG_Opacity] = useState(0.4);
@@ -90,19 +93,23 @@ const Reviews = (props) => {
   };
 
   const user = props.user;
+  console.log(user);
   useEffect(() => {
     if (mounted) {
-      setR_Reviews(props.user.user.r_reviews);
-      setI_Reviews(props.user.user.i_reviews);
+      setR_Transactions(props.user.user.r_transactions);
+      setI_Transactions(props.user.user.i_transactions);
     }
     return () => {
       setMounted(false);
     };
   }, [user]);
-
   useEffect(() => {
     getOpacity();
   }, [collection]);
+
+  const addTransaction = () => {
+    return null;
+  };
 
   const LottieOptions = {
     loop: false,
@@ -112,9 +119,6 @@ const Reviews = (props) => {
       preserveAspectRatio: 'xMidYMid slice',
     },
   };
-
-  // console.log('i reviews', i_reviews);
-  // console.log('r reviews', r_reviews);
 
   return (
     <ParentContainer>
@@ -145,71 +149,70 @@ const Reviews = (props) => {
                   className="fa-icon given"
                   icon={faSignOutAlt}
                 />{' '}
-                Given
+                Initiated
               </Collection>
             </Collections>
-            {collection === 'received' && r_reviews && (
+            {collection === 'received' && r_transactions && (
               <>
-                {r_reviews.map((review) => {
+                {r_transactions.map((transaction) => {
                   return (
-                    <ReviewItem
+                    <TransactionItem
+                      domain="owner"
+                      type="received"
                       user_id={props.user.user._id}
-                      user_photo={props.user.user.photo || defaultPhoto}
-                      review={review}
-                      key={review._id}
-                      id={review._id}
+                      transaction={transaction}
+                      key={transaction._id}
+                      id={transaction._id}
                       updater={props.updater}
                       user_token={props.user.user.jwt}
                     />
                   );
                 })}
-                {r_reviews.length === 0 && (
+                {r_transactions.length === 0 && (
                   <>
                     <Lottie options={LottieOptions} height={300} width={300} />
-                    <EmptyStateText
-                      style={{
-                        textAlign: 'center',
-                        color: `${props.theme.colors.saturated_contrast}`,
-                      }}
-                    >
-                      No reviews yet.
-                    </EmptyStateText>
+                    <EmptyStateText>No transactions yet</EmptyStateText>
                     <EmptyStateSubtext>
-                      Receive transactions to receive reviews.
+                      Share your profile to get more transactions
                     </EmptyStateSubtext>
                   </>
                 )}
               </>
             )}
-            {collection === 'given' && i_reviews && (
+            {collection === 'given' && i_transactions && (
               <>
-                {i_reviews.map((review) => {
+                <InputRow>
+                  <Button
+                    to={'#'}
+                    height="30"
+                    width="80"
+                    fill={props.theme.colors.dark_background}
+                    transition_color={'white'}
+                    margin="16px 0 0 auto"
+                    onClick={addTransaction}
+                  >
+                    Add
+                  </Button>
+                </InputRow>
+                {i_transactions.map((transaction) => {
                   return (
-                    <ReviewItem
+                    <TransactionItem
+                      domain="visitor"
+                      type="given"
                       user_id={props.user.user._id}
-                      user_photo={props.user.user.photo || defaultPhoto}
-                      review={review}
-                      key={review._id}
-                      id={review._id}
+                      transaction={transaction}
+                      key={transaction._id}
+                      id={transaction._id}
                       updater={props.updater}
                       user_token={props.user.user.jwt}
                     />
                   );
                 })}
-                {i_reviews.length === 0 && (
+                {i_transactions.length === 0 && (
                   <>
                     <Lottie options={LottieOptions} height={300} width={300} />
-                    <EmptyStateText
-                      style={{
-                        textAlign: 'center',
-                        color: `${props.theme.colors.saturated_contrast}`,
-                      }}
-                    >
-                      No reviews yet.
-                    </EmptyStateText>
-                    <EmptyStateSubtext>
-                      Add a transaction before you can add a review.
-                    </EmptyStateSubtext>
+                    <EmptyStateText>No transactions yet</EmptyStateText>
+                    <EmptyStateSubtext>Add a new transaction</EmptyStateSubtext>
                   </>
                 )}
               </>
@@ -221,11 +224,6 @@ const Reviews = (props) => {
   );
 };
 
-Reviews.propTypes = {
-  reviews: PropTypes.array,
-  updater: PropTypes.func,
-  loading: PropTypes.func,
-  user: PropTypes.object,
-};
+Transactions.propTypes = {};
 
-export default withTheme(Reviews);
+export default withTheme(Transactions);

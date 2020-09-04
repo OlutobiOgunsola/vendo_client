@@ -1,18 +1,21 @@
-// PERSONAL DETAILS
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import styled, { withTheme } from 'styled-components';
+import styled, { withTheme, keyframes } from 'styled-components';
+import axios from 'axios';
+import ReactTooltip from 'react-tooltip';
+import { fadeIn } from 'react-animations';
+
+import { editUser, setUserPhoto } from '@/actions/user';
+
 import Input from '@/components/widgets/UI/Input';
 import Button from '@/components/UI/buttons/Button';
 import Edit from '@/assets/images/icons/account/Edit.svg';
-import { editUser, setUserPhoto } from '@/actions/user';
-import axios from 'axios';
 import setAlert from '@/assets/helperFunctions/alerts';
 import InputRow from '@/components/widgets/UI/InputRow';
-import storesArray from '@/assets/fixtures/stores';
+// import storesArray from '@/assets/fixtures/stores';
 import DefaultImage from '@/assets/images/store/DefaultImage.png';
-import ReactTooltip from 'react-tooltip';
+
+const storeAnimation = keyframes`${fadeIn}`;
 
 const ParentContainer = styled.div`
   width: 100%;
@@ -27,8 +30,20 @@ const Container = styled.div`
     height: 0.1px;
     margin: 32px auto;
     border: none;
-    opacity: 0;
+    opacity: 0.6;
     background: ${(props) => props.theme.colors.alternate_light_background_10};
+  }
+
+  @media (max-width: 700px) {
+    hr {
+      margin: 24px auto;
+    }
+  }
+
+  @media (max-width: 500px) {
+    hr {
+      margin: 12px auto;
+    }
   }
 `;
 // section headlines
@@ -37,7 +52,7 @@ const S_Head = styled.h3`
   font-family: 'Noto Sans Regular';
   font-size: 16px;
   font-weight: 500;
-  color: ${(props) => props.theme.colors.dark_background_80};
+  color: ${(props) => props.theme.colors.saturated_font_darker};
   margin: 0;
 `;
 
@@ -55,6 +70,15 @@ const Header = styled.span`
   margin-top: 60px;
   &:first-child {
     margin-top: 32px;
+  }
+  @media (max-width: 700px) {
+    margin-top: 48px;
+  }
+  @media (max-width: 500px) {
+    margin-top: 32px;
+    &:first-child {
+      margin-top: 24px;
+    }
   }
 `;
 
@@ -79,25 +103,26 @@ const Stores = styled.div`
 const Store = styled.img`
   width: 95px;
   height: 95px;
+  animation: 1s ${storeAnimation};
   box-sizing: border-box;
-  border: 5px solid
-    ${(props) => {
-      switch (props.platform) {
-        case 'facebook':
-          return '#395185';
+  border-style: solid;
+  border-color: ${(props) => {
+    switch (props.platform) {
+      case 'facebook':
+        return '#395185';
 
-        case 'twitter':
-          return '#55acee';
+      case 'twitter':
+        return '#55acee';
 
-        case 'instagram':
-          return '#d53f90';
+      case 'instagram':
+        return '#d53f90';
 
-        default:
-          return `${props.theme.colors.yellow}`;
-      }
-    }};
+      default:
+        return `${props.theme.colors.yellow}`;
+    }
+  }};
   display: inline-block;
-  margin-left: 16px;
+  margin: 4px 16px 0px 0px;
   &:first-child {
     margin-left: 0px;
   }
@@ -105,12 +130,26 @@ const Store = styled.img`
     margin-left: 0px;
   }
   border-radius: 50%;
+
+  @media (max-width: 700px) {
+    width: 55px;
+    height: 55px;
+    margin: 2px 4px;
+    border-width: 3px;
+  }
+  @media (max-width: 500px) {
+    width: 35px;
+    height: 35px;
+    margin-left: 2px 4px;
+    border-width: 1px;
+  }
 `;
 
 const P_Details = (props) => {
   const [f_name, setF_name] = useState('');
   const [l_name, setL_name] = useState('');
   const [u_name, setU_name] = useState('');
+  const [mounted, setMounted] = useState(true);
   const [u_nameValid, setU_NameValid] = useState(true);
   const [bio, setBio] = useState('');
   const [email, setEmail] = useState('');
@@ -119,6 +158,18 @@ const P_Details = (props) => {
   const [p_photo, setP_Photo] = useState('');
   const [p_detailsActive, setP_Details] = useState(false);
   const [acctActive, setAcctActive] = useState(false);
+
+  const stores = props.user.user.registered_stores || [];
+  const [storesArray, setStoresArray] = useState(stores);
+
+  useEffect(() => {
+    if (mounted) {
+      setStoresArray(stores);
+    }
+    return () => {
+      setMounted(false);
+    };
+  }, [stores]);
 
   // const storesArray = props.user.user.stores || [];
   const toggleP_DetailsActive = (active) => {
@@ -243,13 +294,14 @@ const P_Details = (props) => {
     const userObj = {};
     // console.log(f_name, l_name, bio, email);
 
-    if (f_name !== props.user.user.firstname) {
-      userObj.firstname = f_name;
-    } else if (l_name !== props.user.user.lastname) {
-      userObj.lastname = l_name;
-    } else if (bio !== props.user.user.bio) {
-      userObj.bio = bio;
-    } else if (email && emailValid) {
+    // if (f_name !== props.user.user.firstname) {
+    userObj.firstname = f_name;
+    // } else if (l_name !== props.user.user.lastname) {
+    userObj.lastname = l_name;
+    // } else if (bio !== props.user.user.bio) {
+    userObj.bio = bio;
+    // } else
+    if (email && emailValid) {
       userObj.email = validatedEmail.toLowerCase();
     }
 
@@ -278,8 +330,7 @@ const P_Details = (props) => {
       if (typeof p_photo === 'object') {
         uploadImage();
       }
-      if (u_name && u_nameValid) {
-        console.log('setting username');
+      if (u_name !== props.user.user.username && u_nameValid) {
         userObj.username = u_name.toLowerCase();
       }
 
@@ -360,22 +411,27 @@ const P_Details = (props) => {
     <ParentContainer>
       <Container>
         <ReactTooltip effect={'solid'} />
-        <Header>
-          <S_Head>LINKED STORES</S_Head>
-        </Header>
-        <hr />
-        <Stores>
-          {storesArray.map((store) => {
-            return (
-              <Store
-                key={store.id}
-                src={store.photo || DefaultImage}
-                platform={store.platform}
-                data-tip={store.name}
-              />
-            );
-          })}
-        </Stores>
+        {props.user.user.accountType === 'Vendor' && (
+          <>
+            <Header>
+              <S_Head>LINKED STORES</S_Head>
+            </Header>
+            <hr />
+            <Stores>
+              {storesArray.length > 0 &&
+                storesArray.map((store) => {
+                  return (
+                    <Store
+                      data-tip={store.name}
+                      key={store._id}
+                      src={store.photo || DefaultImage}
+                      platform={store.platform}
+                    />
+                  );
+                })}
+            </Stores>
+          </>
+        )}
         <Header>
           <S_Head>ACCOUNT</S_Head>
           <EditIcon src={Edit} onClick={toggleAcctActive} />
@@ -399,8 +455,8 @@ const P_Details = (props) => {
                 name: 'u_name',
                 type: 'text',
                 fill: `${props.theme.colors.alternate_light_background_10}`,
-                color: `${props.theme.colors.dark_background_60}`,
-                p_color: `${props.theme.colors.dark_background_20}`,
+                color: `${props.theme.colors.saturated_contrast_60}`,
+                p_color: `${props.theme.colors.saturated_contrast_20}`,
                 padding: '8px',
                 placeholder: 'Username',
                 label: { display: 'none' },
@@ -448,8 +504,8 @@ const P_Details = (props) => {
                 name: 'p_photo',
                 type: 'file',
                 fill: `${props.theme.colors.alternate_light_background_10}`,
-                color: `${props.theme.colors.dark_background_60}`,
-                p_color: `${props.theme.colors.dark_background_20}`,
+                color: `${props.theme.colors.saturated_contrast_60}`,
+                p_color: `${props.theme.colors.saturated_contrast_20}`,
                 padding: '8px',
                 placeholder: 'Profile Photo',
                 label: { display: 'none' },
@@ -468,8 +524,8 @@ const P_Details = (props) => {
                 name: 'f_name',
                 type: 'text',
                 fill: `${props.theme.colors.alternate_light_background_10}`,
-                color: `${props.theme.colors.dark_background_60}`,
-                p_color: `${props.theme.colors.dark_background_20}`,
+                color: `${props.theme.colors.saturated_contrast_60}`,
+                p_color: `${props.theme.colors.saturated_contrast_20}`,
                 padding: '8px',
                 placeholder: 'First name',
                 label: { display: 'none' },
@@ -488,8 +544,8 @@ const P_Details = (props) => {
                 name: 'l_name',
                 type: 'text',
                 fill: `${props.theme.colors.alternate_light_background_10}`,
-                color: `${props.theme.colors.dark_background_60}`,
-                p_color: `${props.theme.colors.dark_background_20}`,
+                color: `${props.theme.colors.saturated_contrast_60}`,
+                p_color: `${props.theme.colors.saturated_contrast_20}`,
                 padding: '8px',
                 placeholder: 'Last name',
                 label: { display: 'none' },
@@ -509,8 +565,8 @@ const P_Details = (props) => {
                 name: 'email',
                 type: 'email',
                 fill: `${props.theme.colors.alternate_light_background_10}`,
-                color: `${props.theme.colors.dark_background_60}`,
-                p_color: `${props.theme.colors.dark_background_20}`,
+                color: `${props.theme.colors.saturated_contrast_60}`,
+                p_color: `${props.theme.colors.saturated_contrast_20}`,
                 padding: '8px',
                 placeholder: 'Email address',
                 label: { display: 'none' },
@@ -533,9 +589,10 @@ const P_Details = (props) => {
                 columns: '30',
                 rows: '30',
                 height: '100',
+                width: '350',
                 fill: `${props.theme.colors.alternate_light_background_10}`,
-                color: `${props.theme.colors.dark_background_60}`,
-                p_color: `${props.theme.colors.dark_background_20}`,
+                color: `${props.theme.colors.saturated_contrast_60}`,
+                p_color: `${props.theme.colors.saturated_contrast_20}`,
                 padding: '8px',
                 placeholder: 'Bio',
                 label: { display: 'none' },
@@ -575,8 +632,8 @@ const P_Details = (props) => {
               name: 'account-type',
               type: 'text',
               fill: `${props.theme.colors.alternate_light_background_10}`,
-              color: `${props.theme.colors.dark_background_60}`,
-              p_color: `${props.theme.colors.dark_background_20}`,
+              color: `${props.theme.colors.saturated_contrast_60}`,
+              p_color: `${props.theme.colors.saturated_contrast_20}`,
               padding: '8px',
               placeholder: 'Account Type',
               label: { display: 'none' },
@@ -597,8 +654,8 @@ const P_Details = (props) => {
               name: 'billing-type',
               type: 'text',
               fill: `${props.theme.colors.alternate_light_background_10}`,
-              color: `${props.theme.colors.dark_background_60}`,
-              p_color: `${props.theme.colors.dark_background_20}`,
+              color: `${props.theme.colors.saturated_contrast_60}`,
+              p_color: `${props.theme.colors.saturated_contrast_20}`,
               padding: '8px',
               placeholder: 'Billing Tier',
               label: { display: 'none' },

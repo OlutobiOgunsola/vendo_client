@@ -2,11 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 
 const LogoContainer = styled.svg`
-  fill: ${(props) => props.theme.colors.dark_background_60};
+  fill: ${(props) => props.theme.colors.saturated_contrast_60};
   transition: all 0.2s ease-in-out;
   margin: 0;
   &:hover {
-    fill: ${(props) => props.theme.colors.dark_background};
+    fill: ${(props) => props.theme.colors.saturated_contrast};
     cursor: pointer;
   }
 `;

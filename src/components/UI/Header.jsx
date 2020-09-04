@@ -113,12 +113,30 @@ const IconsBox = styled.div`
 
 const Add = styled.img`
   margin: 0px 8px;
+  opacity: 0.6;
+  transition: all 0.25s ease-in-out;
+  &:hover {
+    cursor: pointer;
+    opacity: 1;
+  }
 `;
 const Notification = styled.img`
   margin: 0px 8px;
+  opacity: 0.6;
+  transition: all 0.25s ease-in-out;
+  &:hover {
+    cursor: pointer;
+    opacity: 1;
+  }
 `;
 const Transaction = styled.img`
   margin: 0px 8px;
+  opacity: 0.6;
+  transition: all 0.25s ease-in-out;
+  &:hover {
+    cursor: pointer;
+    opacity: 1;
+  }
 `;
 
 const FloatRight = styled.div`
@@ -184,6 +202,14 @@ const Header = (props) => {
       });
   };
 
+  const openTransactions = () => {
+    return props.history.push('/account/transactions');
+  };
+
+  const openNotifications = () => {
+    return props.history.push('/notifications');
+  };
+
   const firstName = userObj.name || 'User';
   const photo = userObj.photo || defaultPhoto;
 
@@ -205,19 +231,24 @@ const Header = (props) => {
         </LogoContainer>
       )}
       {window.location.pathname !== '/' && (
-        <LogoContainer>
-          <Logo />
-        </LogoContainer>
+        <>
+          <LogoContainer>
+            <Logo />
+          </LogoContainer>
+          <SearchBox placeholder="Search" type="search" />
+        </>
       )}
       {loggedIn && (
         <>
-          <SearchBox placeholder="Search" type="search" />
           <FloatRight>
             <NameBox>Hello, {firstName} </NameBox>
             <IconsBox>
               <Add src={AddIcon} />
-              <Notification src={NotificationIcon} />
-              <Transaction src={TransactionIcon} />
+              <Notification
+                src={NotificationIcon}
+                onClick={openNotifications}
+              />
+              <Transaction src={TransactionIcon} onClick={openTransactions} />
             </IconsBox>
             <HeaderProfile
               username={firstName}

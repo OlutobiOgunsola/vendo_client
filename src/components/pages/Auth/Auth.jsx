@@ -38,7 +38,7 @@ const ParentContainer = styled.div`
 const Container = styled.div`
   width: 750px;
   height: 400px;
-  background: ${(props) => props.theme.colors.white};
+  background: white;
   border: none;
   border-radius: 0px 4px 4px 0px;
   display: flex;
@@ -300,14 +300,20 @@ const ErrorMsg = styled.p`
 
 const BigCircle = styled.span`
   position: absolute;
-  left: -100px;
-  top: 60%;
+  left: 200px;
+  top: 30%;
   z-index: 1;
   width: 400px;
   height: 400px;
   background: ${(props) => props.theme.colors.yellow_80};
   border: none;
   border-radius: 50%;
+  @media (max-width: 600px) {
+    width: 300px;
+    height: 300px;
+    left: 20px;
+    top: 50%;
+  }
 `;
 const Big2Circle = styled.span`
   position: absolute;
@@ -443,15 +449,25 @@ const Auth = (props) => {
             }
             props.setUser(result.data.data);
             props.loadUser(result.data.data._id);
-            props.history.push('/account/overview');
+            const destination = JSON.parse(
+              localStorage.getItem('vendo_prev_location_url'),
+            );
+            if (!destination) {
+              props.history.push('/account/settings');
+            }
+            if (destination) {
+              props.history.push(destination);
+            }
+            return;
           } else {
             setError('Invalid credentials');
           }
         })
         .catch((err) => {
+          console.log(err);
           setValidating(false);
           setLoginValid(false);
-          setError('Invalid credentials');
+          setError('Invalid credentials. Please try again');
         });
     } else {
       setError('Invalid details. Please correct highlighted fields');
@@ -491,7 +507,17 @@ const Auth = (props) => {
           localStorage.setItem('vendo_id', res.data.data._id);
           props.setUser(res.data.data);
           props.loadUser(res.data.data._id);
-          return props.history.push('/account/settings');
+          const destination = JSON.parse(
+            localStorage.getItem('vendo_prev_location_url'),
+          );
+          console.log('destination', destination);
+          if (!destination) {
+            props.history.push('/account/settings');
+          }
+          if (destination) {
+            props.history.push(destination);
+          }
+          return;
         })
         .catch((err) => {
           setValidating(false);
@@ -520,6 +546,7 @@ const Auth = (props) => {
 
   const validateUsername = (e) => {
     if (username) {
+      console.log('validating username');
       setValidating(true);
       const regex = /^[A-Za-z0-9_]+$/;
       const u_name = username.toString();
@@ -732,11 +759,11 @@ const Auth = (props) => {
                 width={250}
                 height={40}
                 fill={props.theme.colors.dark_background}
-                color={props.theme.colors.white}
+                color={'white'}
                 className="toggle"
                 display={'block'}
                 transition_fill={props.theme.colors.yellow}
-                transition_color={props.theme.colors.white}
+                transition_color={'white'}
                 border={'none'}
                 onClick={loginSubmit}
                 margin={'16px 0px'}
@@ -843,10 +870,10 @@ const Auth = (props) => {
                 height={40}
                 fill={props.theme.colors.dark_background}
                 className="toggle"
-                color={props.theme.colors.white}
+                color={'white'}
                 display={'block'}
                 transition_fill={props.theme.colors.yellow}
-                transition_color={props.theme.colors.white}
+                transition_color={'white'}
                 border={'none'}
                 margin={'16px 0px'}
                 onClick={signupSubmit}

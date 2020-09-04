@@ -10,6 +10,7 @@ const ParentContainer = styled.div`
   height: 400px;
   background: white;
   border-radius: 4px;
+  background: ${(props) => props.theme.colors.white};
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
   @media (max-width: 700px) {
     width: 100%;
@@ -48,6 +49,8 @@ const NameBar = styled.span`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  margin-bottom: 8px;
+  color: white;
   @media (max-width: 700px) {
     margin: 0;
     text-align: left;
@@ -58,7 +61,7 @@ const FirstName = styled.p`
   font-size: 18px;
   text-transform: uppercase;
   display: inline;
-  color: ${(props) => props.theme.colors.alternate_light_background};
+  color: ${(props) => props.theme.colors.saturated_contrast};
   @media (max-width: 700px) {
     font-size: 14px;
     margin: 0;
@@ -100,7 +103,7 @@ const Bio = styled.p`
 const Header = styled.p`
   font-family: 'Noto Sans Regular';
   font-size: 12px;
-  margin: 8px 0px;
+  margin: 16px 0px 8px 0px;
   color: ${(props) => props.theme.colors.saturated_contrast};
   @media (max-width: 700px) {
     display: none;

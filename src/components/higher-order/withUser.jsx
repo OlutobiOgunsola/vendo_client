@@ -22,6 +22,9 @@ function withUser(WrappedComponent, authRequired = false) {
         if (id && this.state.mounted) {
           const userObj = await this.props.loadUser(id);
           if (!userObj && authRequired) {
+            const match = this.props.match;
+            const path = match.url;
+            localStorage.setItem('vendo_prev_location_url', path);
             this.props.history.push('/auth');
           }
           // if (this.state.mounted) {
@@ -36,6 +39,9 @@ function withUser(WrappedComponent, authRequired = false) {
           });
           // }
         } else if (!id && this.state.mounted && authRequired) {
+          const match = this.props.match;
+          const path = match.url;
+          localStorage.setItem('vendo_prev_location_url', JSON.stringify(path));
           this.props.history.push('/auth');
         }
       }
