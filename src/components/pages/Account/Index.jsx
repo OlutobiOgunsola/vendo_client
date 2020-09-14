@@ -63,13 +63,12 @@ const Container = styled.div`
 const ActionContainer = styled.div`
   width: 633px;
   height: auto;
-  background: white;
   box-sizing: border-box;
   padding: 40px 32px;
   border-radius: 4px;
   position: relative;
   z-index: 1;
-  background: ${(props) => props.theme.colors.white};
+  background: ${(props) => props.theme.colors.dark_background};
   @media (max-width: 900px) {
     width: 500px;
   }

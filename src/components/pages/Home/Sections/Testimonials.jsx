@@ -98,7 +98,7 @@ const Testimonials = (props) => {
   //dirty hack gives the user a flash of "undefined" upon immediate load. Check
   const setActive = (id) => {
     setOpen(false);
-    setTimeout(() => {
+    const timeOut = setTimeout(() => {
       const index = id;
       const select = t_array[index];
       const name = select.l_name;
@@ -106,6 +106,8 @@ const Testimonials = (props) => {
       setSelected(select);
       setOpen(true);
     }, 500);
+
+    return clearTimeout(timeOut);
   };
 
   useEffect(() => {
@@ -116,15 +118,17 @@ const Testimonials = (props) => {
 
     const slider = setInterval(() => {
       if (count === 3) {
-        setCount((count -= 3));
+        setCount((count) => (count -= 3));
       } else {
-        setCount(count++);
+        setCount((count) => count++);
       }
-      return setActive(count);
+      setActive(count);
     }, 5000);
 
-    return () => clearInterval(slider);
-  }, []);
+    return () => {
+      clearInterval(slider);
+    };
+  }, [count]);
 
   return (
     <ParentContainer>

@@ -38,7 +38,7 @@ const Highlights = styled.div`
   @media (min-width: 816px) and (max-width: 1080px) {
     flex-flow: row wrap;
     height: 422px;
-    width: 616px;
+    width: 648px;
   }
 
   @media (max-width: 815px) {
@@ -64,13 +64,16 @@ const BigHighlights = styled.div`
   padding: 0;
 
   @media (min-width: 816px) and (max-width: 1080px) {
-    flex-flow: column wrap;
+    flex-flow: row nowrap;
+    width: 648px;
     height: 280px;
     align-items: center;
+    justify-content: space-between;
   }
 
   @media (max-width: 815px) {
     height: 616px;
+    width: 432px;
     margin-bottom: 0px;
     justify-content: center;
     align-items: flex-start;

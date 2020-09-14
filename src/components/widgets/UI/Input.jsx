@@ -387,7 +387,7 @@ const Input = React.forwardRef((props, ref) => {
     if (props.inputType !== 'imagepicker') {
       props.handleChange(value);
     }
-  }, [value]);
+  }, [value]); 
 
   const submitted = props.submitted;
   // function to clear input if the form has been submitted for comments mostly, then maybe reviews or whatever other possible use cases

@@ -11,21 +11,21 @@ const ParentContainer = styled.div`
   width: 100%;
   height: 328px;
   box-sizing: border-box;
-  background: ${(props) => props.theme.colors.light_background};
+  background: ${(props) => props.theme.colors.review_background};
   @media (min-width: 1280px) {
-    padding: 0px 200px;
+    padding: 40px 200px;
     height: 360px;
   }
   @media (min-width: 880px) and (max-width: 1279px) {
-    padding: 0px 100px;
+    padding: 40px 100px;
     height: 360px;
   }
   @media (min-width: 533px) and (max-width: 879px) {
-    padding: 0px 50px;
+    padding: 40px 50px;
     height: 320px;
   }
   @media (max-width: 532px) {
-    padding: 0px 20px;
+    padding: 30px 20px;
     height: 320px;
   }
   @media (max-width: 480px) {

@@ -12,7 +12,7 @@ const ParentContainer = styled.span`
   }
 `;
 
-const Label = styled.p`
+const Label = styled.label`
   width: 40%;
   display: inline-block;
   font-family: 'Noto Sans Regular';
@@ -26,7 +26,7 @@ const Label = styled.p`
 const InputRow = (props) => {
   return (
     <ParentContainer>
-      <Label>{props.label}</Label>
+      <Label htmlFor={props.for}>{props.label}</Label>
       {props.children}
     </ParentContainer>
   );

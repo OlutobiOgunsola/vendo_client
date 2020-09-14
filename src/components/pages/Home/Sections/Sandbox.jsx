@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -6,6 +7,8 @@ import 'aos/dist/aos.css';
 import SandboxLogo from '@/components/UI/interface/home/SandboxLogo';
 import PadLogoSmall from '@/assets/images/icons/sandbox/Padlock_2.svg';
 import PadLogoBig from '@/assets/images/icons/sandbox/Padlock.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons';
 
 const ParentContainer = styled.div`
   background: ${(props) => props.theme.colors.dark_background};
@@ -172,6 +175,76 @@ const BigPadlock = styled.img`
   }
 `;
 
+const Action = styled(Link)`
+  position: relative;
+  z-index: 9;
+  display: inline-block;
+  line-height: 50px;
+  width: 100%;
+  height: 50px;
+  margin: 0 auto;
+  text-align: center;
+  box-sizing: border-box;
+  color: ${(props) =>
+    props.borders
+      ? `${props.theme.colors.yellow}`
+      : `${props.theme.colors.saturated_contrast}`};
+  border: ${(props) =>
+    props.borders ? `1px solid ${props.theme.colors.yellow}` : 'none'};
+  border-radius: 4px;
+  transition: all 0.5s ease-in-out;
+  text-decoration: none;
+  .fa-icon {
+    width: 0px;
+    position: relative;
+    left: 0px;
+    margin-left: 0px;
+    transition: all 1s ease-in-out;
+    opacity: 0;
+    color: ${(props) => props.theme.colors.dark_background};
+  }
+  &:hover {
+    cursor: pointer;
+    color: ${(props) => props.theme.colors.dark_background};
+    /* box-shadow: 0px 4px 10px ${(props) => props.theme.colors.yellow_20}; */
+    .fa-icon {
+      width: 24px;
+      left: 8px;
+      margin-left: 0px;
+      opacity: 1;
+    }
+    border: none;
+  }
+  &:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    top: -0.5px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: ${(props) => props.theme.colors.yellow};
+    z-index: -1;
+    transform: scaleX(0);
+    transition-property: transform;
+    -webkit-transform-origin: 0 50%;
+    transform-origin: 0 50%;
+    -webkit-transition-property: transform;
+    transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+  &:hover:before {
+    transform: scaleX(1);
+  }
+  @media (max-width: 1000px) {
+    width: 400px;
+  }
+  @media (max-width: 900px) {
+    width: 300px;
+  }
+`;
+
 const Sandbox = (props) => {
   useEffect(() => {
     AOS.init({ duration: 500 });
@@ -198,9 +271,15 @@ const Sandbox = (props) => {
             money and pay the vendor when you are both satisfied with the
             service rendered.
           </Copy>
-          <CTAButton data-aos="fade-up-left" data-aos-duration="1000">
-            Try for free >
-          </CTAButton>
+          <Action
+            data-aos="fade-up-left"
+            data-aos-duration="1000"
+            to={'#'}
+            borders="true"
+          >
+            Try for <strong>FREE</strong>
+            <FontAwesomeIcon className="fa-icon" icon={faLongArrowAltRight} />
+          </Action>
         </CopyContainer>
       </Container>
     </ParentContainer>

@@ -2,8 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import Logo from '@/components/UI/interface/home/Logo.jsx';
+import AOS from 'aos';
 
-const ParentContainer = styled.div`
+const ParentContainer = styled.footer`
   background: ${(props) => props.theme.colors.footer_background};
   display: flex;
   align-items: center;

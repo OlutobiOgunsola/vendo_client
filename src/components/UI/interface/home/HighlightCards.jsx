@@ -17,7 +17,7 @@ const ParentContainer = styled.div`
   flex-basis: auto;
   border-radius: 8px;
   overflow: hidden;
-  margin: 0;
+  margin: 0 auto;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
   @media (min-width: 816px) and (max-width: 1080px) {
     width: ${(props) => (props.big ? '300px' : '142px')};

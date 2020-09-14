@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import styled, { withTheme, keyframes } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { fadeIn } from 'react-animations';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { setUser, loadUser } from '@/actions/user';
@@ -10,8 +11,10 @@ import { setUser, loadUser } from '@/actions/user';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-import BackgroundLight from '@/assets/images/backgrounds/auth/SVGLight.svg';
-import BackgroundDark from '@/assets/images/backgrounds/auth/SVGDark.svg';
+import signin_400 from '@/assets/images/backgrounds/auth/signin_400.jpg';
+import signin_200 from '@/assets/images/backgrounds/auth/signin_200.jpg';
+import signup_400 from '@/assets/images/backgrounds/auth/signup_400.jpg';
+import signup_200 from '@/assets/images/backgrounds/auth/signup_200.jpg';
 import Logo from '@/components/UI/interface/home/Logo';
 import Button from '@/components/UI/buttons/Button';
 
@@ -23,6 +26,8 @@ const Spin = keyframes`
     transform: rotate(360deg)
   }
 `;
+
+const FadeIn = keyframes(`${fadeIn}`);
 
 const ParentContainer = styled.div`
   width: 100%;
@@ -36,8 +41,9 @@ const ParentContainer = styled.div`
 `;
 
 const Container = styled.div`
-  width: 750px;
-  height: 400px;
+  width: 100%;
+  height: 100vh;
+  /* background: ${(props) => props.theme.colors.page_background}; */
   background: white;
   border: none;
   border-radius: 0px 4px 4px 0px;
@@ -49,6 +55,8 @@ const Container = styled.div`
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.25);
   @media (max-width: 880px) {
     width: 600px;
+    height: calc(100vh - 100px);
+    flex-flow: column nowrap;
   }
   @media (max-width: 630px) {
     width: 400px;
@@ -64,33 +72,40 @@ const Container = styled.div`
 
 const Presentation = styled.div`
   transition: all 1s ease-in-out;
-  width: 300px;
-  height: 400px;
-  background: ${(props) => {
-    return props.login
-      ? props.theme.colors.auth_background_1
-      : props.theme.colors.auth_background_2;
-  }};
+  width: 600px;
+  height: 100vh;
+  background-image: ${(props) =>
+    props.login ? `url(${signin_400})` : `url(${signup_400})`};
+  background-size: cover;
   display: flex;
   flex-flow: column nowrap;
   position: relative;
+  overflow: hidden;
   padding: 20px;
   box-sizing: border-box;
+  box-shadow: 1px 0px 4px rgba(0, 0, 0, 0.2);
   text-align: center;
   align-items: center;
   justify-content: center;
+  @media (max-width: 1000px) {
+    width: 400px;
+  }
+  @media (max-width: 880px) {
+    width: 100%;
+    height: 300px;
+  }
   @media (max-width: 630px) {
     width: 400px;
-    height: 200px;
+    height: 300px;
   }
   @media (max-width: 430px) {
     width: 300px;
-    height: 200px;
+    height: 300px;
   }
 `;
 const Inputs = styled.div`
-  width: 450px;
-  height: auto;
+  width: calc(100% - 600px);
+  height: 100%;
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
@@ -100,66 +115,87 @@ const Inputs = styled.div`
     border-radius: 8px;
     border: 0.5px solid ${(props) => props.theme.colors.dark_background};
   }
+  @media (max-width: 1000px) {
+    width: calc(100% - 400px);
+  }
   @media (max-width: 880px) {
-    width: 300px;
+    width: 100%;
+    height: calc(100% - 300px);
   }
   @media (max-width: 630px) {
     width: 400px;
-    height: 400px;
+    height: calc(100% - 200px);
   }
   @media (max-width: 430px) {
     width: 300px;
-    height: 400px;
+    height: calc(100% - 200px);
   }
 `;
 
-const Svg_background = styled.img`
+const Modal = styled.div`
   width: 100%;
   height: 100%;
   position: absolute;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8));
   top: 0;
   left: 0;
   border: none;
+  padding: 32px;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
   @media (max-width: 630px) {
     width: 400px;
-    height: 200px;
+    height: 100%;
     flex-flow: column nowrap;
   }
   @media (max-width: 430px) {
     width: 300px;
+    padding: 16px;
   }
 `;
 
 const LogoContainer = styled.div`
   width: 30px;
   height: 30px;
-  position: absolute;
   z-index: 9;
-  top: 20px;
-  left: 20px;
+`;
+
+const Copy = styled.div`
+  text-align: left;
+  position: relative;
+  padding: 16px 0px;
+  margin: 0 auto 32px 0;
 `;
 
 const Headline = styled.h2`
   margin: 0;
-  color: ${(props) => props.theme.colors.font_high_contrast};
+  color: white;
   font-family: 'Oxygen Bold';
   font-size: 32px;
-  margin: 0 auto;
+  text-transform: uppercase;
   position: relative;
   z-index: 9;
   transition: all 0.25s ease-in-out;
 `;
 
 const SubHeader = styled.p`
-  width: 240px;
+  width: 300px;
   height: 36px;
-  margin: 16px auto;
+  margin: 16px auto 24px auto;
+  text-transform: uppercase;
   transition: all 0.25s ease-in-out;
-  color: ${(props) => props.theme.colors.font_high_contrast};
+  color: white;
   font-family: 'Josefin Sans Light';
   font-size: 18px;
+  line-height: 24px;
   position: relative;
   z-index: 9;
+  @media (max-width: 500px) {
+    width: 250px;
+    font-size: 14px;
+    margin: 8px auto 16px auto;
+  }
 `;
 
 const FormGroup = styled.form`
@@ -299,6 +335,7 @@ const ErrorMsg = styled.p`
 `;
 
 const BigCircle = styled.span`
+  animation: 3s ${FadeIn};
   position: absolute;
   left: 200px;
   top: 30%;
@@ -316,6 +353,7 @@ const BigCircle = styled.span`
   }
 `;
 const Big2Circle = styled.span`
+  animation: 3s ${FadeIn};
   position: absolute;
   left: 20px;
   top: 5%;
@@ -327,6 +365,7 @@ const Big2Circle = styled.span`
   border-radius: 50%;
 `;
 const Big4Circle = styled.span`
+  animation: 3s ${FadeIn};
   position: absolute;
   left: 80%;
   top: 5px;
@@ -638,37 +677,36 @@ const Auth = (props) => {
     <ParentContainer>
       <Container>
         <Presentation login={login}>
-          <Svg_background
-            src={
-              props.theme.scheme === 'dark' ? BackgroundLight : BackgroundDark
-            }
-          />
-          <LogoContainer>
-            <Logo />
-          </LogoContainer>
-          <Headline className="toggle">
-            {login ? 'Welcome' : 'Hi There!!'}
-          </Headline>
-          <SubHeader className="toggle">
-            {login
-              ? 'Please input your details to continue to Vendo'
-              : 'Sign up to start writing or receiving reviews on Vendo'}
-          </SubHeader>
-          <Button
-            width={130}
-            height={40}
-            border={`1px solid ${props.theme.colors.font_high_contrast}`}
-            position={'relative'}
-            z-index={9}
-            transition_fill={'white'}
-            transition_color={props.theme.colors.font_primary}
-            onClick={toggle}
-            margin={'0 auto'}
-            to={'#'}
-            className="toggle"
-          >
-            {login ? 'Sign Up >' : 'Sign In >'}
-          </Button>
+          <Modal>
+            <LogoContainer>
+              <Logo />
+            </LogoContainer>
+            <Copy>
+              <Headline className="toggle">
+                {login ? 'Welcome' : 'Hi There!!'}
+              </Headline>
+              <SubHeader className="toggle">
+                {login
+                  ? 'Please input your details to continue to Vendo'
+                  : 'Sign up to start writing or receiving reviews on Vendo'}
+              </SubHeader>
+              <Button
+                width={130}
+                height={40}
+                border={`1px solid ${props.theme.colors.font_high_contrast}`}
+                position={'relative'}
+                z-index={9}
+                transition_fill={'white'}
+                transition_color={props.theme.colors.font_primary}
+                onClick={toggle}
+                margin={'16 auto 0 0'}
+                to={'#'}
+                className="toggle"
+              >
+                {login ? 'Sign Up >' : 'Sign In >'}
+              </Button>
+            </Copy>
+          </Modal>
         </Presentation>
         <Inputs>
           {login && (

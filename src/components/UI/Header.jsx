@@ -16,13 +16,15 @@ import Alert from '../widgets/UI/Alert';
 import { clearUser } from '@/actions/user';
 import { connect } from 'react-redux';
 
-const ParentContainer = styled.div`
+const ParentContainer = styled.header`
   width: 100%;
   height: 70px;
   display: flex;
   align-items: center;
   box-sizing: border-box;
   margin: 0;
+  box-shadow: ${(props) =>
+    props.useOwnBackground ? '0px 2px 5px rgba(0, 0, 0, 0.5)' : ''};
   padding: ${(props) => (props.usePagePadding ? '' : '10px 200px')};
   @media (max-width: 900px) {
     padding: ${(props) => (props.usePagePadding ? '' : '10px 100px')};
@@ -53,8 +55,8 @@ const LogoContainer = styled.svg`
 
 const SearchBox = styled.input`
   background: rgba(196, 207, 212, 0.2);
-  width: 386px;
-  height: 32px;
+  width: 250px;
+  height: 30px;
   border: none;
   border-radius: 4px;
   padding: 7px 24px;
@@ -151,6 +153,7 @@ const Header = (props) => {
   const [userObj, setUserObj] = useState({});
   const [alerts, addAlert] = useState([]);
   const [mounted, setMounted] = useState(true);
+  const user = props.user;
 
   const cancel = axios.CancelToken;
   const source = cancel.source();
@@ -168,13 +171,7 @@ const Header = (props) => {
     return () => {
       source.cancel();
     };
-  }, [props.user]);
-
-  useEffect(() => {
-    return () => {
-      setMounted(false);
-    };
-  }, []);
+  }, [user]);
 
   const logout = () => {
     console.log('logout clicked');
@@ -186,18 +183,12 @@ const Header = (props) => {
         if (res.status === 200) {
           localStorage.clear();
           props.clearUser();
-          if (mounted) {
-            setAlert(addAlert, 'success', 'Successfully logged out');
-          }
           return props.history.push('/');
         }
       })
       .catch((err) => {
         if (axios.isCancel(err)) {
           console.log('Request cancelled', err.message);
-        }
-        if (mounted) {
-          setAlert(addAlert, 'error', 'An error occured. Please try again');
         }
       });
   };

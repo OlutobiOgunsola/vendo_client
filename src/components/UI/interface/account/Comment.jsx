@@ -470,66 +470,6 @@ const Comment = (props) => {
         });
     }
   };
-
-  // const showVotes = () => {
-  //   if (votes === 'upvotes') {
-  //     return (
-  //       <VotesContainer>
-  //         <VotesDiv>
-  //           {selectVoters(comment.upvotes).map((upvote, index) => {
-  //             return (
-  //               <Voter
-  //                 src={upvote.photo || DefaultImage}
-  //                 key={upvote._id}
-  //                 index={index}
-  //               />
-  //             );
-  //           })}
-  //         </VotesDiv>
-  //         {comment.upvotes.length > 5 && (
-  //           <OtherVoters>
-  //             <b
-  //               style={{
-  //                 fontWeight: 700,
-  //               }}
-  //             >
-  //               and {comment.upvotes.length - 5} other users
-  //             </b>{' '}
-  //             {/* have upvoted this review */}
-  //           </OtherVoters>
-  //         )}
-  //       </VotesContainer>
-  //     );
-  //   } else if (votes === 'downvotes') {
-  //     return (
-  //       <VotesContainer>
-  //         <VotesDiv>
-  //           {selectVoters(comment.downvotes).map((downvote, index) => {
-  //             return (
-  //               <Voter
-  //                 src={downvote.photo || DefaultImage}
-  //                 key={downvote._id}
-  //                 index={index}
-  //               />
-  //             );
-  //           })}
-  //         </VotesDiv>
-  //         {comment.downvotes.length > 5 && (
-  //           <OtherVoters>
-  //             <b
-  //               style={{
-  //                 fontWeight: 700,
-  //               }}
-  //             >
-  //               and {comment.downvotes.length - 5} other users
-  //             </b>{' '}
-  //             {/* have downvoted this review */}
-  //           </OtherVoters>
-  //         )}
-  //       </VotesContainer>
-  //     );
-  //   }
-  // };
   const date = new Date();
 
   return (
@@ -561,12 +501,12 @@ const Comment = (props) => {
           {expanded && <Spacer />}
           <VotesContainer>
             <VotesDiv>
-              {selectVoters(comment.upvotes).map((upvote, index) => {
+              {selectVoters(comment.upvotes).map((upvote) => {
+                console.log('upvotr', upvote);
                 return (
                   <Voter
                     src={upvote.photo || DefaultImage}
-                    key={upvote._id}
-                    index={index}
+                    key={upvote._id || upvote}
                   />
                 );
               })}
@@ -599,10 +539,12 @@ const Comment = (props) => {
             </DateContainer>
           </Author>
         </Details>
-        <ExpandGroup onClick={openComments}>
-          <FontAwesomeIcon className="fa-icon" icon={faReply} />
-          Reply
-        </ExpandGroup>
+        {props.user_id && (
+          <ExpandGroup onClick={openComments}>
+            <FontAwesomeIcon className="fa-icon" icon={faReply} />
+            Reply
+          </ExpandGroup>
+        )}
 
         <ExpandGroup
           onClick={() => {
@@ -623,7 +565,7 @@ const Comment = (props) => {
           </b>
         </ExpandGroup>
 
-        {showCommentGroup && (
+        {showCommentGroup && props.user_id && (
           <CommentGroup>
             <Image>
               <CommentImage src={props.user_photo} />
@@ -664,10 +606,10 @@ const Comment = (props) => {
       </Container>
       {expanded &&
         comment.comments
-          .sort(sort('ownFirst', props.user_id))
+          .sort(sort('ownFirst', {user_id: props.user_id}))
           .map((comment) => {
             return (
-              <Reply>
+              <Reply key={comment._id}>
                 <ReplyText>{comment.comment}</ReplyText>
                 <ReplyAuthor>
                   <ReplyAuthorName

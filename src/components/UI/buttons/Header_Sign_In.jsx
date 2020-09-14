@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 const Button = styled(Link)`
   width: 100px;
@@ -20,7 +20,15 @@ const Button = styled(Link)`
 `;
 
 const HeaderSignIn = (props) => {
-  return <Button to="/auth">Sign In</Button>;
+  const navigate = () => {
+    const location = props.location.pathname;
+    localStorage.setItem('vendo_prev_location_url', JSON.stringify(location));
+  };
+  return (
+    <Button to="/auth" onClick={navigate}>
+      Sign In
+    </Button>
+  );
 };
 
-export default HeaderSignIn;
+export default withRouter(HeaderSignIn);

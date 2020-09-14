@@ -78,6 +78,7 @@ export const getTransaction = (id) => {
 };
 
 export const getTransactionsByUserID = (id) => {
+console.log('fired');
   return (dispatch) => {
     dispatch(beginGetTransactionsByUID());
     // const vendo_cached_reviews =

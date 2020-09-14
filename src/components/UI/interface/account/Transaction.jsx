@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes, withTheme } from 'styled-components';
+import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { fadeIn, slideInUp } from 'react-animations';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import StarRatings from 'react-star-ratings';
 
 import DefaultImage from '@/assets/images/icons/account/Profile.svg';
@@ -27,13 +30,17 @@ const slideInUpAnimation = keyframes`${slideInUp}`;
 
 const ParentContainer = styled.div`
   background: ${(props) => props.theme.colors.review_background};
-  width: 100%;
+  width: calc(100% - 10px);
+  &:hover {
+    width: 100%;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
   height: auto;
   position: relative;
   z-index: 9;
   box-sizing: border-box;
   transition: all 0.25s ease-in-out;
-  margin: 32px 0px 0px 0px;
+  margin: 32px auto 0px auto;
   animation: 0.5s ${slideInUpAnimation};
   padding: 32px;
   border-style: solid;
@@ -64,12 +71,17 @@ const TextContainer = styled.span`
 const Text = styled.p`
   display: inline-block;
   font-family: 'Josefin Sans Regular';
-  width: calc(100% - 108px);
+  width: calc(100% - 124px);
   font-size: 16px;
   font-weight: 500;
   box-sizing: border-box;
+  opacity: 0.8;
   color: ${(props) => props.theme.colors.saturated_contrast};
   margin: 0;
+  &:hover {
+    cursor: pointer;
+    opacity: 1;
+  }
   @media (max-width: 500px) {
     font-size: 12px;
   }
@@ -121,7 +133,7 @@ const TransactionImage = styled.img`
   margin: 0px 4px;
 `;
 
-const ExpandGroup = styled.span`
+const ExpandGroup = styled(Link)`
   width: 100%;
   text-align: left;
   color: ${(props) => props.theme.colors.saturated_font_darker};
@@ -158,6 +170,9 @@ const Action = styled.span`
   margin-right: 8px;
   margin-left: auto;
   transition: all 0.25s ease-in-out;
+  padding: 4px;
+  border-radius: 4px;
+  background: ${(props) => props.background};
 
   &:last-child {
     margin-right: 0px;
@@ -240,18 +255,28 @@ const TransactionItem = (props) => {
   useEffect(() => {
     const fetchTransaction = async (_id) => {
       const foundTransaction = await props.getTransaction(_id);
-      console.log('transacton', foundTransaction);
+      console.log('transacton', props.transaction);
       if (mounted) {
         setTransaction(foundTransaction);
       }
     };
     if (_id) {
-      fetchTransaction(_id);
+      if (props.transaction) {
+        setTransaction(props.transaction);
+      } else {
+        fetchTransaction(_id);
+      }
     }
     return () => {
       setMounted(false);
     };
   }, [_id]);
+
+  useEffect(() => {
+    // initialize aos library
+    AOS.init({ duration: 1000 });
+    AOS.refresh();
+  }, []);
 
   const getAuthor = (e) => {
     // logic to navigate to author page here
@@ -259,7 +284,6 @@ const TransactionItem = (props) => {
 
   const addComment = (comment) => {};
   const actionTransaction = (e) => {
-    console.log('token', props.user_token);
     const headers = {
       Authorization: `Bearer ${props.user_token}`,
     };
@@ -326,13 +350,21 @@ const TransactionItem = (props) => {
     }
   };
 
+  const openTransaction = (url) => {
+    const store_owner = transaction.store_owner_id._id;
+    const transaction_id = transaction._id;
+    return props.history.push(
+      `/user/${store_owner}/transactions/${transaction_id}`,
+    );
+  };
+
   return (
     <>
       <ReactTooltip effect={'solid'} />
-      <ParentContainer border={transactionBorders}>
+      <ParentContainer border={transactionBorders} id={`${transaction._id}`}>
         <Container>
           <TextContainer>
-            <Text>{transaction.title}</Text>
+            <Text onClick={openTransaction}>{transaction.title}</Text>
             {transaction.review && transaction.review.rating > 0 && (
               <StarRatings
                 starDimension={'10px'}
@@ -347,7 +379,8 @@ const TransactionItem = (props) => {
               transactionStatus === 'new' && (
                 <>
                   <Action
-                    color={'#83ffa8'}
+                    color={props.theme.colors.alert_text_green}
+                    background={props.theme.colors.alert_background_green}
                     data-action={'accept'}
                     onClick={actionTransaction}
                   >
@@ -358,7 +391,8 @@ const TransactionItem = (props) => {
                     Accept
                   </Action>
                   <Action
-                    color={'#ff8383'}
+                    color={props.theme.colors.alert_text_red}
+                    background={props.theme.colors.alert_background_red}
                     data-action={'reject'}
                     onClick={actionTransaction}
                   >
@@ -370,24 +404,30 @@ const TransactionItem = (props) => {
             {(!transaction.review || transaction.review.rating === 0) &&
               props.type === 'given' &&
               transactionStatus === 'new' && (
-                <Action color={'white'} data-tip={'Transaction Pending'}>
+                <Action color={'white'} background={'rgba(255, 255, 255, 0.2)'}>
                   Pending
                 </Action>
               )}
             {(!transaction.review || transaction.review.rating === 0) &&
               transactionStatus === 'accepted' && (
-                <Action color={'#83ffa8'} data-tip={'Transaction Accepted'}>
+                <Action
+                  color={props.theme.colors.alert_text_green}
+                  background={props.theme.colors.alert_background_green}
+                >
                   Accepted
                 </Action>
               )}
             {transactionStatus === 'rejected' && (
-              <Action color={'#ff8383'} data-tip={'Transaction Rejected'}>
+              <Action
+                color={props.theme.colors.alert_text_red}
+                background={props.theme.colors.alert_background_red}
+              >
                 Rejected
               </Action>
             )}
           </TextContainer>
           <Details>
-            <ExpandGroup>
+            <ExpandGroup to={`#${transaction._id}`}>
               <FontAwesomeIcon className="fa-icon" icon={faPlus} />
               Expand Transaction
             </ExpandGroup>
@@ -444,4 +484,4 @@ TransactionItem.propTypes = {
 
 export default connect(mapStateToProps, mapDispatchToProps, null, {
   forwardRef: true,
-})(withTheme(TransactionItem));
+})(withTheme(withRouter(TransactionItem)));

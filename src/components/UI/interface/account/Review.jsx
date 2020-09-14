@@ -17,6 +17,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { fadeIn, slideInUp } from 'react-animations';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 import Input from '@/components/widgets/UI/Input';
 
@@ -27,23 +29,23 @@ import { connect } from 'react-redux';
 import Alert from '@/components/widgets/UI/Alert';
 import setAlert from '@/assets/helperFunctions/alerts';
 import { sort } from '@/assets/helperFunctions/sort';
+
 const fadeInUpAnimation = keyframes`${fadeIn}`;
-const slideInUpAnimation = keyframes`${slideInUp}`;
 
 const ParentContainer = styled.div`
   background: ${(props) => props.theme.colors.review_background};
-  width: 100%;
+  width: calc(100% - 10px);
+  &:hover {
+    width: 100%;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
   height: auto;
   position: relative;
   z-index: 9;
-  /* border-style: hidden hidden hidden solid;
-  border-width: 2px;
-  border-color: ${(props) => props.theme.colors.saturated_contrast_20}; */
   border-radius: 2px;
   box-sizing: border-box;
   transition: all 0.25s ease-in-out;
-  margin: 32px 0px 0px 0px;
-  animation: 0.5s ${slideInUpAnimation};
+  margin: 16px 0px 16px 0px;
   padding: 32px;
   @media (max-width: 500px) {
     padding: 16px;
@@ -321,7 +323,11 @@ const ReviewItem = (props) => {
       }
     };
     if (_id) {
-      fetchReview(_id);
+      if (props.review) {
+        setReview(props.review);
+      } else {
+        fetchReview(_id);
+      }
     }
     return () => {
       setMounted(false);
@@ -341,6 +347,12 @@ const ReviewItem = (props) => {
       setDownvoted(true);
     }
   }, [review]);
+
+  useEffect(() => {
+    // initialize aos library
+    AOS.init({ duration: 1000 });
+    AOS.refresh();
+  }, []);
 
   const getAuthor = (e) => {
     // logic to navigate to author page here
@@ -484,69 +496,10 @@ const ReviewItem = (props) => {
     }
   };
 
-  // const showVotes = () => {
-  //   if (votes === 'upvotes') {
-  //     return (
-  //       <VotesContainer>
-  //         <VotesDiv>
-  //           {selectVoters(review.upvotes).map((upvote, index) => {
-  //             return (
-  //               <Voter
-  //                 src={upvote.photo || DefaultImage}
-  //                 key={upvote._id}
-  //                 index={index}
-  //               />
-  //             );
-  //           })}
-  //         </VotesDiv>
-  //         {review.upvotes.length > 5 && (
-  //           <OtherVoters>
-  //             <b
-  //               style={{
-  //                 fontWeight: 700,
-  //               }}
-  //             >
-  //               and {review.upvotes.length - 5} other users
-  //             </b>{' '}
-  //             {/* have upvoted this review */}
-  //           </OtherVoters>
-  //         )}
-  //       </VotesContainer>
-  //     );
-  //   } else if (votes === 'downvotes') {
-  //     return (
-  //       <VotesContainer>
-  //         <VotesDiv>
-  //           {selectVoters(review.downvotes).map((downvote, index) => {
-  //             return (
-  //               <Voter
-  //                 src={downvote.photo || DefaultImage}
-  //                 key={downvote._id}
-  //                 index={index}
-  //               />
-  //             );
-  //           })}
-  //         </VotesDiv>
-  //         {review.downvotes.length > 5 && (
-  //           <OtherVoters>
-  //             <b
-  //               style={{
-  //                 fontWeight: 700,
-  //               }}
-  //             >
-  //               and {review.downvotes.length - 5} other users
-  //             </b>{' '}
-  //             {/* have downvoted this review */}
-  //           </OtherVoters>
-  //         )}
-  //       </VotesContainer>
-  //     );
-  //   }
-  // };
   const date = new Date();
   return (
     <>
-      <ParentContainer>
+      <ParentContainer data-aos="fade-up" id={`review-${review._id}`}>
         <Container>
           <TextContainer>
             <Votes>
@@ -607,10 +560,12 @@ const ReviewItem = (props) => {
             </Author>
           </Details>
 
-          <ExpandGroup onClick={openComments}>
-            <FontAwesomeIcon className="fa-icon" icon={faReply} />
-            Reply
-          </ExpandGroup>
+          {props.user_id && (
+            <ExpandGroup onClick={openComments}>
+              <FontAwesomeIcon className="fa-icon" icon={faReply} />
+              Reply
+            </ExpandGroup>
+          )}
 
           <ExpandGroup
             onClick={() => {
@@ -621,7 +576,7 @@ const ReviewItem = (props) => {
             Share
           </ExpandGroup>
 
-          {showCommentGroup && (
+          {showCommentGroup && props.user_id && (
             <CommentGroup>
               <Image>
                 <CommentImage src={props.user_photo} />
@@ -688,7 +643,7 @@ const ReviewItem = (props) => {
         {showComments && (
           <CommentsContainer>
             {review.comments
-              .sort(sort('ownFirst', props.user_id))
+              .sort(sort('ownFirst', { user_id: props.user_id }))
               .map((comment) => {
                 return (
                   <Comment
@@ -728,4 +683,7 @@ ReviewItem.propTypes = {
   getReview: PropTypes.func,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(ReviewItem));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withTheme(ReviewItem));

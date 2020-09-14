@@ -6,17 +6,21 @@ import './App.css';
 import '@/assets/theme/fontawesome';
 
 import Loading from '@/components/UI/interface/home/Loading';
-import Header from './components/UI/Header';
 
 function App(props) {
-  const Home = React.lazy(() => import('./components/pages/Home/Home'));
-  const Auth = React.lazy(() => import('./components/pages/Auth/Auth'));
+  const Home = React.lazy(() => import('./components/pages/Home/Home.jsx'));
+  const Auth = React.lazy(() => import('./components/pages/Auth/Auth.jsx'));
   const Account = React.lazy(() =>
-    import('./components/pages/Account/Account'),
+    import('./components/pages/Account/Index.jsx'),
   );
-  const User = React.lazy(() =>
-    import('./components/pages/User/Users'),
+  const User = React.lazy(() => import('./components/pages/User/Index.jsx'));
+  const TransactionsIndex = React.lazy(() =>
+    import('./components/pages/Transactions/Index.jsx'),
   );
+  const Search = React.lazy(() =>
+    import('./components/pages/Search/Index.jsx'),
+  );
+  const Store = React.lazy(() => import('./components/pages/Stores/Index.jsx'));
 
   return (
     <div>
@@ -41,6 +45,21 @@ function App(props) {
           <Route path="/users/:user_id">
             <Suspense fallback={<Loading />}>
               <User />
+            </Suspense>
+          </Route>
+          <Route path="/transactions">
+            <Suspense fallback={<Loading />}>
+              <TransactionsIndex />
+            </Suspense>
+          </Route>
+          <Route path="/search">
+            <Suspense fallback={<Loading />}>
+              <Search />
+            </Suspense>
+          </Route>
+          <Route path="/stores/:store_id">
+            <Suspense fallback={<Loading />}>
+              <Store />
             </Suspense>
           </Route>
         </Switch>
