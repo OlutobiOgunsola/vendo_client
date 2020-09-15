@@ -470,6 +470,7 @@ const Auth = (props) => {
     const headers = {
       'Content-Type': 'application/json',
       Accept: '*/*',
+      withCredentials: true,
     };
 
     if (username && password) {
@@ -520,6 +521,7 @@ const Auth = (props) => {
     const headers = {
       'Content-Type': 'application/json',
       Accept: '*/*',
+      withCredentials: true,
     };
     const user = {};
     user.username = username.toString();
