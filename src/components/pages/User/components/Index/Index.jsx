@@ -144,6 +144,7 @@ const Action = styled(Link)`
     transition: all 1s ease-in-out;
     opacity: 0;
     color: ${(props) => props.theme.colors.dark_background};
+    display: none;
   }
   &:hover {
     cursor: pointer;
@@ -154,6 +155,7 @@ const Action = styled(Link)`
       left: 8px;
       margin-left: 0px;
       opacity: 1;
+      display: inline-block;
     }
     border: none;
   }
