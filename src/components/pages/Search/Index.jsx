@@ -29,10 +29,8 @@ import ReviewItem from '@/components/UI/interface/account/Review.jsx';
 
 import { getTransaction } from '@/actions/transaction';
 import { connect } from 'react-redux';
-import Alert from '@/components/widgets/UI/Alert';
 import setAlert from '@/assets/helperFunctions/alerts';
 import { debounce } from '@/assets/helperFunctions/debounce';
-import InputRow from '@/components/widgets/UI/InputRow';
 import { useCallback } from 'react';
 import Header from '@/components/UI/Header';
 import Footer from '@/components/UI/Footer';
@@ -51,12 +49,6 @@ const ParentContainer = styled.div`
   font-size: 16px;
   box-sizing: border-box;
   transition: all 0.25s ease-in-out;
-  @media (max-width: 500px) {
-    padding: 16px;
-  }
-  @media (max-width: 400px) {
-    padding: 16px 8px;
-  }
 `;
 
 const Container = styled.div`
@@ -64,10 +56,39 @@ const Container = styled.div`
   margin: 40px auto;
   display: flex;
   flex-flow: row nowrap;
+  @media (max-width: 900px) {
+    width: 50rem;
+  }
+  @media (max-width: 800px) {
+    width: 40rem;
+  }
+  @media (max-width: 700px) {
+    width: 37rem;
+  }
+  @media (max-width: 620px) {
+    width: 33rem;
+    flex-flow: column nowrap;
+  }
+
+  @media (max-width: 540px) {
+    width: 30rem;
+  }
+  @media (max-width: 500px) {
+    padding: 1rem;
+    width: 27rem;
+  }
+  @media (max-width: 440px) {
+    width: 23rem;
+  }
+  @media (max-width: 400px) {
+    padding: 1rem 0.5rem;
+  }
 `;
 const Filters = styled.div`
   width: 12.5rem;
   height: auto;
+  display: flex;
+  flex-flow: column nowrap;
   margin-right: 1rem;
   border-radius: 4px;
   background: ${(props) => props.theme.colors.light_background};
@@ -79,15 +100,15 @@ const Filters = styled.div`
     margin-right: 1rem;
     color: ${(props) => props.theme.colors.saturated_contrast};
   }
-`;
 
-const FiltersHeader = styled.h5`
-  display: inline-block;
-  font-size: 1rem;
-  font-family: 'Josefin Sans Light';
-  color: ${(props) => props.theme.colors.saturated_contrast};
-  margin: 1rem 0rem;
-  font-weight: 500;
+  @media (max-width: 880px) {
+    width: 10rem;
+  }
+
+  @media (max-width: 620px) {
+    flex-flow: row nowrap;
+    width: 100%;
+  }
 `;
 
 const SearchContainer = styled.div`
@@ -103,6 +124,29 @@ const SearchContainer = styled.div`
     opacity: 0.6;
     background: ${(props) => props.theme.colors.alternate_light_background_10};
   }
+
+  @media (max-width: 880px) {
+    width: calc(100% - 11rem);
+  }
+  @media (max-width: 620px) {
+    width: 100%;
+  }
+`;
+
+const FiltersHeaderContainer = styled.div`
+  width: 100%;
+  @media (max-width: 620px) {
+    width: 3rem;
+  }
+`;
+
+const FiltersHeader = styled.h5`
+  display: inline-block;
+  font-size: 1rem;
+  font-family: 'Josefin Sans Light';
+  color: ${(props) => props.theme.colors.saturated_contrast};
+  margin: 1rem 0rem;
+  font-weight: 500;
 `;
 
 const ExpandGroup = styled(Link)`
@@ -322,7 +366,7 @@ const Search = (props) => {
   return (
     <>
       <ParentContainer id="add_transaction">
-        <Header useOwnBackground />
+        <Header useOwnBackground usePagePadding />
         <SplashScreen>
           <Modal>
             <SearchBox
@@ -341,8 +385,10 @@ const Search = (props) => {
         </SplashScreen>
         <Container>
           <Filters>
-            <FontAwesomeIcon className="fa-icon" icon={faFilter} />
-            <FiltersHeader>FILTER BY</FiltersHeader>
+            <FiltersHeaderContainer>
+              <FontAwesomeIcon className="fa-icon" icon={faFilter} />
+              <FiltersHeader>FILTER BY</FiltersHeader>
+            </FiltersHeaderContainer>
             <Navbar />
           </Filters>
           <SearchContainer>

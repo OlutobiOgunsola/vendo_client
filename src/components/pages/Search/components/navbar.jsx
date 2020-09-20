@@ -15,6 +15,9 @@ import { useRef } from 'react';
 const ParentContainer = styled.div`
   width: 100%;
   height: auto;
+  @media (max-width: 620px) {
+    width: calc(100% - 3rem);
+  }
 `;
 const Container = styled.div`
   width: 100%;
@@ -34,6 +37,10 @@ const Container = styled.div`
     }
   }
 
+  @media (max-width: 620px) {
+    flex-flow: row wrap;
+  }
+
   @media (max-width: 480px) {
     .selected {
       font-size: 10px;
@@ -43,7 +50,7 @@ const Container = styled.div`
 `;
 
 const LinkItem = styled(NavLink)`
-  width: 100%;
+  width: fit-content;
   height: 2.5rem;
   margin-bottom: 0.5rem;
   display: flex;
@@ -69,6 +76,10 @@ const LinkItem = styled(NavLink)`
     text-decoration: none;
     color: ${(props) => props.theme.colors.saturated_contrast};
     border-bottom: 1px solid ${(props) => props.theme.colors.yellow};
+  }
+
+  @media (min-width: 620px) {
+    width: 100%;
   }
 
   @media (max-width: 480px) {

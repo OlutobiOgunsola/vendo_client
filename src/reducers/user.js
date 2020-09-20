@@ -41,8 +41,8 @@ const user = (state = initialState, action) => {
       };
     case 'LOAD_USER_STARTED':
       return {
-        ...state,
-        loading: true,
+        // ...state,
+        // loading: true,
       };
     case 'BEGIN_EDIT_USER':
       return {

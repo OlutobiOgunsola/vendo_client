@@ -149,7 +149,7 @@ const Account = (props) => {
 
   return (
     <ParentContainer>
-      <Header useOwnBackground />
+      <Header useOwnBackground usePagePadding/>
       {alerts.map((alert) => {
         return (
           <Alert type={alert.type} key={alert.text}>

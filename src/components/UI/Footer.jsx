@@ -9,19 +9,19 @@ const ParentContainer = styled.footer`
   display: flex;
   align-items: center;
   @media (min-width: 1280px) {
-    padding: 0px 200px;
+    padding: 40px 200px;
     height: 300px;
   }
   @media (min-width: 751px) and (max-width: 1279px) {
-    padding: 0px 100px;
+    padding: 40px 100px;
     height: 300px;
   }
   @media (min-width: 481px) and (max-width: 750px) {
-    padding: 0px 20px;
+    padding: 40px 20px;
     height: 496px;
   }
   @media (max-width: 480px) {
-    padding: 0px 10px;
+    padding: 40px 10px;
     height: 600px;
   }
 `;

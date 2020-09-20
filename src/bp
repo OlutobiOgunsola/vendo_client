@@ -1,0 +1,60 @@
+import React, { useState, useEffect, useRef } from 'react';
+import styled, { keyframes, withTheme } from 'styled-components';
+import { Link, withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import axios from 'axios';
+import Lottie from 'react-lottie';
+
+import DefaultImage from '@/assets/images/icons/account/Profile.svg';
+import emptyReview from '@/assets/images/lottie/emptyReview.json';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faEnvelope,
+  faStore,
+  faLongArrowAltRight,
+} from '@fortawesome/free-solid-svg-icons';
+import ReviewItem from '@/components/UI/interface/account/Review.jsx';
+
+const ParentContainer = styled.div`
+  background: ${(props) => props.theme.colors.page_background};
+  width: 100%;
+  height: auto;
+  position: relative;
+  z-index: 9;
+  box-sizing: border-box;
+  transition: all 0.25s ease-in-out;
+  margin: 32px auto 0px auto;
+  /* animation: 0.5s ${slideInUpAnimation}; */
+  padding: 32px;
+  @media (max-width: 500px) {
+    padding: 16px;
+  }
+  @media (max-width: 400px) {
+    padding: 16px 8px;
+  }
+`;
+
+const Container = styled.div`
+  width: 100%;
+`;
+
+const TransactionList = (props) => {
+  return (
+    <>
+      <ParentContainer id="add_transaction">
+        <Container></Container>
+      </ParentContainer>
+    </>
+  );
+};
+
+TransactionList.propTypes = {
+  //   user_id: PropTypes.string,
+  //   review: PropTypes.object,
+  //   user_photo: PropTypes.string,
+  //   reviews: PropTypes.array,
+  //   getReview: PropTypes.func,
+};
+
+export default withTheme(withRouter(TransactionList));

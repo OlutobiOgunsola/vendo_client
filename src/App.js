@@ -14,56 +14,54 @@ function App(props) {
     import('./components/pages/Account/Index.jsx'),
   );
   const User = React.lazy(() => import('./components/pages/User/Index.jsx'));
-  const TransactionsIndex = React.lazy(() =>
-    import('./components/pages/Transactions/Index.jsx'),
-  );
   const Search = React.lazy(() =>
     import('./components/pages/Search/Index.jsx'),
   );
   const Store = React.lazy(() => import('./components/pages/Stores/Index.jsx'));
+  const Page404 = React.lazy(() => import('./components/pages/404/Index.jsx'));
 
   return (
     <div>
       <GlobalStyles />
-      <Router>
-        <Switch>
-          <Route path="/" exact>
-            <Suspense fallback={<Loading />}>
-              <Home />
-            </Suspense>
-          </Route>
-          <Route path="/auth">
-            <Suspense fallback={<Loading />}>
-              <Auth />
-            </Suspense>
-          </Route>
-          <Route path="/account">
-            <Suspense fallback={<Loading />}>
-              <Account />
-            </Suspense>
-          </Route>
-          <Route path="/users/:user_id">
-            <Suspense fallback={<Loading />}>
-              <User />
-            </Suspense>
-          </Route>
-          <Route path="/transactions">
-            <Suspense fallback={<Loading />}>
-              <TransactionsIndex />
-            </Suspense>
-          </Route>
-          <Route path="/search">
-            <Suspense fallback={<Loading />}>
-              <Search />
-            </Suspense>
-          </Route>
-          <Route path="/stores/:store_id">
-            <Suspense fallback={<Loading />}>
-              <Store />
-            </Suspense>
-          </Route>
-        </Switch>
-      </Router>
+      {/* <Router> */}
+      <Switch>
+        <Route path="/" exact>
+          <Suspense fallback={<Loading />}>
+            <Home />
+          </Suspense>
+        </Route>
+        <Route path="/auth">
+          <Suspense fallback={<Loading />}>
+            <Auth />
+          </Suspense>
+        </Route>
+        <Route path="/account">
+          <Suspense fallback={<Loading />}>
+            <Account />
+          </Suspense>
+        </Route>
+        <Route path="/users/:user_name">
+          <Suspense fallback={<Loading />}>
+            <User />
+          </Suspense>
+        </Route>
+        <Route path="/search">
+          <Suspense fallback={<Loading />}>
+            <Search />
+          </Suspense>
+        </Route>
+        <Route path="/stores/:store_name">
+          <Suspense fallback={<Loading />}>
+            <Store />
+          </Suspense>
+        </Route>
+        <Route path="/">
+          <Suspense fallback={<Loading />}>
+            <Page404 />
+          </Suspense>
+        </Route>
+      </Switch>
+      {/* </Router> */}
     </div>
   );
 }

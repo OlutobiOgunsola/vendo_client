@@ -11,7 +11,7 @@ import StarRatings from 'react-star-ratings';
 import DefaultImage from '@/assets/images/icons/account/Profile.svg';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import Input from '@/components/widgets/UI/Input';
 
@@ -29,6 +29,7 @@ const fadeInUpAnimation = keyframes`${fadeIn}`;
 const slideInUpAnimation = keyframes`${slideInUp}`;
 
 const ParentContainer = styled.div`
+  font-size: 16px;
   background: ${(props) => props.theme.colors.review_background};
   width: calc(100% - 10px);
   &:hover {
@@ -202,6 +203,15 @@ const Action = styled.span`
   }
 `;
 
+const Description = styled.p`
+  width: 100%;
+  font-family: 'Josefin Sans Light';
+  color: ${(props) => props.theme.colors.saturated_contrast};
+  font-size: 0.75rem;
+  line-height: 1rem;
+  margin: 1rem 0rem;
+  box-sizing: border-box;
+`;
 const TransactionItem = (props) => {
   const _id = props.id;
   const transactions = props.transactions;
@@ -247,6 +257,7 @@ const TransactionItem = (props) => {
   const [mounted, setMounted] = useState(true);
   const [opacity, setOpacity] = useState(0.6);
   const [submitted, setSubmitted] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const transactionStatus = transaction.status;
 
@@ -255,7 +266,6 @@ const TransactionItem = (props) => {
   useEffect(() => {
     const fetchTransaction = async (_id) => {
       const foundTransaction = await props.getTransaction(_id);
-      console.log('transacton', props.transaction);
       if (mounted) {
         setTransaction(foundTransaction);
       }
@@ -280,6 +290,10 @@ const TransactionItem = (props) => {
 
   const getAuthor = (e) => {
     // logic to navigate to author page here
+  };
+
+  const expand = () => {
+    return setExpanded(!expanded);
   };
 
   const addComment = (comment) => {};
@@ -350,11 +364,11 @@ const TransactionItem = (props) => {
     }
   };
 
-  const openTransaction = (url) => {
-    const store_owner = transaction.store_owner_id._id;
+  const openTransaction = () => {
+    const store_owner = transaction.store_id.name;
     const transaction_id = transaction._id;
     return props.history.push(
-      `/user/${store_owner}/transactions/${transaction_id}`,
+      `/stores/${store_owner}/transactions/${transaction_id}`,
     );
   };
 
@@ -427,10 +441,20 @@ const TransactionItem = (props) => {
             )}
           </TextContainer>
           <Details>
-            <ExpandGroup to={`#${transaction._id}`}>
-              <FontAwesomeIcon className="fa-icon" icon={faPlus} />
-              Expand Transaction
-            </ExpandGroup>
+            {!expanded &&
+              (!props.domain ||
+                (props.domain && props.domain !== 'visitor')) && (
+                <ExpandGroup to={`#${transaction._id}`} onClick={expand}>
+                  <FontAwesomeIcon className="fa-icon" icon={faPlus} />
+                  Expand Transaction
+                </ExpandGroup>
+              )}
+            {expanded && props.domain !== 'visitor' && (
+              <ExpandGroup to={`#${transaction._id}`} onClick={expand}>
+                <FontAwesomeIcon className="fa-icon" icon={faMinus} />
+                Collapse Transaction
+              </ExpandGroup>
+            )}
             {props.type === 'received' && props.domain === 'owner' && (
               <Author>
                 <TransactionImage
@@ -456,6 +480,7 @@ const TransactionItem = (props) => {
               </Author>
             )}
           </Details>
+          {expanded && <Description>{transaction.description}</Description>}
         </Container>
       </ParentContainer>
     </>

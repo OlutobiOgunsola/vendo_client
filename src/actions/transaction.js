@@ -40,16 +40,8 @@ const getTransactionByUIDSuccess = () => {
 
 export const getTransaction = (id) => {
   return (dispatch) => {
-    dispatch(beginGetTransaction());
-    // const vendo_cached_reviews =
-    //   JSON.parse(localStorage.getItem('vendo_cached_reviews')) || [];
-    // const cachedReview = vendo_cached_reviews.filter((review) => {
-    //   return review._id === id;
-    // });
-    // if (cachedReview.length === 1) {
-    //   console.log('cached review found', id, cachedReview);
-    //   return cachedReview[0];
-    // } else if (cachedReview.length < 1) {
+    dispatch(beginGetTransaction);
+    console.log('in here tryna get transaction');
     return axios
       .get(`${process.env.REACT_APP_API_PREFIX}/api/transactions/${id}`)
       .then((res) => {
@@ -61,8 +53,6 @@ export const getTransaction = (id) => {
         const cachedTransactions =
           JSON.parse(localStorage.getItem('vendo_cached_transactions')) ||
           emptyCache;
-
-        // cachedReviews.push(review);
 
         localStorage.setItem(
           'vendo_cached_transactions',
@@ -78,18 +68,9 @@ export const getTransaction = (id) => {
 };
 
 export const getTransactionsByUserID = (id) => {
-console.log('fired');
+  console.log('fired');
   return (dispatch) => {
-    dispatch(beginGetTransactionsByUID());
-    // const vendo_cached_reviews =
-    //   JSON.parse(localStorage.getItem('vendo_cached_reviews')) || [];
-    // const cachedReview = vendo_cached_reviews.filter((review) => {
-    //   return review._id === id;
-    // });
-    // if (cachedReview.length === 1) {
-    //   console.log('cached review found', id, cachedReview);
-    //   return cachedReview[0];
-    // } else if (cachedReview.length < 1) {
+    dispatch(beginGetTransactionsByUID);
     return axios
       .get(
         `${process.env.REACT_APP_API_PREFIX}/api/transactions/getAllByUser/${id}`,

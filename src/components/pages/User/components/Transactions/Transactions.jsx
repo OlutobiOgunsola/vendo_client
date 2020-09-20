@@ -4,7 +4,7 @@ import Lottie from 'react-lottie';
 import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
-import {  withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import TransactionItem from '@/components/UI/interface/account/Transaction';
 
@@ -15,6 +15,7 @@ import emptyTransactions from '@/assets/images/lottie/emptyTransactions.json';
 import { getTransactionsByUserID } from '@/actions/transaction';
 
 import FilterComponent from '../Filters/Filters';
+import { sort } from '@/assets/helperFunctions/sort';
 
 const ParentContainer = styled.div`
   width: 100%;
@@ -71,10 +72,12 @@ const Transactions = (props) => {
   const [alerts, addAlert] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [mounted, setMounted] = useState(true);
+  const [show, setShow] = useState(null);
   const loginStatus = props.user.loggedIn;
 
   const { match } = props;
   const user_id = props.user_id;
+  const user_name = props.user_name;
 
   const toggleLoading = (payload) => {
     return setLoading(payload);
@@ -86,13 +89,10 @@ const Transactions = (props) => {
     // get all user transactions
     const fetchTransactions = async (_id) => {
       let foundTransactions = await props.getTransactionsByUserID(_id);
-      console.log('f0und transcations', foundTransactions);
       if (mounted) {
         setTransactions(foundTransactions);
-        !transactions ? setFetching(true) : setFetching(false);
         setFetching(false);
       }
-      // return null;
     };
 
     if (user_id) {
@@ -129,6 +129,7 @@ const Transactions = (props) => {
           <>
             <Lottie options={LottieOptions} height={300} width={300} />
             <EmptyStateText
+              show={show}
               style={{
                 textAlign: 'center',
                 color: `${props.theme.colors.saturated_contrast}`,
@@ -136,14 +137,13 @@ const Transactions = (props) => {
             >
               No transactions yet.
             </EmptyStateText>
-            <EmptyStateSubtext>
+            <EmptyStateSubtext show={show}>
               Be the first to patronize. Open a transaction.
             </EmptyStateSubtext>
           </>
         )}
         {transactions &&
-          transactions.map((transaction) => {
-            console.log('transactionnnn', transaction);
+          transactions.sort(sort('latestFirst')).map((transaction) => {
             return (
               <TransactionItem
                 id={transaction._id}

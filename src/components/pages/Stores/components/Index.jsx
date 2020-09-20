@@ -169,40 +169,10 @@ const StoreIndex = (props) => {
   const topReview = sortedReviews ? sortedReviews[0] : {};
   const topTransaction = sortedTransactions ? sortedTransactions[0] : {};
 
+  console.log(topTransaction);
+
   return (
     <ParentContainer>
-      <Section>
-        <S_Head>RECENT REVIEWS</S_Head>
-        <hr />
-        {store.reviews
-          .sort(sort('latestFirst'))
-          .slice(0, 4)
-          .map((review) => {
-            return (
-              <ReviewItem
-                user_id={props.loggedinUser._id}
-                user_photo={props.loggedinUser.photo}
-                review={review}
-                id={review._id}
-                key={review._id}
-                updater={props.updater}
-                user_token={props.loggedinUser.jwt}
-              />
-            );
-          })}
-        {store.reviews.length === 0 && (
-          <>
-            <Lottie
-              options={emptyReviewLottieOptions}
-              height={300}
-              width={300}
-            />
-            <EmptyStateText>Be the first to leave a review!</EmptyStateText>
-            <EmptyStateSubtext>Open a transaction below</EmptyStateSubtext>
-          </>
-        )}
-      </Section>
-
       <Section>
         <S_Head>TOP REVIEW</S_Head>
         <hr />
@@ -259,13 +229,43 @@ const StoreIndex = (props) => {
         )}
       </Section>
       <Section>
+        <S_Head>RECENT REVIEWS</S_Head>
+        <hr />
+        {store.reviews
+          .sort(sort('latestFirst'))
+          .slice(0, 4)
+          .map((review) => {
+            return (
+              <ReviewItem
+                user_id={props.loggedinUser._id}
+                user_photo={props.loggedinUser.photo}
+                review={review}
+                id={review._id}
+                key={review._id}
+                updater={props.updater}
+                user_token={props.loggedinUser.jwt}
+              />
+            );
+          })}
+        {store.reviews.length === 0 && (
+          <>
+            <Lottie
+              options={emptyReviewLottieOptions}
+              height={300}
+              width={300}
+            />
+            <EmptyStateText>Be the first to leave a review!</EmptyStateText>
+            <EmptyStateSubtext>Open a transaction below</EmptyStateSubtext>
+          </>
+        )}
+      </Section>
+      <Section>
         <S_Head>TOP TRANSACTION</S_Head>
         <hr />
         {topTransaction && (
           <TransactionItem
             user_id={props.loggedinUser._id}
             user_photo={props.loggedinUser.photo}
-            transaction={topTransaction}
             id={topTransaction._id}
             updater={props.updater}
             user_token={props.loggedinUser.jwt}

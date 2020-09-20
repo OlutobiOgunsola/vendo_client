@@ -30,7 +30,8 @@ const slideInUpAnimation = keyframes`${slideInUp}`;
 
 const ParentContainer = styled.div`
   background: ${(props) => props.theme.colors.review_background};
-  width: calc(100% - 10px);
+  width: 100%;
+  /* width: calc(100% - 10px); */
   &:hover {
     width: 100%;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
@@ -40,9 +41,8 @@ const ParentContainer = styled.div`
   z-index: 9;
   box-sizing: border-box;
   transition: all 0.25s ease-in-out;
-  margin: 32px auto 0px auto;
+  margin: 0 auto;
   animation: 0.5s ${slideInUpAnimation};
-  padding: 32px;
   border-style: solid;
   border-width: 0.25px;
   border-color: ${(props) => {
@@ -310,7 +310,7 @@ const ReviewContainer = styled.div`
   padding: 16px 0px;
 `;
 
-const TransactionPage = (props) => {
+const ReviewPage = (props) => {
   const { match } = props;
   const _id = match.params.transaction_id;
   const [actioned, setActioned] = useState(false);
@@ -325,7 +325,12 @@ const TransactionPage = (props) => {
       _id: '',
       name: '',
     },
+    title: '',
+    description: '',
+    _id: '',
   });
+
+  const transaction_found = transaction && transaction._id !== '';
 
   // manually trigger rerender with state update
   const [render, setRender] = useState(false);
@@ -448,108 +453,110 @@ const TransactionPage = (props) => {
   };
   return (
     <>
-      <ParentContainer border={transactionBorders} id={`${transaction._id}`}>
-        <Container>
-          <TransactionProfile>
-            <TransactionDetailsContainer>
-              <StoreImage
-                platform={transaction.store_id.platform || 'local'}
-                src={transaction.store_id.photo || DefaultImage}
-              />
-              <TransactionDetails>
-                <NameBar>
-                  {transaction.title && <h1>{transaction.title}</h1>}
-                </NameBar>
-                <Requested>
-                  Transaction opened by{' '}
-                  <h6>{transaction.author_id.username}</h6>
-                </Requested>
-                <Handle_And_Rating>
-                  <Rating>
-                    <StarRatings
-                      starDimension={'16px'}
-                      starSpacing={'4px'}
-                      rating={transactionRating}
-                      starRatedColor={props.theme.colors.yellow}
-                      starEmptyColor={props.theme.colors.light_background}
-                    />
-                  </Rating>
-                </Handle_And_Rating>
-                <Bio>
-                  {transaction.store_id.description
-                    ? transaction.store_id.description
-                    : 'No store description'}
-                </Bio>
-                <Tags>
-                  {transaction.store_id.categories &&
-                    transaction.store_id.categories === 0 && (
-                      <EmptyStateText>No Store Category Tags</EmptyStateText>
-                    )}
-                  {transaction.store_id.categories &&
-                    transaction.store_id.categories.map((category) => {
-                      return <TagItem key={category}>{category}</TagItem>;
-                    })}
-                </Tags>
-
-                <ProfileActions>
-                  <Action to={'#'}>
-                    View Store
-                    <FontAwesomeIcon className="fa-icon" icon={faStore} />
-                  </Action>
-                  <Action to={'#'}>
-                    Send Mail
-                    <FontAwesomeIcon className="fa-icon" icon={faEnvelope} />
-                  </Action>
-                </ProfileActions>
-              </TransactionDetails>
-            </TransactionDetailsContainer>
-          </TransactionProfile>
-          <ReviewContainer>
-            {transaction.review && (
-              <ReviewItem
-                user_id={props.loggedinUser._id}
-                user_photo={props.loggedinUser.photo}
-                review={transaction.review}
-                id={transaction.review._id}
-                updater={props.updater}
-                user_token={props.loggedinUser.jwt}
-              />
-            )}
-            {!transaction.review && (
-              <>
-                <Lottie
-                  options={emptyReviewLottieOptions}
-                  height={300}
-                  width={300}
+      {transaction_found && (
+        <ParentContainer border={transactionBorders} id={`${transaction._id}`}>
+          <Container>
+            <TransactionProfile>
+              <TransactionDetailsContainer>
+                <StoreImage
+                  platform={transaction.store_id.platform || 'local'}
+                  src={transaction.store_id.photo || DefaultImage}
                 />
-                <EmptyStateText>No review!</EmptyStateText>
-                <EmptyStateSubtext>
-                  Transaction has not been reviewed.
-                </EmptyStateSubtext>
-              </>
-            )}
-            {!transaction.review &&
-              transaction.author_id._id === props.loggedinUser && (
-                <ProfileActions>
-                  <Action
-                    data-aos="fade-up"
-                    data-aos-duration="250"
-                    to={'#'}
-                    borders="true"
-                    width="200px"
-                    hover_width="220px"
-                  >
-                    Review your transaction
-                    <FontAwesomeIcon
-                      className="fa-icon"
-                      icon={faLongArrowAltRight}
-                    />
-                  </Action>
-                </ProfileActions>
+                <TransactionDetails>
+                  <NameBar>
+                    {transaction.title && <h1>{transaction.title}</h1>}
+                  </NameBar>
+                  <Requested>
+                    Transaction opened by{' '}
+                    <h6>{transaction.author_id.username}</h6>
+                  </Requested>
+                  <Handle_And_Rating>
+                    <Rating>
+                      <StarRatings
+                        starDimension={'16px'}
+                        starSpacing={'4px'}
+                        rating={transactionRating}
+                        starRatedColor={props.theme.colors.yellow}
+                        starEmptyColor={props.theme.colors.light_background}
+                      />
+                    </Rating>
+                  </Handle_And_Rating>
+                  <Bio>
+                    {transaction.store_id.description
+                      ? transaction.store_id.description
+                      : 'No store description'}
+                  </Bio>
+                  <Tags>
+                    {transaction.store_id.categories &&
+                      transaction.store_id.categories === 0 && (
+                        <EmptyStateText>No Store Category Tags</EmptyStateText>
+                      )}
+                    {transaction.store_id.categories &&
+                      transaction.store_id.categories.map((category) => {
+                        return <TagItem key={category}>{category}</TagItem>;
+                      })}
+                  </Tags>
+
+                  <ProfileActions>
+                    <Action to={'#'}>
+                      View Store
+                      <FontAwesomeIcon className="fa-icon" icon={faStore} />
+                    </Action>
+                    <Action to={'#'}>
+                      Send Mail
+                      <FontAwesomeIcon className="fa-icon" icon={faEnvelope} />
+                    </Action>
+                  </ProfileActions>
+                </TransactionDetails>
+              </TransactionDetailsContainer>
+            </TransactionProfile>
+            <ReviewContainer>
+              {transaction.review && (
+                <ReviewItem
+                  user_id={props.loggedinUser._id}
+                  user_photo={props.loggedinUser.photo}
+                  review={transaction.review}
+                  id={transaction.review._id}
+                  updater={props.updater}
+                  user_token={props.loggedinUser.jwt}
+                />
               )}
-          </ReviewContainer>
-        </Container>
-      </ParentContainer>
+              {!transaction.review && (
+                <>
+                  <Lottie
+                    options={emptyReviewLottieOptions}
+                    height={300}
+                    width={300}
+                  />
+                  <EmptyStateText>No review!</EmptyStateText>
+                  <EmptyStateSubtext>
+                    Transaction has not been reviewed.
+                  </EmptyStateSubtext>
+                </>
+              )}
+              {!transaction.review &&
+                transaction.author_id._id === props.loggedinUser && (
+                  <ProfileActions>
+                    <Action
+                      data-aos="fade-up"
+                      data-aos-duration="250"
+                      to={'#'}
+                      borders="true"
+                      width="200px"
+                      hover_width="220px"
+                    >
+                      Review your transaction
+                      <FontAwesomeIcon
+                        className="fa-icon"
+                        icon={faLongArrowAltRight}
+                      />
+                    </Action>
+                  </ProfileActions>
+                )}
+            </ReviewContainer>
+          </Container>
+        </ParentContainer>
+      )}
     </>
   );
 };
@@ -576,4 +583,4 @@ TransactionPage.propTypes = {
 
 export default connect(mapStateToProps, mapDispatchToProps, null, {
   forwardRef: true,
-})(withTheme(withRouter(TransactionPage)));
+})(withTheme(withRouter(ReviewPage)));

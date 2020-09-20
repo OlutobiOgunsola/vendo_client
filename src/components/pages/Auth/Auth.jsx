@@ -394,21 +394,21 @@ const Auth = (props) => {
 
   // cleanup after unmounting from dom
   useEffect(() => {
-    return () => {
-      setLogin(true);
-      setUsername('');
-      setPassword('');
-      setRepeatPassword('');
-      setPwdType('password');
-      setAcctType('Client');
-      setPersist(false);
-      setValidating(false);
-      setUsernameValid(true);
-      setPasswordValid(true);
-      setError('');
-      setPwdStrength('weak');
-      setLoginValid(true);
-    };
+    // return () => {
+    //   setLogin(true);
+    //   setUsername('');
+    //   setPassword('');
+    //   setRepeatPassword('');
+    //   setPwdType('password');
+    //   setAcctType('Client');
+    //   setPersist(false);
+    //   setValidating(false);
+    //   setUsernameValid(true);
+    //   setPasswordValid(true);
+    //   setError('');
+    //   setPwdStrength('weak');
+    //   setLoginValid(true);
+    // };
   }, []);
   useEffect(() => {
     AOS.init({ duration: 500 });

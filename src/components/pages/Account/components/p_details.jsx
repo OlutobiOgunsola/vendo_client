@@ -20,6 +20,7 @@ const storeAnimation = keyframes`${fadeIn}`;
 const ParentContainer = styled.div`
   width: 100%;
   height: 100%;
+  font-size: 16px;
 `;
 const Container = styled.div`
   width: 100%;
@@ -142,6 +143,30 @@ const Store = styled.img`
     height: 35px;
     margin-left: 2px 4px;
     border-width: 1px;
+  }
+`;
+
+const AddStoreButton = styled(Button)`
+  width: 6rem;
+  height: 6rem;
+  display: inline-block;
+  margin: 0.5rem 0rem;
+  border: dashed 4px ${(props) => props.theme.colors.saturated_contrast_60};
+  border-radius: 4px;
+  position: relative;
+  &:before {
+    content: '+';
+    font-size: 2rem;
+    color: ${(props) => props.theme.colors.saturated_contrast_60};
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: grid;
+    place-items: center;
   }
 `;
 
@@ -429,6 +454,7 @@ const P_Details = (props) => {
                     />
                   );
                 })}
+              <AddStoreButton to={'/stores/add'} />
             </Stores>
           </>
         )}

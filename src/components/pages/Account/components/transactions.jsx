@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignInAlt, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import InputRow from '@/components/widgets/UI/InputRow';
 import Button from '@/components/UI/buttons/Button';
+import { sort } from '@/assets/helperFunctions/sort';
 
 const ParentContainer = styled.div`
   width: 100%;
@@ -93,7 +94,7 @@ const Transactions = (props) => {
   };
 
   const user = props.user;
-  console.log(user);
+  console.log('user', user);
   useEffect(() => {
     if (mounted) {
       setR_Transactions(props.user.user.r_transactions);
@@ -154,7 +155,7 @@ const Transactions = (props) => {
             </Collections>
             {collection === 'received' && r_transactions && (
               <>
-                {r_transactions.map((transaction) => {
+                {r_transactions.sort(sort('latestFirst')).map((transaction) => {
                   return (
                     <TransactionItem
                       domain="owner"
@@ -194,7 +195,7 @@ const Transactions = (props) => {
                     Add
                   </Button>
                 </InputRow>
-                {i_transactions.map((transaction) => {
+                {i_transactions.sort(sort('latestFirst')).map((transaction) => {
                   return (
                     <TransactionItem
                       domain="visitor"
@@ -203,6 +204,7 @@ const Transactions = (props) => {
                       transaction={transaction}
                       key={transaction._id}
                       id={transaction._id}
+                      domain='owner'
                       updater={props.updater}
                       user_token={props.user.user.jwt}
                     />

@@ -24,10 +24,12 @@ function withUser(WrappedComponent, authRequired = false) {
           if (!userObj && authRequired) {
             const match = this.props.match;
             const path = match.url;
-            localStorage.setItem('vendo_prev_location_url', path);
+            localStorage.setItem(
+              'vendo_prev_location_url',
+              JSON.stringify(path),
+            );
             this.props.history.push('/auth');
           }
-          // if (this.state.mounted) {
           return this.setState((state) => {
             return {
               user: {
@@ -37,13 +39,14 @@ function withUser(WrappedComponent, authRequired = false) {
               },
             };
           });
-          // }
         } else if (!id && this.state.mounted && authRequired) {
           const match = this.props.match;
           const path = match.url;
           localStorage.setItem('vendo_prev_location_url', JSON.stringify(path));
           this.props.history.push('/auth');
         }
+      } else {
+        return null;
       }
     };
     componentDidMount() {

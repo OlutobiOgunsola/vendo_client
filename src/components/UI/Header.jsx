@@ -25,9 +25,9 @@ const ParentContainer = styled.header`
   margin: 0;
   box-shadow: ${(props) =>
     props.useOwnBackground ? '0px 2px 5px rgba(0, 0, 0, 0.5)' : ''};
-  padding: ${(props) => (props.usePagePadding ? '' : '10px 200px')};
-  @media (max-width: 900px) {
-    padding: ${(props) => (props.usePagePadding ? '' : '10px 100px')};
+  padding: 10px 100px;
+  @media (max-width: 880px) {
+    padding: ${(props) => (props.usePagePadding ? '' : '10px 50px')};
   }
   @media (max-width: 700px) {
     padding: ${(props) => (props.usePagePadding ? '' : '10px 50px')};
@@ -37,6 +37,7 @@ const ParentContainer = styled.header`
   }
   @media (max-width: 400px) {
     width: 100%;
+    padding: 8px;
   }
   background: ${(props) =>
     props.useOwnBackground ? props.theme.colors.dark_background : ''};

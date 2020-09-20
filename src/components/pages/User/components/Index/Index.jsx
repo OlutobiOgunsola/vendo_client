@@ -19,6 +19,7 @@ const storeAnimation = keyframes(fadeIn);
 const ParentContainer = styled.div`
   max-width: 880px;
   margin: 0 auto;
+  animation: 0.25s ${storeAnimation};
 `;
 
 const EmptyStateText = styled.h5`
@@ -104,6 +105,14 @@ const StoreItem = styled.img`
   &:hover {
     cursor: pointer;
     opacity: 1;
+  }
+  @media (max-width: 580px) {
+    width: 75px;
+    height: 75px;
+  }
+  @media (max-width: 400px) {
+    width: 50px;
+    height: 50px;
   }
 `;
 

@@ -14,33 +14,41 @@ import {
   useLocation,
 } from 'react-router-dom';
 
-import StoreIndex from './components/Index/Index';
+import StoreIndex from './components/Index';
+import AddStore from './components/Add';
 
 import withUser from '@/components/higher-order/withUser';
 import Footer from '@/components/UI/Footer';
 import Header from '@/components/UI/Header';
 import Loader from '@/components/widgets/UI/Loader';
 import Alert from '@/components/widgets/UI/Alert';
-import { loadUser } from '@/actions/user';
+import TransactionsIndex from './components/Transactions/Index';
 
 import empty404 from '@/assets/images/lottie/404.json';
 import defaultImage from '@/assets/images/icons/account/Profile.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faPlus,
   faLongArrowAltRight,
   faEnvelope,
+  faEdit,
 } from '@fortawesome/free-solid-svg-icons';
+import { setAlert } from '@/actions/alerts';
 
 const ParentContainer = styled.div`
   width: 100%;
-  background: ${(props) => props.theme.colors.dark_background};
+  background: ${(props) => props.theme.colors.page_background};
   height: auto;
+  font-size: 16px;
 `;
 
 const Container = styled.div`
   width: 100%;
+  max-width: 880px;
+  margin: 2.5rem auto;
   box-sizing: border-box;
+  border-radius: 4px;
+  border: none;
+  padding: 4rem 3rem;
   background: ${(props) => props.theme.colors.dark_background};
   /* padding: 20px; */
 
@@ -54,19 +62,42 @@ const Container = styled.div`
   }
 
   @media (max-width: 900px) {
+    width: 50rem;
   }
   @media (max-width: 800px) {
+    width: 40rem;
   }
   @media (max-width: 700px) {
+    width: 37rem;
     flex-flow: column nowrap;
     padding: 40px 50px;
   }
-  @media (max-width: 500px) {
+  @media (max-width: 620px) {
+    width: 33rem;
     flex-flow: column nowrap;
     padding: 40px 10px;
     box-sizing: border-box;
   }
+
+  @media (max-width: 540px) {
+    width: 30rem;
+    flex-flow: column nowrap;
+    padding: 40px 10px;
+    box-sizing: border-box;
+  }
+  @media (max-width: 500px) {
+    padding: 40px 5px;
+    width: 27rem;
+    flex-flow: column nowrap;
+  }
+  @media (max-width: 440px) {
+    padding: 40px 5px;
+    width: 23rem;
+    flex-flow: column nowrap;
+  }
   @media (max-width: 400px) {
+    width: 100%;
+    padding: 0.5rem;
     flex-flow: column nowrap;
   }
 `;
@@ -77,6 +108,9 @@ const ProfileActions = styled.div`
   margin: 16px auto;
   display: flex;
   justify-content: space-between;
+  @media (max-width: 580px) {
+    height: 30px;
+  }
 `;
 
 const Action = styled(Link)`
@@ -84,7 +118,6 @@ const Action = styled(Link)`
   height: 100%;
   line-height: 50px;
   width: ${(props) => (props.width ? props.width : '48%')};
-  margin: 0 auto;
   text-align: center;
   box-sizing: border-box;
   background: ${(props) => props.theme.colors.dark_background};
@@ -116,10 +149,34 @@ const Action = styled(Link)`
       margin-left: 12px;
       opacity: 1;
     }
+    @media (max-width: 600px) {
+      .fa-icon {
+        left: 8px;
+        margin-left: 8px;
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 450px) {
+      .fa-icon {
+        left: 4px;
+        margin-left: 4px;
+        opacity: 1;
+      }
+    }
+  }
+
+  @media (max-width: 900px) {
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 580px) {
+    font-size: 0.75rem;
+    line-height: 30px;
   }
 `;
 
-const UserProfile = styled.section`
+const StoreProfile = styled.section`
   width: 100%;
   height: auto;
   background: ${(props) => {
@@ -127,19 +184,19 @@ const UserProfile = styled.section`
       ? `url(${props.background_cover_image})`
       : props.theme.colors.dark_background;
   }};
-  /* margin: 40px 0px; */
 `;
 
-const UserModal = styled.span`
+const StoreModal = styled.span`
   display: block;
   width: 100%;
   height: 100%;
-  position: relative;
   background: rgba(0, 0, 0, 0.2);
-  padding: 24px 0px;
+  position: relative;
+  /* padding: 24px 0px; */
+  box-sizing: border-box;
 `;
 
-const UserImage = styled.img`
+const StoreImage = styled.img`
   height: 150px;
   width: 150px;
   border: solid 8px ${(props) => props.theme.colors.yellow};
@@ -147,8 +204,23 @@ const UserImage = styled.img`
   display: inline-block;
   position: absolute;
   top: 10%;
+  @media (max-width: 900px) {
+    height: 100px;
+    width: 100px;
+  }
+
+  @media (max-width: 540px) {
+    height: 75px;
+    width: 75px;
+    border: solid 4px ${(props) => props.theme.colors.yellow};
+  }
+  @media (max-width: 380px) {
+    height: 50px;
+    width: 50px;
+    border: solid 2px ${(props) => props.theme.colors.yellow};
+  }
 `;
-const UserDetails = styled.div`
+const StoreDetails = styled.div`
   width: calc(100% - 182px);
   display: inline-block;
   display: inherit;
@@ -157,13 +229,49 @@ const UserDetails = styled.div`
   box-sizing: border-box;
   padding: 16px;
   border-bottom: 2px solid ${(props) => props.theme.colors.light_background};
+  @media (max-width: 900px) {
+    width: calc(100% - 132px);
+  }
+
+  @media (max-width: 540px) {
+    width: calc(100% - 93px);
+  }
+
+  @media (max-width: 380px) {
+    width: calc(100% - 58px);
+  }
 `;
-const UserDetailsContainer = styled.div`
+const StoreDetailsContainer = styled.div`
   max-width: 880px;
   height: auto;
   margin: 0px auto 40px auto;
   display: flex;
   flex-flow: row nowrap;
+  @media (max-width: 900px) {
+    width: 50rem;
+  }
+  @media (max-width: 800px) {
+    width: 40rem;
+  }
+  @media (max-width: 700px) {
+    width: 37rem;
+  }
+  @media (max-width: 620px) {
+    width: 33rem;
+  }
+
+  @media (max-width: 540px) {
+    width: 30rem;
+  }
+  @media (max-width: 500px) {
+    width: 27rem;
+  }
+  @media (max-width: 440px) {
+    width: 23rem;
+  }
+  @media (max-width: 400px) {
+    width: 20rem;
+  }
 `;
 const NameBar = styled.span`
   display: flex;
@@ -177,31 +285,43 @@ const NameBar = styled.span`
     margin-left: 8px;
     display: inline-block;
     font-family: 'Noto Sans Regular';
-    font-size: 32px;
+    font-size: 2rem;
     color: ${(props) => props.theme.colors.yellow};
+    @media (max-width: 580px) {
+      font-size: 1rem;
+    }
   }
   h2 {
     display: inline-block;
     font-family: 'Noto Sans Regular';
     font-weight: 300;
-    font-size: 32px;
+    font-size: 2rem;
     color: ${(props) => props.theme.colors.saturated_contrast};
     margin: 0;
+    @media (max-width: 580px) {
+      font-size: 1rem;
+    }
   }
 `;
 const Handle_And_Rating = styled.div`
-  margin: 8px 0px;
+  margin: 0.5rem 0rem;
+  @media (max-width: 580px) {
+    margin: 0.25rem 0rem;
+  }
 `;
 const Handle = styled.span`
   margin: 0;
-  padding-right: 16px;
+  padding-right: 1rem;
   border-right: solid 1px ${(props) => props.theme.colors.saturated_contrast};
   font-family: 'Josefin Sans Light';
   color: ${(props) => props.theme.colors.yellow};
+  @media (max-width: 580px) {
+    padding-right: 0.5rem;
+  }
 `;
 const Rating = styled.span`
   margin: 0;
-  margin-left: 16px;
+  margin-left: 1rem;
   font-family: 'Josefin Sans Light';
   font-size: 14px;
   color: ${(props) => props.theme.colors.saturated_contrast};
@@ -214,10 +334,10 @@ const Rating = styled.span`
 `;
 const Bio = styled.p`
   margin: 0;
-  max-height: 64px;
-  padding: 8px 0px;
+  max-height: 4rem;
+  padding: 0.5rem 0rem;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 1.25rem;
   font-family: 'Josefin Sans Light';
   color: ${(props) => props.theme.colors.saturated_contrast};
   display: -webkit-box;
@@ -227,7 +347,7 @@ const Bio = styled.p`
   overflow: hidden;
 `;
 const Tags = styled.div`
-  margin: 16px 0px;
+  margin: 1rem 0rem;
   display: inline-block;
   max-width: 200px;
   overflow: hidden;
@@ -235,11 +355,12 @@ const Tags = styled.div`
 const TagItem = styled.span`
   display: inline-block;
   padding: 0.25rem;
-  background: ${(props) => props.theme.colors.saturated_contrast_40};
+  font-size: 0.75rem;
+  background: ${(props) => props.theme.colors.yellow};
   border-radius: 0.25rem;
   border: none;
   margin-left: 0.5rem;
-  color: ${(props) => props.theme.colors.saturated_contrast};
+  color: ${(props) => props.theme.colors.dark_background};
   &:first-child {
     margin-left: 0px;
   }
@@ -265,7 +386,10 @@ const Store = (props) => {
   const [alerts, addAlert] = useState([]);
   const [display, setDisplay] = useState('');
   const [transactions, setTransactions] = useState([]);
+  const [transactionsRoute, setTransactionsRoute] = useState(false);
   const [mounted, setMounted] = useState(true);
+  const [status, setStatus] = useState('exists');
+  const [addError, setAddError] = useState(false);
   const loginStatus = props.user.loggedIn;
   const [store, setStore] = useState({
     _id: '',
@@ -275,29 +399,51 @@ const Store = (props) => {
     reviews: [],
     transactions: [],
   });
+  const [storePhoto, setStore_Photo] = useState(store.photo);
 
   const store_found = store._id !== '' && store._id !== undefined;
 
-  const { match } = props;
-  const target_store_id = match.params.store_id;
+  const owner_id = store_found && store.owner_id;
 
-  const toggleLoading = (payload) => {
-    return setLoading(payload);
+  const owner = owner_id === props.user.user._id;
+
+  const { match } = props;
+  const target_store_name = match.params.store_name;
+
+  const navigateToStore = () => {
+    return props.history.push(`/stores/${store.address}`);
+  };
+
+  const setTransactionPath = (payload) => {
+    return setTransactionsRoute(payload);
   };
 
   useEffect(() => {
+    setLoading(true);
     const getStore = async (id) => {
       return axios
         .get(
-          `${process.env.REACT_APP_API_PREFIX}/api/stores/${target_store_id}`,
+          `${process.env.REACT_APP_API_PREFIX}/api/stores/${target_store_name}`,
         )
         .then((res) => {
           if (mounted) {
             setStore(res.data.data);
+            setStore_Photo(res.data.data.photo);
+            setLoading(false);
           }
+        })
+        .catch((err) => {
+          setAlert(addAlert, 'error', 'Cannot get store!');
+          setLoading(false);
+          const timeout = setTimeout(() => {
+            if (target_store_name !== 'add') {
+              props.history.push(props.history.goBack());
+            }
+            clearTimeout(timeout);
+          }, 3000);
         });
     };
-    getStore(target_store_id);
+    getStore(target_store_name);
     if (mounted) {
       !transactions ? setFetching(true) : setFetching(false);
     }
@@ -305,6 +451,17 @@ const Store = (props) => {
       setMounted(false);
     };
   }, []);
+
+  useEffect(() => {
+    if (target_store_name === 'add') {
+      if (loginStatus && props.user.user.accountType === 'Vendor') {
+        setStatus('new');
+        setAddError(false);
+      } else {
+        setAddError(true);
+      }
+    }
+  }, [loginStatus]);
 
   // destructure pathname from useLocation hook
   const { pathname } = useLocation();
@@ -325,7 +482,9 @@ const Store = (props) => {
 
   return (
     <ParentContainer>
-      <Header useOwnBackground />
+      {isLoading && <Loader />}
+      {isFetching && <Loader transition={0.1} />}
+      <Header useOwnBackground usePagePadding />
       {alerts.map((alert) => {
         return (
           <Alert type={alert.type} key={alert.text}>
@@ -334,33 +493,21 @@ const Store = (props) => {
         );
       })}
 
-      <Container>
-        {isLoading && <Loader />}
-        {isFetching && <Loader transition={0.2} />}
-        {!store._id && (
+      {store_found &&
+        !transactionsRoute &&
+        status !== 'new' &&
+        !isLoading &&
+        !isFetching && (
           <>
-            <Lottie options={LottieOptions} height={300} width={300} />
-            <EmptyStateText
-              style={{
-                textAlign: 'center',
-                color: `${props.theme.colors.saturated_contrast}`,
-              }}
-            >
-              No Store Found.
-            </EmptyStateText>
-            <EmptyStateSubtext>Back to home</EmptyStateSubtext>
-          </>
-        )}
-
-        {store_found && (
-          <>
-            <UserProfile background_cover_image={store.background_cover_image}>
-              <UserModal>
-                <UserDetailsContainer>
-                  <UserImage src={store.photo || defaultImage} />
-                  <UserDetails>
+            <StoreProfile background_cover_image={store.background_cover_image}>
+              <StoreModal>
+                <StoreDetailsContainer>
+                  <StoreImage src={storePhoto || defaultImage} />
+                  <StoreDetails>
                     <NameBar>
-                      <h1>{store.name}</h1>
+                      <h1 onClick={navigateToStore}>
+                        {store.name.toUpperCase()}
+                      </h1>
                       <Tags>
                         {store.category.length > 0 &&
                           store.category.map((category) => {
@@ -373,63 +520,148 @@ const Store = (props) => {
                       </Tags>
                     </NameBar>
                     <Handle_And_Rating>
-                      <Handle>@{store.handle || ''}</Handle>
+                      <Handle>@{store.address || ''}</Handle>
                       <Rating>
                         <strong>{store.rating > 0 || '0'}%</strong>
                       </Rating>
                     </Handle_And_Rating>
                     <Bio>{store.bio ? store.bio : 'No bio'}</Bio>
 
-                    <ProfileActions>
-                      <Action to={'#'}>
-                        New Transaction
-                        <FontAwesomeIcon
-                          className="fa-icon"
-                          icon={faLongArrowAltRight}
-                        />
-                      </Action>
-                      <Action to={'#'}>
-                        Send Mail{' '}
-                        <FontAwesomeIcon
-                          className="fa-icon"
-                          icon={faEnvelope}
-                        />
-                      </Action>
-                    </ProfileActions>
-                  </UserDetails>
-                </UserDetailsContainer>
-              </UserModal>
-            </UserProfile>
-            <Router>
-              <Switch>
-                <Route
-                  path={`${match.url}`}
-                  exact
-                  component={() => {
-                    return (
-                      <StoreIndex
-                        store={store}
-                        updater={addAlert}
-                        loggedinUser={props.user.user}
-                      />
-                    );
-                  }}
-                />
-                <Route
-                  path={`${match.url}/transactions`}
-                  component={() => {
-                    return null;
-                    //   <ConnectedTransactions
-                    //     user={user}
-                    //     user_id={target_user_id}
-                    //     updater={addAlert}
-                    //     loggedinUser={props.user.user}
-                    //   />
-                  }}
-                />
-              </Switch>
-            </Router>
+                    {!owner && (
+                      <ProfileActions>
+                        <Action to={`${match.url}/transactions/add`}>
+                          New Transaction
+                          <FontAwesomeIcon
+                            className="fa-icon"
+                            icon={faLongArrowAltRight}
+                          />
+                        </Action>
+                        <Action to={'#'}>
+                          Send Mail{' '}
+                          <FontAwesomeIcon
+                            className="fa-icon"
+                            icon={faEnvelope}
+                          />
+                        </Action>
+                      </ProfileActions>
+                    )}
+                    {owner && (
+                      <ProfileActions>
+                        <Action to={`${match.url}/edit`}>
+                          Edit Store
+                          <FontAwesomeIcon className="fa-icon" icon={faEdit} />
+                        </Action>
+                        <Action to={'#'}>
+                          Send Mail{' '}
+                          <FontAwesomeIcon
+                            className="fa-icon"
+                            icon={faEnvelope}
+                          />
+                        </Action>
+                      </ProfileActions>
+                    )}
+                  </StoreDetails>
+                </StoreDetailsContainer>
+              </StoreModal>
+            </StoreProfile>
           </>
+        )}
+
+      <Container>
+        {!store._id &&
+          !isLoading &&
+          !isFetching &&
+          !addError &&
+          status !== 'new' && (
+            <>
+              <Lottie options={LottieOptions} height={300} width={300} />
+              <EmptyStateText
+                style={{
+                  textAlign: 'center',
+                  color: `${props.theme.colors.saturated_contrast}`,
+                }}
+              >
+                No Store Found.
+              </EmptyStateText>
+              <EmptyStateSubtext>Back to home</EmptyStateSubtext>
+            </>
+          )}
+        {addError && (
+          <>
+            <Lottie options={LottieOptions} height={300} width={300} />
+            <EmptyStateText
+              style={{
+                textAlign: 'center',
+                color: `${props.theme.colors.saturated_contrast}`,
+              }}
+            >
+              You cannot add a store
+            </EmptyStateText>
+            <EmptyStateSubtext>
+              You are running a Client account. Please open a Vendor account to
+              add stores.
+            </EmptyStateSubtext>
+          </>
+        )}
+        {status === 'new' && !isLoading && !isFetching && (
+          <AddStore
+            updater={addAlert}
+            user={props.user.user}
+            loading={setLoading}
+          />
+        )}
+        {status !== 'new' && !isLoading && !isFetching && store_found && (
+          // <Router>
+          <Switch>
+            <Route
+              path={`${match.url}`}
+              exact
+              component={() => {
+                return (
+                  <StoreIndex
+                    store={store}
+                    updater={addAlert}
+                    loggedinUser={props.user.user}
+                  />
+                );
+              }}
+            />
+
+            {/* {store_found && props.user.user._id === store.owner_id && ( */}
+            <Route
+              path={`${match.url}/edit`}
+              exact
+              component={() => {
+                return (
+                  <AddStore
+                    updater={addAlert}
+                    user={props.user.user}
+                    loading={setLoading}
+                    store={store}
+                    setUserPhoto={setStore_Photo}
+                  />
+                );
+              }}
+            />
+            {/* )} */}
+
+            <Route
+              path={`${match.url}/transactions`}
+              component={() => {
+                return (
+                  <TransactionsIndex
+                    updater={addAlert}
+                    user={props.user.user}
+                    store_id={store._id}
+                    handle={store.address}
+                    owner={owner}
+                    setRoute={setTransactionPath}
+                  />
+                );
+              }}
+            />
+          </Switch>
+          // </Router>
         )}
       </Container>
       <Footer />

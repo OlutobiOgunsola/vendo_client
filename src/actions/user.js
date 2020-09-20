@@ -86,7 +86,7 @@ const setUserPhotoSuccess = (userPhoto) => {
 
 export const loadUser = (id) => {
   return (dispatch) => {
-    dispatch(loadUserStarted());
+    dispatch(loadUserStarted);
     axios.defaults.withCredentials = true;
     return axios
       .get(`${process.env.REACT_APP_API_PREFIX}/api/users/${id}`, {
@@ -106,7 +106,7 @@ export const loadUser = (id) => {
 export const setUser = (user) => {
   console.log('begin set user');
   return (dispatch) => {
-    dispatch(beginSetUser());
+    dispatch(beginSetUser);
     console.log('dispatch set user');
     dispatch(setUserSuccess(user));
   };
@@ -115,7 +115,7 @@ export const setUser = (user) => {
 export const loginUser = (user) => {
   console.log('begin login user');
   return (dispatch) => {
-    dispatch(beginLoginUser());
+    dispatch(beginLoginUser);
     console.log('dispatch set user');
     dispatch(loginUserSuccess(user));
   };
@@ -124,7 +124,7 @@ export const loginUser = (user) => {
 export const editUser = (user) => {
   console.log('begin edit user');
   return (dispatch) => {
-    dispatch(beginEditUser());
+    dispatch(beginEditUser);
     console.log('dispatch edit user');
     dispatch(editUserSuccess(user));
   };
@@ -132,14 +132,14 @@ export const editUser = (user) => {
 
 export const setUserPhoto = (photo) => {
   return (dispatch) => {
-    dispatch(beginSetUserPhoto());
+    dispatch(beginSetUserPhoto);
     dispatch(setUserPhotoSuccess(photo));
   };
 };
 
 export const clearUser = (user) => {
   return (dispatch) => {
-    dispatch(beginClearUser());
+    dispatch(beginClearUser);
     dispatch(clearUserSuccess(user));
   };
 };

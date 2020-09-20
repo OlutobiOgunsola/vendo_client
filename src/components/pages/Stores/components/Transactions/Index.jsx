@@ -16,6 +16,7 @@ import {
 } from 'react-router-dom';
 
 import TransactionPage from './components/transaction';
+import TransactionList from './components/list';
 import AddTransaction from './components/add';
 
 import withUser from '@/components/higher-order/withUser';
@@ -23,9 +24,7 @@ import Footer from '@/components/UI/Footer';
 import Header from '@/components/UI/Header';
 import Loader from '@/components/widgets/UI/Loader';
 import Alert from '@/components/widgets/UI/Alert';
-import { loadUser } from '@/actions/user';
 
-import empty404 from '@/assets/images/lottie/404.json';
 import defaultImage from '@/assets/images/icons/account/Profile.svg';
 
 const ParentContainer = styled.div`
@@ -86,7 +85,7 @@ const TransactionsIndex = (props) => {
   const [isFetching, setFetching] = useState(false);
   const [alerts, addAlert] = useState([]);
   const [mounted, setMounted] = useState(true);
-  const [route, setRoute] = useState(true);
+  const [transactionsArray, setTransactionsArray] = useState([]);
   const [transaction, setTransaction] = useState({
     store_id: {
       photo: '',
@@ -97,40 +96,47 @@ const TransactionsIndex = (props) => {
 
   const { match } = props;
 
+  const store_id = props.store_id;
+  const owner = props.owner;
+  const handle = props.handle;
+
   const toggleLoading = (payload) => {
     return setLoading(payload);
   };
 
   useEffect(() => {
-    // initialize aos library
-    AOS.init({ duration: 2000 });
-    AOS.refresh();
-  }, []);
+    setLoading(true);
+    const getStoreTransactions = async (store_id) => {
+      return axios
+        .get(
+          `${process.env.REACT_APP_API_PREFIX}/api/transactions/all/${store_id}`,
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            const result = res.data.data;
+            setTransactionsArray(result);
+            return;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    };
 
-  const location = useLocation();
+    if (store_id) {
+      getStoreTransactions(store_id);
+    }
+  }, [store_id]);
 
   useEffect(() => {
-    //get loaction details
-    const loaded = location.pathname.split('/').pop();
-    if (loaded !== '' && loaded !== '/' && loaded !== 'transactions') {
-      setRoute(true);
-    } else {
-      setRoute(false);
-    }
-  }, [match.url]);
-
-  const LottieOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: empty404,
-    rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice',
-    },
-  };
+    // props.setRoute(true);
+  }, []);
 
   return (
     <ParentContainer>
-      <Header useOwnBackground />
       {alerts.map((alert) => {
         return (
           <Alert type={alert.type} key={alert.text}>
@@ -142,56 +148,50 @@ const TransactionsIndex = (props) => {
       <Container>
         {isLoading && <Loader />}
         {isFetching && <Loader transition={0.2} />}
-        <Router>
-          <Switch>
-            <Route
-              path={`${match.url}/add`}
-              component={() => {
-                return (
-                  <AddTransaction
-                    updater={addAlert}
-                    loggedinUser={props.user.user}
-                  />
-                );
-              }}
-            />
-            <Route
-              path={`${match.url}/edit/:transaction_id`}
-              component={() => {
-                return null;
-              }}
-            />
-            <Route
-              path={`${match.url}/:transaction_id`}
-              component={() => {
-                return (
-                  <TransactionPage
-                    updater={addAlert}
-                    loggedinUser={props.user.user}
-                  />
-                );
-              }}
-            />
-          </Switch>
-        </Router>
-        {!route && (
-          <>
-            <Lottie options={LottieOptions} height={300} width={300} />
-            <EmptyStateText
-              style={{
-                textAlign: 'center',
-                color: `${props.theme.colors.saturated_contrast}`,
-              }}
-            >
-              No Transaction Found.
-            </EmptyStateText>
-            <EmptyStateSubtext>Back to home</EmptyStateSubtext>
-          </>
-        )}
+
+        <Switch>
+          <Route
+            path={`${match.url}/`}
+            exact
+            component={() => {
+              return (
+                <TransactionList
+                  updater={addAlert}
+                  loggedinUser={props.user}
+                  transactions={transactionsArray}
+                />
+              );
+            }}
+          />
+          <Route
+            path={`${match.url}/add`}
+            exact
+            component={() => {
+              return (
+                <AddTransaction
+                  updater={addAlert}
+                  loggedinUser={props.user}
+                  store_id={props.store_id}
+                />
+              );
+            }}
+          />
+          <Route
+            path={`${match.url}/:transaction_id`}
+            component={() => {
+              return (
+                <TransactionPage
+                  updater={addAlert}
+                  loggedinUser={props.user}
+                  store_id={props.store_id}
+                />
+              );
+            }}
+          />
+        </Switch>
       </Container>
-      <Footer />
     </ParentContainer>
   );
 };
 
-export default withUser(withTheme(withRouter(TransactionsIndex)), false);
+export default withTheme(withRouter(TransactionsIndex));

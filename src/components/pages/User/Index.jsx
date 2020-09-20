@@ -5,6 +5,7 @@ import axios from 'axios';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import StarRatings from 'react-star-ratings';
+import { fadeIn } from 'react-animations';
 
 import {
   BrowserRouter as Router,
@@ -32,15 +33,23 @@ import {
   faEnvelope,
 } from '@fortawesome/free-solid-svg-icons';
 
+const fadeInAnimation = keyframes`${fadeIn}`;
+
 const ParentContainer = styled.div`
   width: 100%;
   background: ${(props) => props.theme.colors.dark_background};
   height: auto;
+  font-size: 16px;
 `;
 
 const Container = styled.div`
   width: 100%;
+  max-width: 880px;
+  margin: 2.5rem auto;
   box-sizing: border-box;
+  border-radius: 4px;
+  border: none;
+  padding: 4rem 3rem;
   background: ${(props) => props.theme.colors.dark_background};
   /* padding: 20px; */
 
@@ -54,20 +63,43 @@ const Container = styled.div`
   }
 
   @media (max-width: 900px) {
+    width: 50rem;
   }
   @media (max-width: 800px) {
+    width: 40rem;
   }
   @media (max-width: 700px) {
+    width: 37rem;
     flex-flow: column nowrap;
     padding: 40px 50px;
   }
-  @media (max-width: 500px) {
+  @media (max-width: 620px) {
+    width: 33rem;
     flex-flow: column nowrap;
     padding: 40px 10px;
     box-sizing: border-box;
   }
-  @media (max-width: 400px) {
+
+  @media (max-width: 540px) {
+    width: 30rem;
     flex-flow: column nowrap;
+    padding: 40px 10px;
+    box-sizing: border-box;
+  }
+  @media (max-width: 500px) {
+    padding: 40px 5px;
+    width: 27rem;
+    flex-flow: column nowrap;
+  }
+  @media (max-width: 440px) {
+    padding: 40px 5px;
+    width: 23rem;
+    flex-flow: column nowrap;
+  }
+  @media (max-width: 400px) {
+    width: 100%;
+    flex-flow: column nowrap;
+    padding: 0.5rem;
   }
 `;
 
@@ -77,6 +109,9 @@ const ProfileActions = styled.div`
   margin: 16px auto;
   display: flex;
   justify-content: space-between;
+  @media (max-width: 580px) {
+    height: 30px;
+  }
 `;
 
 const Action = styled(Link)`
@@ -84,7 +119,6 @@ const Action = styled(Link)`
   height: 100%;
   line-height: 50px;
   width: ${(props) => (props.width ? props.width : '48%')};
-  margin: 0 auto;
   text-align: center;
   box-sizing: border-box;
   background: ${(props) => props.theme.colors.dark_background};
@@ -116,6 +150,30 @@ const Action = styled(Link)`
       margin-left: 12px;
       opacity: 1;
     }
+    @media (max-width: 600px) {
+      .fa-icon {
+        left: 8px;
+        margin-left: 8px;
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 450px) {
+      .fa-icon {
+        left: 4px;
+        margin-left: 4px;
+        opacity: 1;
+      }
+    }
+  }
+
+  @media (max-width: 900px) {
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 580px) {
+    font-size: 0.75rem;
+    line-height: 30px;
   }
 `;
 
@@ -134,9 +192,10 @@ const UserModal = styled.span`
   display: block;
   width: 100%;
   height: 100%;
-  position: relative;
   background: rgba(0, 0, 0, 0.2);
-  padding: 24px 0px;
+  position: relative;
+  /* padding: 24px 0px; */
+  box-sizing: border-box;
 `;
 
 const UserImage = styled.img`
@@ -147,6 +206,21 @@ const UserImage = styled.img`
   display: inline-block;
   position: absolute;
   top: 10%;
+  @media (max-width: 900px) {
+    height: 100px;
+    width: 100px;
+  }
+
+  @media (max-width: 540px) {
+    height: 75px;
+    width: 75px;
+    border: solid 4px ${(props) => props.theme.colors.yellow};
+  }
+  @media (max-width: 380px) {
+    height: 50px;
+    width: 50px;
+    border: solid 2px ${(props) => props.theme.colors.yellow};
+  }
 `;
 const UserDetails = styled.div`
   width: calc(100% - 182px);
@@ -157,6 +231,17 @@ const UserDetails = styled.div`
   box-sizing: border-box;
   padding: 16px;
   border-bottom: 2px solid ${(props) => props.theme.colors.light_background};
+  @media (max-width: 900px) {
+    width: calc(100% - 132px);
+  }
+
+  @media (max-width: 540px) {
+    width: calc(100% - 93px);
+  }
+
+  @media (max-width: 380px) {
+    width: calc(100% - 58px);
+  }
 `;
 const UserDetailsContainer = styled.div`
   max-width: 880px;
@@ -164,9 +249,37 @@ const UserDetailsContainer = styled.div`
   margin: 0px auto 40px auto;
   display: flex;
   flex-flow: row nowrap;
+  @media (max-width: 900px) {
+    width: 50rem;
+  }
+  @media (max-width: 800px) {
+    width: 40rem;
+  }
+  @media (max-width: 700px) {
+    width: 37rem;
+  }
+  @media (max-width: 620px) {
+    width: 33rem;
+  }
+
+  @media (max-width: 540px) {
+    width: 30rem;
+  }
+  @media (max-width: 500px) {
+    width: 27rem;
+  }
+  @media (max-width: 440px) {
+    width: 23rem;
+  }
+  @media (max-width: 400px) {
+    width: 20rem;
+  }
 `;
 const NameBar = styled.span`
-  display: block;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
   text-align: left;
   h1 {
@@ -174,20 +287,29 @@ const NameBar = styled.span`
     margin-left: 8px;
     display: inline-block;
     font-family: 'Noto Sans Regular';
-    font-size: 32px;
+    font-size: 2rem;
     color: ${(props) => props.theme.colors.yellow};
+    @media (max-width: 580px) {
+      font-size: 1rem;
+    }
   }
   h2 {
     display: inline-block;
     font-family: 'Noto Sans Regular';
     font-weight: 300;
-    font-size: 32px;
+    font-size: 2rem;
     color: ${(props) => props.theme.colors.saturated_contrast};
     margin: 0;
+    @media (max-width: 580px) {
+      font-size: 1rem;
+    }
   }
 `;
 const Handle_And_Rating = styled.div`
-  margin: 8px 0px;
+  margin: 0.5rem 0rem;
+  @media (max-width: 580px) {
+    margin: 0.25rem 0rem;
+  }
 `;
 const Handle = styled.span`
   margin: 0;
@@ -224,16 +346,23 @@ const Bio = styled.p`
   overflow: hidden;
 `;
 const Tags = styled.div`
-  margin: 16px 0px;
+  margin: 1rem 0rem;
+  @media (max-width: 580px) {
+    margin: 0.5rem 0rem;
+  }
 `;
 const TagItem = styled.span`
-  padding: 8px;
-  background: ${(props) => props.theme.colors.light_background};
-  margin-left: 8px;
+  padding: 0.5rem;
+  background: ${(props) => props.theme.colors.yellow};
+  margin-left: 0.5rem;
   box-shadow: 2px 4px 10px ${(props) => props.theme.colors.dark_background_20};
-  color: ${(props) => props.theme.colors.saturated_contrast};
+  color: ${(props) => props.theme.colors.dark_background};
   &:first-child {
     margin-left: 0px;
+  }
+  @media (max-width: 580px) {
+    font-size: 0.75rem;
+    padding: 0.25rem;
   }
 `;
 
@@ -279,7 +408,8 @@ const User = (props) => {
   const user_found = user._id !== '' && user._id !== undefined;
 
   const { match } = props;
-  const target_user_id = match.params.user_id;
+  const target_user_name = match.params.user_name;
+  const target_user_id = user._id;
 
   const userRating = Math.ceil(user.rating);
 
@@ -288,18 +418,22 @@ const User = (props) => {
   };
 
   useEffect(() => {
-    const getUser = async (id) => {
+    setLoading(true);
+    const getUser = async (target_user_name) => {
       return axios
         .get(
-          `${process.env.REACT_APP_API_PREFIX}/api/users/user/${target_user_id}`,
+          `${process.env.REACT_APP_API_PREFIX}/api/users/user/${target_user_name}`,
         )
         .then((res) => {
           if (mounted) {
             setUser(res.data.data);
           }
+        })
+        .finally(() => {
+          setLoading(false);
         });
     };
-    getUser(target_user_id);
+    getUser(target_user_name);
     if (mounted) {
       !transactions ? setFetching(true) : setFetching(false);
     }
@@ -327,7 +461,7 @@ const User = (props) => {
 
   return (
     <ParentContainer>
-      <Header useOwnBackground />
+      <Header useOwnBackground usePagePadding />
       {alerts.map((alert) => {
         return (
           <Alert type={alert.type} key={alert.text}>
@@ -339,7 +473,7 @@ const User = (props) => {
       <Container>
         {isLoading && <Loader />}
         {isFetching && <Loader transition={0.2} />}
-        {!user._id && (
+        {!user._id && !isLoading && (
           <>
             <Lottie options={LottieOptions} height={300} width={300} />
             <EmptyStateText
@@ -416,36 +550,37 @@ const User = (props) => {
                 </UserDetailsContainer>
               </UserModal>
             </UserProfile>
-            <Router>
-              <Switch>
-                <Route
-                  path={`${match.url}`}
-                  exact
-                  component={() => {
-                    return (
-                      <UserIndex
-                        user={user}
-                        updater={addAlert}
-                        loggedinUser={props.user.user}
-                      />
-                    );
-                  }}
-                />
-                <Route
-                  path={`${match.url}/transactions`}
-                  component={() => {
-                    return (
-                      <ConnectedTransactions
-                        user={user}
-                        user_id={target_user_id}
-                        updater={addAlert}
-                        loggedinUser={props.user.user}
-                      />
-                    );
-                  }}
-                />
-              </Switch>
-            </Router>{' '}
+            {/* <Router> */}
+            <Switch>
+              <Route
+                path={`${match.url}`}
+                exact
+                component={() => {
+                  return (
+                    <UserIndex
+                      user={user}
+                      updater={addAlert}
+                      loggedinUser={props.user.user}
+                    />
+                  );
+                }}
+              />
+              <Route
+                path={`${match.url}/transactions`}
+                component={() => {
+                  return (
+                    <ConnectedTransactions
+                      user={user}
+                      user_name={target_user_name}
+                      user_id={target_user_id}
+                      updater={addAlert}
+                      loggedinUser={props.user.user}
+                    />
+                  );
+                }}
+              />
+            </Switch>
+            {/* </Router> */}
           </>
         )}
       </Container>

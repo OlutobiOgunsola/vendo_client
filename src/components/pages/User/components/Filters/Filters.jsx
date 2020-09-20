@@ -19,10 +19,12 @@ const Searchbar = styled.input`
   width: 250px;
   height: 40px;
   margin: 5px;
-  border: solid 1px ${(props) => props.theme.colors.saturated_contrast_20};
+  /* border: solid 0px ${(props) =>
+    props.theme.colors.saturated_contrast_20}; */
+  border: none;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.05);
-  color: ${(props) => props.theme.colors.saturated_contrast};
+  background: ${(props) => props.theme.colors.review_background};
+  color: ${(props) => props.theme.colors.saturated_contrast_60};
   padding: 0px 8px;
   box-sizing: border-box;
   &:focus {
@@ -33,12 +35,12 @@ const Searchbar = styled.input`
 const SortBy = styled.select`
   width: 150px;
   height: 40px;
-  border: solid 1px ${(props) => props.theme.colors.saturated_contrast_20};
+  border: none;
   border-radius: 4px;
   padding: 8px;
   box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.05);
-  color: ${(props) => props.theme.colors.saturated_contrast};
+  background: ${(props) => props.theme.colors.review_background};
+  color: ${(props) => props.theme.colors.saturated_contrast_60};
   &:focus {
     outline: none;
   }
@@ -59,9 +61,9 @@ const FilterComponent = (props) => {
   return (
     <ParentContainer>
       <Container>
-        <Label for="searchbar">Search</Label>
+        <Label htmlFor="searchbar">Search</Label>
         <Searchbar type="search" id="searchbar" placeholder="Search" />
-        <Label for="sortby">Sort by</Label>
+        <Label htmlFor="sortby">Sort by</Label>
         <SortBy id="sortby">
           <Option>Date</Option>
           <Option>Rating - Highest</Option>
