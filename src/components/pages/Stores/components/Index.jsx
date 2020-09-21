@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { keyframes, withTheme } from 'styled-components';
 import ReactTooltip from 'react-tooltip';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { fadeIn } from 'react-animations';
 import Lottie from 'react-lottie';
 
@@ -144,6 +144,7 @@ const Action = styled(Link)`
 `;
 
 const StoreIndex = (props) => {
+  const match = props.match;
   const store = props.store;
   const emptyReviewLottieOptions = {
     loop: true,
@@ -284,7 +285,12 @@ const StoreIndex = (props) => {
         )}
         <ProfileActions>
           {topTransaction && (
-            <Action to={'#'} borders="true" width="200px" hover_width="220px">
+            <Action
+              to={`${match.url}/transactions`}
+              borders="true"
+              width="200px"
+              hover_width="220px"
+            >
               View all transactions
               <FontAwesomeIcon className="fa-icon" icon={faLongArrowAltRight} />
             </Action>
@@ -307,4 +313,4 @@ StoreIndex.propTypes = {
   loggedinUser: PropTypes.object,
 };
 
-export default withTheme(StoreIndex);
+export default withTheme(withRouter(StoreIndex));

@@ -10,6 +10,7 @@ import Button from '@/components/UI/buttons/Button';
 import setAlert from '@/assets/helperFunctions/alerts';
 import withUser from '@/components/higher-order/withUser';
 
+
 const fadeInUpAnimation = keyframes`${fadeIn}`;
 
 const ParentContainer = styled.div`
@@ -105,10 +106,14 @@ const AddTransaction = (props) => {
         },
       )
       .then((res) => {
-        console.log(res);
+        if (res.status === 200) {
+          const _id = res.data.data._id;
+          setAlert(props.updater, 'success', 'Successfully added transaction.');
+          props.history.push(`/stores/${handle}/transactions/${_id}`);
+        }
       })
       .catch((err) => {
-        console.log(err);
+        setAlert(props.updater, 'error', 'Error adding transaction.');
       });
   };
 

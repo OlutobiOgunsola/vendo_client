@@ -8,22 +8,15 @@ import DefaultImage from '@/assets/images/icons/account/Profile.svg';
 import TransactionItem from '@/components/UI/interface/account/Transaction.jsx';
 import ReviewItem from '@/components/UI/interface/account/Review.jsx';
 
+import FilterComponent from '@/components/widgets/UI/Filters';
+
 const ParentContainer = styled.div`
-  background: ${(props) => props.theme.colors.page_background};
   width: 100%;
   height: auto;
   position: relative;
   z-index: 9;
   box-sizing: border-box;
   transition: all 0.25s ease-in-out;
-  margin: 32px auto 0px auto;
-  padding: 32px;
-  @media (max-width: 500px) {
-    padding: 16px;
-  }
-  @media (max-width: 400px) {
-    padding: 16px 8px;
-  }
 `;
 
 const Container = styled.div`
@@ -47,10 +40,30 @@ const EmptyStateSubtext = styled.p`
 const TransactionList = (props) => {
   const transactionsArray = props.transactions;
 
+  const [transactions, setTransactions] = useState(transactionsArray);
+
+  const sortBy = (sortOrder) => {
+    const transactionClone = [...transactions];
+
+    switch (sortOrder) {
+      case 'rating':
+        const sortedRating = transactionClone.sort((a, b) => {
+          return a.rating > b.rating;
+        });
+        return setTransactions(sortedRating);
+      case 'newest':
+        const sortedNewest = transactionClone.sort((a, b) => {
+          return a.createdAt > b.createdAt;
+        });
+        return setTransactions(sortedNewest);
+    }
+  };
+
   return (
     <>
-      <ParentContainer id="add_transaction">
+      <ParentContainer id="list_transaction">
         <Container>
+          <FilterComponent handleChange={sortBy} />
           {transactionsArray.map((transaction, index) => {
             return (
               <TransactionItem

@@ -14,7 +14,7 @@ import emptyTransactions from '@/assets/images/lottie/emptyTransactions.json';
 
 import { getTransactionsByUserID } from '@/actions/transaction';
 
-import FilterComponent from '../Filters/Filters';
+import FilterComponent from '@/components/widgets/UI/Filters';
 import { sort } from '@/assets/helperFunctions/sort';
 
 const ParentContainer = styled.div`
@@ -72,6 +72,7 @@ const Transactions = (props) => {
   const [alerts, addAlert] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [mounted, setMounted] = useState(true);
+  const [sortOrder, setSortOrder] = useState('newest');
   const [show, setShow] = useState(null);
   const loginStatus = props.user.loggedIn;
 
@@ -112,6 +113,23 @@ const Transactions = (props) => {
     },
   };
 
+  const sortBy = (sortOrder) => {
+    const transactionClone = [...transactions];
+
+    switch (sortOrder) {
+      case 'rating':
+        const sortedRating = transactionClone.sort((a, b) => {
+          return a.rating > b.rating;
+        });
+        return setTransactions(sortedRating);
+      case 'newest':
+        const sortedNewest = transactionClone.sort((a, b) => {
+          return a.createdAt > b.createdAt;
+        });
+        return setTransactions(sortedNewest);
+    }
+  };
+
   return (
     <ParentContainer>
       {alerts.map((alert) => {
@@ -124,7 +142,7 @@ const Transactions = (props) => {
       <Container>
         {isLoading && <Loader />}
         {isFetching && <Loader transition={0.2} />}
-        <FilterComponent />
+        <FilterComponent handleChange={sortBy} />
         {!transactions && (
           <>
             <Lottie options={LottieOptions} height={300} width={300} />

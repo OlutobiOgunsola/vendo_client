@@ -15,6 +15,7 @@ import InputRow from '@/components/widgets/UI/InputRow';
 // import storesArray from '@/assets/fixtures/stores';
 import DefaultImage from '@/assets/images/store/DefaultImage.png';
 import { withRouter } from 'react-router';
+import Alert from '@/components/widgets/UI/Alert';
 
 const storeAnimation = keyframes`${fadeIn}`;
 
@@ -106,18 +107,21 @@ const AddStore = (props) => {
     storeProp ? storeProp.photo : '',
   );
 
+  const [alerts, addAlert] = useState([]);
+
   const [success, setSuccess] = useState(false);
 
-  const user_id = props.user._id;
-  const store_owner_id = storeProp.owner_id;
+  const user_id = props.user._id ? props.user._id : '';
+  const store_owner_id = storeProp ? storeProp.owner_id : '';
   useEffect(() => {
     if (storeProp) {
       if (user_id !== store_owner_id) {
-        setAlert(props.updater, 'error', 'Cannot edit store');
+        setAlert(addAlert, 'error', 'Cannot edit store');
         const timeout = setTimeout(() => {
           if (!props.history.goBack()) {
             props.history.push('/');
           }
+          props.history.goBack();
           clearTimeout(timeout);
         }, 1000);
       }
@@ -130,7 +134,7 @@ const AddStore = (props) => {
     console.log(handle_Regex_Test);
     if (!handle_Regex_Test) {
       setEmailValid(false);
-      return setAlert(props.updater, 'error', 'Handle cannot contain spaces!"');
+      return setAlert(addAlert, 'error', 'Handle cannot contain spaces!"');
     }
 
     const headers = {
@@ -153,7 +157,7 @@ const AddStore = (props) => {
       .then((res) => {
         if (res.data.data) {
           setHandleValid(false);
-          setAlert(props.updater, 'error', 'Handle is taken. Try another');
+          setAlert(addAlert, 'error', 'Handle is taken. Try another');
         }
       })
       .catch((err) => {
@@ -186,19 +190,19 @@ const AddStore = (props) => {
   };
 
   const validateEmail = () => {
-    setEmailValid(true);
+    // setEmailValid(true);
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const email_Regex_Test = regex.test(email);
     if (!email_Regex_Test) {
       setEmailValid(false);
       return setAlert(
-        props.updater,
+        addAlert,
         'error',
         'Use email format "email@example.com"',
       );
     }
     if (!email) {
-      setEmailValid(true);
+      // setEmailValid(true);
       return null;
     }
     if (true) {
@@ -208,7 +212,6 @@ const AddStore = (props) => {
         'Content-Type': 'application/json',
         Accept: '*/*',
       };
-      props.loading(true);
       return axios
         .post(
           `${process.env.REACT_APP_API_PREFIX}/api/stores/verify`,
@@ -218,15 +221,13 @@ const AddStore = (props) => {
         .then((res) => {
           if (res.data.data === true) {
             setEmailValid(false);
-            props.loading(false);
             return setAlert(
-              props.updater,
+              addAlert,
               'error',
               'Email is taken, please try another',
             );
             //implement logic to send an email to the users email address with token for verifying email
           } else {
-            props.loading(false);
             setValidatedEmail(email);
           }
         })
@@ -255,32 +256,28 @@ const AddStore = (props) => {
           setStore_Photo(res.data.data.photo);
           return props.setUserPhoto(res.data.data.photo);
         }
-        setAlert(
-          props.updater,
-          'success',
-          'Profile photo updated successfully!',
-        );
+        setAlert(addAlert, 'success', 'Profile photo updated successfully!');
       })
       .catch((err) => {
-        setAlert(props.updater, 'error', 'Error updating profile photo!');
+        setAlert(addAlert, 'error', 'Error updating profile photo!');
       });
   };
 
   const submit = () => {
     const storeObj = {};
     storeObj.storename = storename;
-    storeObj.address = handle;
+    storeObj.address = handle.toLowerCase();
     storeObj.bio = bio;
     storeObj.email = validatedEmail;
     storeObj.category = [tags];
     storeObj.platform = 'local';
 
     if (storename === 'add') {
-      return setAlert(props.updater, 'error', 'Cannot use "Add" as storename');
+      return setAlert(addAlert, 'error', 'Cannot use "Add" as storename');
     }
     if (handle.length >= 24) {
       return setAlert(
-        props.updater,
+        addAlert,
         'error',
         'Handle too long! Please restrict to 24 characters',
       );
@@ -304,10 +301,10 @@ const AddStore = (props) => {
     };
 
     if (!validated) {
-      return setAlert(props.updater, 'error', 'Please fill out all fields');
+      return setAlert(addAlert, 'error', 'Please fill out all fields');
     }
 
-    props.loading(true);
+    // props.loading(true);
 
     if (validated && !storeProp) {
       return axios
@@ -317,23 +314,19 @@ const AddStore = (props) => {
         })
         .then(async (res) => {
           if (res.status === 200) {
-            props.loading(false);
-            setAlert(
-              props.updater,
-              'success',
-              'You have successfully added store',
-            );
+            // props.loading(false);
+            setAlert(addAlert, 'success', 'You have successfully added store');
             setSuccess(true);
-            // return props.history.push(`/stores/${res.data.data.address}/edit`);
+            return props.history.push(`/stores/${res.data.data.address}/edit`);
           }
         })
         .catch((err) => {
-          props.loading(false);
+          // props.loading(false);
           console.log(err);
-          return setAlert(props.updater, 'error', 'Error adding store.');
+          return setAlert(addAlert, 'error', 'Error adding store.');
         })
         .finally(() => {
-          props.loading(false);
+          // props.loading(false);
         });
     } else if (validated && storeProp) {
       return axios
@@ -347,22 +340,18 @@ const AddStore = (props) => {
         )
         .then(async (res) => {
           if (res.status === 200) {
-            props.loading(false);
-            setAlert(
-              props.updater,
-              'success',
-              'You have successfully added store',
-            );
+            // props.loading(false);
+            setAlert(addAlert, 'success', 'You have successfully added store');
             return props.history.push(`/stores/${res.data.data.address}`);
           }
         })
         .catch((err) => {
-          props.loading(false);
+          // props.loading(false);
           console.log(err);
-          return setAlert(props.updater, 'error', 'Error adding store.');
+          return setAlert(addAlert, 'error', 'Error adding store.');
         })
         .finally(() => {
-          props.loading(false);
+          // props.loading(false);
         });
     }
   };
@@ -395,6 +384,13 @@ const AddStore = (props) => {
 
   return (
     <ParentContainer>
+      {alerts.map((alert) => {
+        return (
+          <Alert type={alert.type} key={alert.text}>
+            {alert.text}
+          </Alert>
+        );
+      })}
       <Container>
         <ReactTooltip effect={'solid'} />
         <Header>
@@ -414,7 +410,7 @@ const AddStore = (props) => {
                   // pass store to the alert function
                   store={props.store}
                   // pass "updater" function from Account component down for use by input picker component
-                  updater={props.updater}
+                  updater={addAlert}
                   // pass image updater to input
                   setImage={setStorePhoto}
                   currentPhoto={storeProp.photo}
@@ -582,7 +578,7 @@ const AddStore = (props) => {
               <Button
                 aos="fade-in"
                 aos-duration="1000"
-                to={`${handle}`}
+                to={`edit`}
                 height="40"
                 width="100"
                 fill={props.theme.colors.dark_background}

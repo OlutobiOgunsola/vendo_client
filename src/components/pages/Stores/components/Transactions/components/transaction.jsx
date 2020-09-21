@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes, withTheme } from 'styled-components';
-import { Link, withRouter } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Link,
+  withRouter,
+} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { fadeIn, slideInUp } from 'react-animations';
@@ -11,6 +17,7 @@ import Lottie from 'react-lottie';
 
 import DefaultImage from '@/assets/images/icons/account/Profile.svg';
 import emptyReview from '@/assets/images/lottie/emptyReview.json';
+import AddReview from '../../Reviews/components/add';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -35,6 +42,7 @@ const ParentContainer = styled.div`
   position: relative;
   z-index: 9;
   box-sizing: border-box;
+  font-size: 16px;
   transition: all 0.25s ease-in-out;
   margin: 0 auto;
   animation: 0.5s ${slideInUpAnimation};
@@ -265,18 +273,17 @@ const Bio = styled.p`
   text-overflow: ellipsis;
   overflow: hidden;
 `;
-const Tags = styled.div`
-  margin: 16px 0px;
-`;
-const TagItem = styled.span`
+
+const Tags = styled.span`
   padding: 8px;
-  background: ${(props) => props.theme.colors.light_background};
-  margin-left: 8px;
+  background: ${(props) => props.background};
+  margin: 1rem auto;
   box-shadow: 2px 4px 10px ${(props) => props.theme.colors.dark_background_20};
-  color: ${(props) => props.theme.colors.saturated_contrast};
+  color: ${(props) => props.color};
   &:first-child {
     margin-left: 0px;
   }
+  width: 100%;
 `;
 const EmptyStateText = styled.h5`
   text-align: center;
@@ -304,6 +311,8 @@ const TransactionPage = (props) => {
   const { match } = props;
   const _id = match.params.transaction_id;
   const [actioned, setActioned] = useState(false);
+  const [color, setColor] = useState('');
+  const [background, setBackground] = useState('');
   const [transaction, setTransaction] = useState({
     store_id: {
       photo: '',
@@ -321,6 +330,8 @@ const TransactionPage = (props) => {
   });
 
   const transaction_found = transaction && transaction._id !== '';
+  const transaction_id = transaction_found ? transaction._id : '';
+  const review_id = transaction_found ? transaction.review[0]._id : 0;
 
   // manually trigger rerender with state update
   const [render, setRender] = useState(false);
@@ -332,10 +343,29 @@ const TransactionPage = (props) => {
   const [opacity, setOpacity] = useState(0.6);
   const [submitted, setSubmitted] = useState(false);
 
-  //   const transactionRating = Math.ceil(transaction.rating);
-  const transactionRating = 4;
+  const transactionRating = transaction.rating
+    ? Math.ceil(transaction.rating)
+    : 0;
 
   const [transactionBorders, setTransactionBorders] = useState('rgba(0,0,0,0)');
+
+  const getColor = () => {
+    const status = transaction.status;
+    switch (status) {
+      case 'new':
+        setColor('rgba(255,255,255,1)');
+        setBackground('rgba(255,255,255,0.2)');
+        break;
+      case 'accepted':
+        setColor(props.theme.colors.alert_text_green);
+        setBackground(props.theme.colors.alert_background_green);
+        break;
+      case 'rejected':
+        setColor(props.theme.colors.alert_text_red);
+        setBackground(props.theme.colors.alert_background_red);
+        break;
+    }
+  };
 
   useEffect(() => {
     const fetchTransaction = async (_id) => {
@@ -351,6 +381,8 @@ const TransactionPage = (props) => {
         fetchTransaction(_id);
       }
     }
+
+    getColor();
     return () => {
       setMounted(false);
     };
@@ -365,8 +397,6 @@ const TransactionPage = (props) => {
   const getAuthor = (e) => {
     // logic to navigate to author page here
   };
-
-  const addComment = (comment) => {};
   const actionTransaction = (e) => {
     const headers = {
       Authorization: `Bearer ${props.user_token}`,
@@ -441,6 +471,8 @@ const TransactionPage = (props) => {
       preserveAspectRatio: 'xMidYMid slice',
     },
   };
+
+  console.log('transaction shenaggni', transaction);
   return (
     <>
       {transaction_found && (
@@ -457,7 +489,7 @@ const TransactionPage = (props) => {
                     {transaction.title && <h1>{transaction.title}</h1>}
                   </NameBar>
                   <Requested>
-                    Transaction opened by{' '}
+                    Transaction opened by
                     <span>{transaction.author_id.username}</span>
                   </Requested>
                   <Handle_And_Rating>
@@ -476,15 +508,8 @@ const TransactionPage = (props) => {
                       ? transaction.store_id.description
                       : 'No store description'}
                   </Bio>
-                  <Tags>
-                    {transaction.store_id.categories &&
-                      transaction.store_id.categories === 0 && (
-                        <EmptyStateText>No Store Category Tags</EmptyStateText>
-                      )}
-                    {transaction.store_id.categories &&
-                      transaction.store_id.categories.map((category) => {
-                        return <TagItem key={category}>{category}</TagItem>;
-                      })}
+                  <Tags color={color} background={background}>
+                    {transaction.status}
                   </Tags>
 
                   <ProfileActions>
@@ -501,47 +526,38 @@ const TransactionPage = (props) => {
               </TransactionDetailsContainer>
             </TransactionProfile>
             <ReviewContainer>
-              {transaction.review && (
+              {transaction.review.length > 0 && (
                 <ReviewItem
                   user_id={props.loggedinUser._id}
                   user_photo={props.loggedinUser.photo}
-                  review={transaction.review}
-                  id={transaction.review._id}
+                  id={review_id}
                   updater={props.updater}
                   user_token={props.loggedinUser.jwt}
                 />
               )}
-              {!transaction.review && (
-                <>
-                  <Lottie
-                    options={emptyReviewLottieOptions}
-                    height={300}
-                    width={300}
-                  />
-                  <EmptyStateText>No review!</EmptyStateText>
-                  <EmptyStateSubtext>
-                    Transaction has not been reviewed.
-                  </EmptyStateSubtext>
-                </>
-              )}
               {!transaction.review &&
-                transaction.author_id._id === props.loggedinUser && (
-                  <ProfileActions>
-                    <Action
-                      data-aos="fade-up"
-                      data-aos-duration="250"
-                      to={'#'}
-                      borders="true"
-                      width="200px"
-                      hover_width="220px"
-                    >
-                      Review your transaction
-                      <FontAwesomeIcon
-                        className="fa-icon"
-                        icon={faLongArrowAltRight}
-                      />
-                    </Action>
-                  </ProfileActions>
+                props.loggedinUser._id !== transaction.author_id._id && (
+                  <>
+                    <Lottie
+                      options={emptyReviewLottieOptions}
+                      height={300}
+                      width={300}
+                    />
+                    <EmptyStateText>No review!</EmptyStateText>
+                    <EmptyStateSubtext>
+                      Transaction has not been reviewed.
+                    </EmptyStateSubtext>
+                  </>
+                )}
+              {!transaction.review &&
+                transaction.author_id._id === props.loggedinUser._id && (
+                  <AddReview
+                    updater={props.updater}
+                    loggedinUser={props.loggedinUser}
+                    store_id={props.store_id}
+                    store_owner_id={props.store_owner_id}
+                    transaction_id={transaction_id}
+                  />
                 )}
             </ReviewContainer>
           </Container>

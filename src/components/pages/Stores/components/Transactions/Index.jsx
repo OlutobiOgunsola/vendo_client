@@ -29,14 +29,12 @@ import defaultImage from '@/assets/images/icons/account/Profile.svg';
 
 const ParentContainer = styled.div`
   width: 100%;
-  background: ${(props) => props.theme.colors.page_background};
   height: auto;
 `;
 
 const Container = styled.div`
   width: 100%;
   box-sizing: border-box;
-  background: ${(props) => props.theme.colors.dark_background};
   /* padding: 20px; */
 
   hr {
@@ -100,6 +98,7 @@ const TransactionsIndex = (props) => {
   const owner = props.owner;
   const handle = props.handle;
 
+
   const toggleLoading = (payload) => {
     return setLoading(payload);
   };
@@ -130,7 +129,7 @@ const TransactionsIndex = (props) => {
       getStoreTransactions(store_id);
     }
   }, [store_id]);
-
+  
   useEffect(() => {
     // props.setRoute(true);
   }, []);
@@ -184,6 +183,7 @@ const TransactionsIndex = (props) => {
                   updater={addAlert}
                   loggedinUser={props.user}
                   store_id={props.store_id}
+                  store_owner_id={props.store_owner_id}
                 />
               );
             }}

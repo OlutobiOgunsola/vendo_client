@@ -573,7 +573,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-TransactionPage.propTypes = {
+ReviewPage.propTypes = {
   //   user_id: PropTypes.string,
   //   review: PropTypes.object,
   //   user_photo: PropTypes.string,

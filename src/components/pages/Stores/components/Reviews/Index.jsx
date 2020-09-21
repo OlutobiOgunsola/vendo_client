@@ -16,6 +16,9 @@ import withUser from '@/components/higher-order/withUser';
 import Loader from '@/components/widgets/UI/Loader';
 import Alert from '@/components/widgets/UI/Alert';
 
+import ReviewPage from './components/review';
+import AddReview from './components/add';
+
 import defaultImage from '@/assets/images/icons/account/Profile.svg';
 
 const ParentContainer = styled.div`
@@ -137,24 +140,26 @@ const ReviewsIndex = (props) => {
 
         <Switch>
           <Route
-            path={`${match.url}/:review_id`}
+            path={`${match.url}/add`}
             exact
             component={() => {
               return (
-                <ReviewPage
+                <AddReview
                   updater={addAlert}
-                  loggedinUser={props.user.user}
-                  transactions={transactionsArray}
+                  loggedinUser={props.loggedinUser}
                 />
               );
             }}
           />
           <Route
-            path={`${match.url}/add`}
-            exact
+            path={`${match.url}/:review_id`}
             component={() => {
               return (
-                <AddReview updater={addAlert} loggedinUser={props.user.user} />
+                <ReviewPage
+                  updater={addAlert}
+                  loggedinUser={props.loggedinUser}
+                  //   review={review}
+                />
               );
             }}
           />

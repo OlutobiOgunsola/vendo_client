@@ -41,7 +41,6 @@ const getTransactionByUIDSuccess = () => {
 export const getTransaction = (id) => {
   return (dispatch) => {
     dispatch(beginGetTransaction);
-    console.log('in here tryna get transaction');
     return axios
       .get(`${process.env.REACT_APP_API_PREFIX}/api/transactions/${id}`)
       .then((res) => {

@@ -286,9 +286,8 @@ const CommentsContainer = styled.div`
 
 const ReviewItem = (props) => {
   const _id = props.id;
-  const author_id = props.review.author_id._id;
-  const reviews = props.reviews;
   const [review, setReview] = useState({
+    review: '',
     upvotes: [],
     downvotes: [],
     comments: [],
@@ -298,6 +297,8 @@ const ReviewItem = (props) => {
       _id: '',
     },
   });
+  const author_id = review.author_id._id;
+
 
   // manually trigger rerender with state update
   const [render, setRender] = useState(false);
@@ -329,6 +330,7 @@ const ReviewItem = (props) => {
         fetchReview(_id);
       }
     }
+
     return () => {
       setMounted(false);
     };

@@ -403,7 +403,7 @@ const Store = (props) => {
 
   const store_found = store._id !== '' && store._id !== undefined;
 
-  const owner_id = store_found && store.owner_id;
+  const owner_id = store_found ? store.owner_id : '';
 
   const owner = owner_id === props.user.user._id;
 
@@ -423,7 +423,9 @@ const Store = (props) => {
     const getStore = async (id) => {
       return axios
         .get(
-          `${process.env.REACT_APP_API_PREFIX}/api/stores/${target_store_name}`,
+          `${
+            process.env.REACT_APP_API_PREFIX
+          }/api/stores/${target_store_name.toLowerCase()}`,
         )
         .then((res) => {
           if (mounted) {
@@ -437,7 +439,7 @@ const Store = (props) => {
           setLoading(false);
           const timeout = setTimeout(() => {
             if (target_store_name !== 'add') {
-              props.history.push(props.history.goBack());
+              // props.history.push(props.history.goBack());
             }
             clearTimeout(timeout);
           }, 3000);
@@ -653,6 +655,7 @@ const Store = (props) => {
                     updater={addAlert}
                     user={props.user.user}
                     store_id={store._id}
+                    store_owner_id={owner_id}
                     handle={store.address}
                     owner={owner}
                     setRoute={setTransactionPath}

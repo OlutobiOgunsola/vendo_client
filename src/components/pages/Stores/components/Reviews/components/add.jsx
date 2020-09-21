@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes, withTheme } from 'styled-components';
-import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { fadeIn } from 'react-animations';
 import InputRow from '@/components/widgets/UI/InputRow';
 import Input from '@/components/widgets/UI/Input';
-import Button from '@/components/UI/buttons/Button';
 import setAlert from '@/assets/helperFunctions/alerts';
-import withUser from '@/components/higher-order/withUser';
+import Alert from '@/components/widgets/UI/Alert';
+import { withRouter } from 'react-router';
 
 const fadeInUpAnimation = keyframes`${fadeIn}`;
 
 const ParentContainer = styled.div`
   width: 100%;
   height: auto;
+  font-size: 16px;
   position: relative;
   z-index: 9;
   box-sizing: border-box;
@@ -49,60 +49,75 @@ const S_Head = styled.h3`
   color: ${(props) => props.theme.colors.saturated_font_darker};
   margin: 0;
 `;
+
+const Button = styled.button`
+  height: 2.5rem;
+  width: 6rem;
+  background: ${(props) => props.theme.colors.dark_background};
+  margin: 1rem auto;
+  border: solid 1px ${(props) => props.theme.colors.saturated_contrast};
+  border-radius: 4px;
+  color: ${(props) => props.theme.colors.saturated_contrast};
+  transition: all 0.25s ease-in-out;
+  font-family: 'Josefin Sans Light';
+  &:hover {
+    cursor: pointer;
+    color: ${(props) => props.theme.colors.dark_background};
+    background: white;
+  }
+`;
 const AddReview = (props) => {
   const [transaction, setTransaction] = useState('');
   const [review, setReview] = useState('');
-  const store_id = props.store_id;
-  const owner = props.owner;
-  const handle = props.handle;
+  const [token, setToken] = useState('');
+  const [alerts, addAlert] = useState([]);
+  const [rating, setRating] = useState(1);
+  const store_owner_id = props.store_owner_id;
+  const transaction_id = props.transaction_id;
 
-  const handleTitle = (title) => {
-    return setTitle((prev) => {
-      return title;
+  const { match } = props;
+
+  const handleReview = (review) => {
+    return setReview((prev) => {
+      return review;
     });
   };
 
-  const handleDesc = (desc) => {
-    return setDesc((prev) => {
-      return desc;
+  const handleRating = (rating) => {
+    return setRating((prev) => {
+      return rating;
     });
   };
 
-  useEffect(() => {
-    if (owner) {
-      props.history.push(`/stores/${handle}`);
-    }
-  }, [owner]);
+  const handleToken = (token) => {
+    return setToken((prev) => {
+      return token;
+    });
+  };
 
   const submit = () => {
-    if (!title || !desc) {
-      return setAlert(
-        props.updater,
-        'error',
-        'Please fill out title and description',
-      );
+    if (!review || !token) {
+      return setAlert(addAlert, 'error', 'Please fill all fields');
     }
-
-    const transactionObj = {};
-    transactionObj.title = title;
-    transactionObj.description = desc;
-    transactionObj.store_id = store_id;
-
+    const reviewObj = {};
+    reviewObj.review = review;
+    reviewObj.rating = rating || 1;
+    reviewObj.token = token;
+    reviewObj.recipient_id = store_owner_id;
+    reviewObj.transaction_id = transaction_id;
     const headers = {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${props.loggedinUser.jwt}`,
     };
-
     axios
-      .post(
-        `${process.env.REACT_APP_API_PREFIX}/api/transactions/add`,
-        transactionObj,
-        {
-          headers,
-        },
-      )
+      .post(`${process.env.REACT_APP_API_PREFIX}/api/reviews/add`, reviewObj, {
+        headers,
+      })
       .then((res) => {
         console.log(res);
+        if (res.status === 200) {
+          props.history.push(`${match.url}`);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -111,39 +126,27 @@ const AddReview = (props) => {
 
   return (
     <ParentContainer id="add_transaction">
+      {alerts.map((alert) => {
+        return (
+          <Alert type={alert.type} key={alert.text}>
+            {alert.text}
+          </Alert>
+        );
+      })}
       <Container>
         <Header>
-          <S_Head>ADD TRANSACTION</S_Head>
+          <S_Head>REVIEW TRANSACTION</S_Head>
         </Header>
         <hr />
-        <InputRow label="Title">
-          <Input
-            useLabelAnimation={true}
-            inputType={'input'}
-            left="14px"
-            handleChange={handleTitle}
-            value={title}
-            class={{
-              name: 'transaction_title',
-              type: 'text',
-              fill: `${props.theme.colors.alternate_light_background_10}`,
-              color: `${props.theme.colors.saturated_contrast_60}`,
-              p_color: `${props.theme.colors.saturated_contrast_20}`,
-              padding: '8px',
-              placeholder: 'Title',
-              label: { display: 'none' },
-            }}
-          />
-        </InputRow>
-        <InputRow label="Description">
+        <InputRow label="Review">
           <Input
             inputType={'textarea'}
             useLabelAnimation={true}
             left="14px"
-            handleChange={handleDesc}
-            value={desc}
+            handleChange={handleReview}
+            value={review}
             valid={() => {
-              return desc !== '';
+              return review !== '';
             }}
             class={{
               name: 'transaction_description',
@@ -156,22 +159,60 @@ const AddReview = (props) => {
               color: `${props.theme.colors.saturated_contrast_60}`,
               p_color: `${props.theme.colors.saturated_contrast_20}`,
               padding: '8px',
-              placeholder: 'A short description of the transaction',
+              placeholder: 'Describe your experience with this store',
               label: { display: 'none' },
             }}
           />
         </InputRow>
-        <InputRow>
-          <Button
-            to={'#'}
-            height="40"
-            width="100"
-            fill={props.theme.colors.dark_background}
-            transition_color={'white'}
-            margin="16px 0 0 auto"
-            onClick={submit}
+        <InputRow label="Rating">
+          <Input
+            useLabelAnimation={true}
+            inputType={'select'}
+            left="14px"
+            handleChange={handleRating}
+            value={rating}
+            class={{
+              name: 'review_rating',
+              fill: `${props.theme.colors.alternate_light_background_10}`,
+              color: `${props.theme.colors.saturated_contrast_60}`,
+              p_color: `${props.theme.colors.saturated_contrast_20}`,
+              padding: '8px',
+              placeholder: '',
+              label: { display: 'none' },
+            }}
           >
-            Add
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </Input>
+        </InputRow>
+        <InputRow label="Token">
+          <Input
+            inputType={'textarea'}
+            useLabelAnimation={true}
+            left="14px"
+            handleChange={handleToken}
+            value={token}
+            class={{
+              name: 'transaction_token',
+              type: 'input',
+              fill: `${props.theme.colors.alternate_light_background_10}`,
+              color: `${props.theme.colors.saturated_contrast_60}`,
+              p_color: `${props.theme.colors.saturated_contrast_20}`,
+              padding: '8px',
+              placeholder: 'Paste token. It is in your mailbox',
+              label: { display: 'none' },
+            }}
+          />
+        </InputRow>
+        <InputRow displayLabel={false}>
+          <label htmlFor={'submit-button'} style={{ display: 'none' }}>
+            Submit Review
+          </label>
+          <Button name={'submit-button'} onClick={submit}>
+            Submit
           </Button>
         </InputRow>
       </Container>
@@ -179,6 +220,6 @@ const AddReview = (props) => {
   );
 };
 
-AddTransaction.propTypes = {};
+AddReview.propTypes = {};
 
-export default withTheme(withRouter(withUser(AddReview, true)));
+export default withTheme(withRouter(AddReview));

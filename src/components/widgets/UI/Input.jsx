@@ -464,8 +464,7 @@ const Input = React.forwardRef((props, ref) => {
     }
   }, [props.value, props.currentPhoto]);
   // grab placeholder element
-  const p_holder = document.getElementById(`${props.class.name}`);
-
+  const p_holder = document.getElementById(`${props.class.name}-placeholder`);
   // grab delete btn
   const delBtnElem = document.getElementById(
     `${props.class.name}-image-delete`,
@@ -528,7 +527,7 @@ const Input = React.forwardRef((props, ref) => {
   const handleChange = (e) => {
     const newValue = e.target.value;
     if (props.useLabelAnimation === true) {
-      if (value.length === 0 || p_holder.style.top === '16px') {
+      if (value.length === 0 || (p_holder && p_holder.style.top === '16px')) {
         slideUp();
       }
     }
@@ -609,7 +608,7 @@ const Input = React.forwardRef((props, ref) => {
       {props.useLabelAnimation === true && (
         <Placeholder
           ref={p_holderRef}
-          id={props.class.name}
+          id={`${props.class.name}-placeholder`}
           labelLeft={props.left}
           value={value}
         >

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled, { withTheme } from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -58,16 +58,23 @@ const Option = styled.option`
 `;
 
 const FilterComponent = (props) => {
+  const [value, setValue] = useState('');
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setValue((prev) => {
+      return value;
+    });
+    props.handleChange(value);
+  };
   return (
     <ParentContainer>
       <Container>
         <Label htmlFor="searchbar">Search</Label>
         <Searchbar type="search" id="searchbar" placeholder="Search" />
         <Label htmlFor="sortby">Sort by</Label>
-        <SortBy id="sortby">
-          <Option>Date</Option>
-          <Option>Rating - Highest</Option>
-          <Option>Rating - Lowest</Option>
+        <SortBy id="sortby" onChange={handleChange}>
+          <Option value="newest">Date</Option>
+          <Option value="rating">Rating - Highest</Option>
         </SortBy>
       </Container>
     </ParentContainer>
