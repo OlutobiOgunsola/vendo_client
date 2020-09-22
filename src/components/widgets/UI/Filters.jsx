@@ -30,6 +30,11 @@ const Searchbar = styled.input`
   &:focus {
     outline: none;
   }
+  @media (max-width: 620px){
+  width: 150px;
+  height: 30px;
+  margin: 5px;
+  }
 `;
 
 const SortBy = styled.select`
@@ -43,6 +48,9 @@ const SortBy = styled.select`
   color: ${(props) => props.theme.colors.saturated_contrast_60};
   &:focus {
     outline: none;
+  }
+  @media (max-width: 620px) {
+    height: 30px;
   }
 `;
 

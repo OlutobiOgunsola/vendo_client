@@ -129,7 +129,6 @@ const TransactionsIndex = (props) => {
       getStoreTransactions(store_id);
     }
   }, [store_id]);
-  
   useEffect(() => {
     // props.setRoute(true);
   }, []);

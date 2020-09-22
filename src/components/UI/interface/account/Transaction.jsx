@@ -55,6 +55,7 @@ const ParentContainer = styled.div`
   }
   @media (max-width: 400px) {
     padding: 16px 8px;
+    margin: 16px auto 0px auto;
   }
 `;
 

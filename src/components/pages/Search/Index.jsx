@@ -11,8 +11,6 @@ import {
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { fadeIn, slideInUp } from 'react-animations';
-import 'aos/dist/aos.css';
-import AOS from 'aos';
 
 import DefaultImage from '@/assets/images/backgrounds/search/search_hero.jpg';
 import DefaultImage_600 from '@/assets/images/backgrounds/search/search_hero_600.jpg';
@@ -36,6 +34,9 @@ import Header from '@/components/UI/Header';
 import Footer from '@/components/UI/Footer';
 import Navbar from './components/navbar';
 import People from './components/people';
+import Stores from './components/stores';
+import Reviews from './components/reviews';
+import Transactions from './components/transactions';
 
 const fadeInUpAnimation = keyframes`${fadeIn}`;
 const slideInUpAnimation = keyframes`${slideInUp}`;
@@ -49,6 +50,7 @@ const ParentContainer = styled.div`
   font-size: 16px;
   box-sizing: border-box;
   transition: all 0.25s ease-in-out;
+  overflow: hidden;
 `;
 
 const Container = styled.div`
@@ -78,7 +80,7 @@ const Container = styled.div`
     width: 27rem;
   }
   @media (max-width: 440px) {
-    width: 23rem;
+    width: 20rem;
   }
   @media (max-width: 400px) {
     padding: 1rem 0.5rem;
@@ -95,6 +97,7 @@ const Filters = styled.div`
   box-shadow: 1px 2px 5px ${(props) => props.theme.colors.light_background_40},
     0px 2px 30px ${(props) => props.theme.colors.light_background_60};
   padding: 1rem;
+  box-sizing: border-box;
   .fa-icon {
     display: inline-block;
     margin-right: 1rem;
@@ -109,17 +112,22 @@ const Filters = styled.div`
     flex-flow: row nowrap;
     width: 100%;
   }
+  @media (max-width: 620px) {
+    margin-right: 0rem;
+    padding: 0.5rem;
+  }
 `;
 
 const SearchContainer = styled.div`
   width: calc(100% - 13.5rem);
   height: auto;
   padding: 1rem;
+  box-sizing: border-box;
   background: ${(props) => props.theme.colors.light_background};
   hr {
     width: 100%;
     height: 0.1px;
-    margin: 32px auto;
+    margin: 1rem auto;
     border: none;
     opacity: 0.6;
     background: ${(props) => props.theme.colors.alternate_light_background_10};
@@ -130,6 +138,10 @@ const SearchContainer = styled.div`
   }
   @media (max-width: 620px) {
     width: 100%;
+    padding: 0.5rem;
+    hr {
+      margin: 0.5rem auto;
+    }
   }
 `;
 
@@ -147,6 +159,14 @@ const FiltersHeader = styled.h5`
   color: ${(props) => props.theme.colors.saturated_contrast};
   margin: 1rem 0rem;
   font-weight: 500;
+  @media (max-width: 620px) {
+    font-size: 0.75rem;
+    margin: 0.5rem 0rem;
+  }
+  @media (max-width: 400px) {
+    font-size: 0.5rem;
+    margin: 0.5rem 0rem;
+  }
 `;
 
 const ExpandGroup = styled(Link)`
@@ -176,6 +196,14 @@ const ExpandGroup = styled(Link)`
 const SearchBox = styled.input`
   width: 400px;
   height: 60px;
+  line-height: 60px;
+
+  @media (max-width: 620px) {
+    width: 300px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+  }
   display: block;
   background: ${(props) => props.theme.colors.light_background_40};
   border: none;
@@ -216,6 +244,10 @@ const SplashScreen = styled.div`
     font-family: 'Josefin Sans Light';
     margin: 16px;
     text-align: center;
+    @media (max-width: 620px) {
+      width: 300px;
+      font-size: 24px;
+    }
   }
 `;
 
@@ -245,21 +277,26 @@ const Results = styled.div`
 const S_Head = styled.h3`
   display: block;
   font-family: 'Noto Sans Regular';
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 500;
   color: ${(props) => props.theme.colors.saturated_contrast};
   margin: 16px 0px 32px 0px;
+  @media (max-width: 620px) {
+    margin: 8px 0px 8px 0px;
+    font-size: 0.75rem;
+  }
 `;
 
 const Search = (props) => {
   const [searchString, setSearchString] = useState('');
-  const [display, setDisplay] = useState('');
   const [error, setError] = useState('');
   const [userResults, setUserResults] = useState([]);
   const [storeResults, setStoreResults] = useState([]);
   const [transactionResults, setTransactionResults] = useState([]);
   const [reviewResults, setReviewResults] = useState([]);
   const [filter, setFilter] = useState('all');
+  const [loading, setLoading] = useState(false);
+  const [noResults, setNoResult] = useState(false);
 
   // A custom hook that builds on useLocation to parse
   // the query string for you.
@@ -269,19 +306,22 @@ const Search = (props) => {
 
   let query = useQuery();
 
-  // destructure pathname from useLocation hook
-  const { pathname } = useLocation();
   useEffect(() => {
-    // initialize aos library
-    AOS.init({ duration: 2000 });
-    AOS.refresh();
+    // check for filters upon render
+    const filter = query.get('filter');
+    if (filter) {
+      setFilter(filter);
+    }
   }, []);
 
   useEffect(() => {
     const string = query.get('query');
+    const filter = query.get('filter');
+    console.log('string crazy', string, 'filter crazy', filter);
+
     if (string) {
       setSearchString(string);
-      getStores(searchString);
+      getStores(searchString, filter);
     }
     return () => null;
   }, []);
@@ -289,14 +329,16 @@ const Search = (props) => {
   const { match } = props;
 
   useEffect(() => {
-    console.log(match);
     if (searchString) {
       getStores(searchString);
     }
   }, [searchString]);
 
   const getStores = useCallback(
-    debounce((string) => {
+    debounce((string, filter) => {
+      console.log('string', string, 'filter', filter);
+      setLoading(true);
+      setNoResult(false);
       return axios
         .post(`${process.env.REACT_APP_API_PREFIX}/api/search`, {
           query: `${string}`,
@@ -308,18 +350,35 @@ const Search = (props) => {
             setStoreResults(results[1]);
             setTransactionResults(results[2]);
             setReviewResults(results[3]);
-            console.log(results);
+            setLoading(false);
+            const noResult =
+              results[0].length === 0 &&
+              results[1].length === 0 &&
+              results[2].length === 0 &&
+              results[3].length === 0 &&
+              results[4].length === 0;
+            if (noResult) {
+              setNoResult(true);
+            }
             return;
           } else {
-            setError('Cannot get users');
+            setLoading(false);
+            setNoResult(true);
             return;
           }
         })
         .catch((err) => {
-          console.log(err);
+          setLoading(false);
+          // fail silently
+          setNoResult(true);
+          return null;
         })
         .finally(() => {
-          props.history.push(`${match.url}?query=${string}`);
+          if (!filter) {
+            // props.history.push(`${match.url}?query=${string}`);
+          } else {
+            // props.history.push(`${match.url}?query=${string}&filter=${filter}`);
+          }
           return;
         });
     }, 500),
@@ -332,26 +391,22 @@ const Search = (props) => {
     setSearchString((prevstate) => {
       return value;
     });
-    console.log(value);
-  };
-
-  const getDisplayForm = () => {
-    switch (display) {
-      case 'settings':
-        return null;
-      case 'reviews':
-        return null;
-      case 'transactions':
-        return null;
-    }
   };
 
   const getResults = () => {
     switch (filter) {
       case 'all':
+        return (
+          <>
+            <People dataset={userResults} />
+            <Stores dataset={storeResults} />
+          </>
+        );
+      case 'users':
         return <People dataset={userResults} />;
-      case 'people':
-        return <People dataset={userResults} />;
+      case 'stores':
+        return <Stores dataset={storeResults} />;
+
       default:
         return null;
     }
@@ -363,6 +418,14 @@ const Search = (props) => {
       return getStores();
     }
   };
+
+  const handleNavigation = (nav) => {
+    setFilter(nav);
+    return props.history.push(
+      `${match.url}?query=${searchString}&filter=${filter}`,
+    );
+  };
+
   return (
     <>
       <ParentContainer id="add_transaction">
@@ -389,16 +452,20 @@ const Search = (props) => {
               <FontAwesomeIcon className="fa-icon" icon={faFilter} />
               <FiltersHeader>FILTER BY</FiltersHeader>
             </FiltersHeaderContainer>
-            <Navbar />
+            <Navbar setDisplay={handleNavigation} active={filter} />
           </Filters>
           <SearchContainer>
             {searchString && (
               <S_Head>
-                SHOWING {filter.toUpperCase()} RESULTS FOR{' '}
-                {searchString.toUpperCase()}
+                SHOWING {filter ? filter.toUpperCase() : ''} RESULTS FOR{' '}
+                {searchString ? searchString.toUpperCase() : 'EMPTY SEARCH'}
               </S_Head>
             )}
             <hr />
+            {noResults && !loading && (
+              <S_Head>SEARCH RETURNED NO RESULTS. TRY ANOTHER KEYWORD</S_Head>
+            )}
+            {loading && <S_Head>LOADING RESULTS...</S_Head>}
             <Results>{getResults()}</Results>
           </SearchContainer>
         </Container>

@@ -170,8 +170,6 @@ const StoreIndex = (props) => {
   const topReview = sortedReviews ? sortedReviews[0] : {};
   const topTransaction = sortedTransactions ? sortedTransactions[0] : {};
 
-  console.log(topTransaction);
-
   return (
     <ParentContainer>
       <Section>

@@ -27,15 +27,15 @@ const bubble = keyframes`
 const ParentContainer = styled.div`
   width: 100%;
   height: 660px;
-  background: url(${desktopLanding});
+  /* background: url(${desktopLanding}); */
   background-size: cover;
   margin: 0px;
-  animation: 2s ${fadeInAnimation};
+  font-size: 16px;
 `;
 const Modal = styled.div`
   height: 640px;
-  background: ${(props) => props.theme.colors.dark_background_80};
-  padding: 10px 200px;
+  background: ${(props) => props.theme.colors.dark_background};
+  padding: 10px 100px;
   @media (max-width: 900px) {
     padding: 10px 100px;
   }
@@ -71,45 +71,32 @@ const Modal = styled.div`
 
 const CopyContainer = styled.div`
   height: 360px;
-  width: 386px;
-  margin: 80px auto 88px auto;
+  width: 600px;
+  margin: 140px auto 0px auto;
   display: flex;
-  flex-direction: column;
+  flex-flow: column nowrap;
+  align-items: center;
+  text-align: left;
   animation: 1s ${slideInDownAnimation};
   @media (max-width: 700px) {
     height: 300;
-    margin: 110px auto 58px auto;
+    margin: 130px auto 38px auto;
   }
   @media (max-width: 500px) {
     width: 300px;
     height: 300;
-    margin: 110px auto 58px auto;
+    margin: 150px auto 28px auto;
+    align-items: flex-start;
   }
 `;
 
-const Headline = styled.h2`
-  color: white;
-  font-family: 'Dancing Script', 'Arial';
-  font-weight: 300;
-  font-size: 72px;
-  font-weight: light;
-  margin: 0px;
-  position: relative;
-  top: 40px;
-  text-align: center;
-  @media (max-width: 700px) {
-    text-align: left;
-    font-size: 50px;
-    top: 20px;
-  }
-`;
 const Jumbo = styled.h1`
   color: ${(props) => props.theme.colors.yellow};
   font-family: 'Oxygen Bold', 'Sans Serif';
-  font-size: 140px;
-  margin: 0px;
+  font-size: 2.5rem;
+  margin: 1rem 0rem;
   @media (max-width: 700px) {
-    font-size: 80px;
+    font-size: 2rem;
   }
 `;
 
@@ -142,6 +129,7 @@ const SubHeadingCopy = styled.p`
   font-family: 'Josefin Sans Light', 'Sans Serif';
   font-weight: 'lighter';
   font-size: 20px;
+  margin: 0.5rem 0rem;
   @media (max-width: 400px) {
     font-size: 16px;
   }
@@ -153,11 +141,11 @@ const SearchInput = styled.input`
   height: 40px;
   border: none;
   border-radius: 4px;
-  padding: 7px 24px;
+  padding: 0.5rem 1.5rem;
   box-sizing: border-box;
   line-height: 19px;
   outline: none;
-  margin-top: 24px;
+  margin-top: 1.5rem;
   color: white;
   font-family: 'Josefin Sans Light', 'Sans Serif';
   font-size: 18px;
@@ -203,7 +191,7 @@ const LandingScreen = () => {
       <Modal>
         <Header usePagePadding />
         <CopyContainer>
-          <Headline>Shop</Headline> <Jumbo>Smart</Jumbo>
+          <Jumbo>Shop smart on the internet</Jumbo>
           <SubHeading>
             <PenIcon>
               <Pen />

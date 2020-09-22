@@ -265,7 +265,6 @@ const UserIndex = (props) => {
           <ReviewItem
             user_id={props.loggedinUser._id}
             user_photo={props.loggedinUser.photo}
-            review={topReview}
             id={topReview._id}
             updater={props.updater}
             user_token={props.loggedinUser.jwt}

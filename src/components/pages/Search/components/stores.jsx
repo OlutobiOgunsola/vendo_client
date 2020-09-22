@@ -6,11 +6,7 @@ import { withRouter } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { slideInUp } from 'react-animations';
 
-import {
-  faEnvelope,
-  faUser,
-  faStoreAltSlash,
-} from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faStore } from '@fortawesome/free-solid-svg-icons';
 
 import defaultStoreImage from '@/assets/images/store/DefaultImage.png';
 import defaultImage from '@/assets/images/icons/account/Profile.svg';
@@ -24,7 +20,7 @@ const ParentContainer = styled.div`
   font-size: 16px;
 `;
 
-const PersonContainer = styled.div`
+const StoreContainer = styled.div`
   width: 100%;
   height: auto;
   display: flex;
@@ -64,23 +60,6 @@ const Photo = styled.img`
   border-radius: 50%;
 `;
 
-const Stores = styled.div`
-  display: inline-block;
-  margin-bottom: 0.5rem;
-  box-sizing: border-box;
-  width: 100%;
-  height: auto;
-`;
-
-const Store = styled.img`
-  width: 1rem;
-  height: 1rem;
-  margin-right: 0.5rem;
-  &:first-child {
-    margin-right: 0rem;
-  }
-  border-radius: 50%;
-`;
 const Details = styled.div`
   width: calc(100% - 7rem);
   @media (max-width: 620px) {
@@ -111,7 +90,7 @@ const NameBar = styled.h5`
   }
 `;
 
-const AccountType = styled.p`
+const StoreCategory = styled.p`
   display: inline;
   padding: 0.25rem;
   border-radius: 4px;
@@ -187,81 +166,49 @@ const Action = styled(Link)`
   }
 `;
 
-const People = (props) => {
-  const People = props.dataset;
+const Stores = (props) => {
+  const Store = props.dataset;
   return (
     <ParentContainer>
-      {People.map((person) => {
-        console.log('person', person);
+      {Store.map((store) => {
         return (
-          <PersonContainer key={person._id}>
+          <StoreContainer key={store._id}>
             <PhotoFancyBorder>
-              <Photo src={person.photo || defaultImage} />
+              <Photo src={store.photo || defaultImage} />
             </PhotoFancyBorder>
             <Details>
               <TitleBar>
                 <NameBar>
-                  {`${person.firstname ? person.firstname : ''}`}
                   <strong>{`${
-                    person.lastname
-                      ? person.lastname.toUpperCase()
-                      : person.username
+                    store.name ? store.name.toUpperCase() : store.address
                   }`}</strong>
                 </NameBar>
-                {person.accountType === 'Vendor' && (
-                  <AccountType>Vendor</AccountType>
+                {store.category && (
+                  <StoreCategory>{store.category}</StoreCategory>
                 )}
               </TitleBar>
-              <Rating>{`@${person.username}`}</Rating>
-              <Bio>{person.bio ? person.bio : 'No bio'}</Bio>
-              {person.registered_stores.length > 0 && (
-                <Stores>
-                  <ReactTooltip effect="solid" />
-                  {person.registered_stores.map((store) => {
-                    return (
-                      <Store
-                        data-tip={`${store.name.toUpperCase()} <br />${store.category.map(
-                          (cat) => {
-                            return cat;
-                          },
-                        )} <br /> ${store.rating} of 5 <br /> ${
-                          store.transactions.length
-                        } transactions completed <br />  ${
-                          store.reviews.length
-                        } reviews received`}
-                        data-class="tooltip"
-                        data-multiline={true}
-                        //   data-aos="fade-in"
-                        key={store._id}
-                        src={store.photo || defaultStoreImage}
-                        platform={store.platform}
-                      />
-                    );
-                  })}
-                </Stores>
-              )}
+              <Rating>{`${store.rating ? store.rating : 0}% rating`}</Rating>
+              <Bio>{store.bio ? store.bio : 'No bio'}</Bio>
               <ProfileActions>
-                <Action to={`/users/${person.username}`}>
-                  Visit Page
-                  <FontAwesomeIcon className="fa-icon" icon={faUser} />
+                <Action to={`/stores/${store.address}`}>
+                  View Store
+                  <FontAwesomeIcon className="fa-icon" icon={faStore} />
                 </Action>
-                {person.email && (
-                  <Action to={'#'}>
-                    Send Mail
-                    <FontAwesomeIcon className="fa-icon" icon={faEnvelope} />
-                  </Action>
-                )}
+                <Action to={'#'}>
+                  Bookmark
+                  <FontAwesomeIcon className="fa-icon" icon={faHeart} />
+                </Action>
               </ProfileActions>
             </Details>
-          </PersonContainer>
+          </StoreContainer>
         );
       })}
     </ParentContainer>
   );
 };
 
-People.propTypes = {
+Stores.propTypes = {
   dataset: PropTypes.array,
 };
 
-export default withRouter(withTheme(People));
+export default withRouter(withTheme(Stores));

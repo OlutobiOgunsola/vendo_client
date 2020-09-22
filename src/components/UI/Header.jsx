@@ -15,10 +15,13 @@ import setAlert from '@/assets/helperFunctions/alerts';
 import Alert from '../widgets/UI/Alert';
 import { clearUser } from '@/actions/user';
 import { connect } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 const ParentContainer = styled.header`
   width: 100%;
   height: 70px;
+  overflow: hidden;
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -60,7 +63,7 @@ const SearchBox = styled.input`
   height: 30px;
   border: none;
   border-radius: 4px;
-  padding: 7px 24px;
+  padding: 7px 16px;
   box-sizing: border-box;
   line-height: 19px;
   outline: none;
@@ -151,6 +154,7 @@ const FloatRight = styled.div`
 
 const Header = (props) => {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [searchString, setSearchString] = useState('');
   const [userObj, setUserObj] = useState({});
   const [alerts, addAlert] = useState([]);
   const [mounted, setMounted] = useState(true);
@@ -202,6 +206,19 @@ const Header = (props) => {
     return props.history.push('/notifications');
   };
 
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchString((prev) => {
+      return value;
+    });
+  };
+
+  const processSearch = (e) => {
+    if (e.key === 'Enter') {
+      props.history.push(`/search?query=${searchString}`);
+    }
+  };
+
   const firstName = userObj.name || 'User';
   const photo = userObj.photo || defaultPhoto;
 
@@ -227,7 +244,12 @@ const Header = (props) => {
           <LogoContainer>
             <Logo />
           </LogoContainer>
-          <SearchBox placeholder="Search" type="search" />
+          <SearchBox
+            placeholder="Search"
+            type="search"
+            onKeyUp={processSearch}
+            onChange={handleSearch}
+          />
         </>
       )}
       {loggedIn && (

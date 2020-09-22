@@ -305,8 +305,17 @@ const ReplyDateContainer = styled.p`
 
 const Comment = (props) => {
   const author_id = props.comment.author_id;
-  const commentProp = props.comment;
-  const [comment, setComment] = useState(commentProp);
+  const [comment, setComment] = useState({
+    upvotes: [],
+    downvotes: [],
+    author_id: {
+      username: '',
+      _id: '',
+      photo: '',
+    },
+    comments: [],
+    createdAt: '',
+  });
   const [votes, setVotes] = useState('upvotes');
   const [opacity, setOpacity] = useState(0.6);
   const [upvoted, setUpvoted] = useState(false);
@@ -316,18 +325,26 @@ const Comment = (props) => {
   const [expanded, setExpanded] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  const comment_found = comment._id !== '' && comment.comments;
+
+  const upvotes = comment.upvotes || [];
+  const downvotes = comment.downvotes || [];
+
   // manually trigger rerender with state update
   const [render, setRender] = useState(false);
 
   // automatically focus comment box when reply button is clicked
   const commentBox = useRef(null);
   useEffect(() => {
-    if (comment.upvotes.indexOf(props.user_id) > -1) {
+    if (upvotes.indexOf(props.user_id) > -1) {
       setUpvoted(true);
     }
-  }, [comment]);
-
-  console.log('comments again', comment);
+    const comment = props.comment;
+    if (!comment.comments) {
+      comment.comments = [];
+    }
+    setComment(comment);
+  }, [author_id]);
 
   const getAuthor = (e) => {
     // logic to navigate to author page here
@@ -485,7 +502,7 @@ const Comment = (props) => {
               >
                 <Upvote fillCol={getThumbfill('upvote')} />
               </Thumb>
-              <p>{comment.upvotes.length > 99 ? 99 : comment.upvotes.length}</p>
+              <p>{upvotes.length > 99 ? 99 : upvotes.length}</p>
               <Thumb
                 onClick={() => {
                   return addVote('downvote');
@@ -501,8 +518,7 @@ const Comment = (props) => {
           {expanded && <Spacer />}
           <VotesContainer>
             <VotesDiv>
-              {selectVoters(comment.upvotes).map((upvote) => {
-                console.log('upvotr', upvote);
+              {selectVoters(upvotes).map((upvote) => {
                 return (
                   <Voter
                     src={upvote.photo || DefaultImage}
@@ -511,7 +527,7 @@ const Comment = (props) => {
                 );
               })}
             </VotesDiv>
-            {comment.upvotes.length > 5 && (
+            {upvotes.length > 5 && (
               <OtherVoters>
                 <b
                   style={{
@@ -519,19 +535,16 @@ const Comment = (props) => {
                   }}
                 >
                   {upvoted && 'You, '} and{' '}
-                  {upvoted
-                    ? comment.upvotes.length - 5
-                    : comment.upvotes.length - 1}{' '}
-                  other users
-                </b>{' '}
-                {/* have upvoted this review */}
+                  {upvoted ? upvotes.length - 5 : upvotes.length - 1} other
+                  users
+                </b>
               </OtherVoters>
             )}
           </VotesContainer>
           <Author>
-            <AuthorName
-              onClick={getAuthor}
-            >{`- ${comment.author_id.username}`}</AuthorName>
+            <AuthorName onClick={getAuthor}>{`- ${
+              comment.author_id ? comment.author_id.username : ''
+            }`}</AuthorName>
             <DateContainer>
               {`${moment(comment.createdAt).format('ddd DD MMM YYYY')}`}
               {' at '}
@@ -546,24 +559,25 @@ const Comment = (props) => {
           </ExpandGroup>
         )}
 
-        <ExpandGroup
-          onClick={() => {
-            return setExpanded(!expanded);
-          }}
-        >
-          {!expanded && <FontAwesomeIcon className="fa-icon" icon={faPlus} />}
-          {expanded && <FontAwesomeIcon className="fa-icon" icon={faMinus} />}
-          {!expanded && 'Expand'}
-          {expanded && 'Collapse'}{' '}
-          <b
-            style={{
-              fontWeight: 700,
+        {comment.comments.length > 0 && (
+          <ExpandGroup
+            onClick={() => {
+              return setExpanded(!expanded);
             }}
           >
-            {comment.comments.length > 0 ? comment.comments.length : ''}{' '}
-            {comment.comments.length <= 1 ? 'comment' : 'comments'}
-          </b>
-        </ExpandGroup>
+            {!expanded && <FontAwesomeIcon className="fa-icon" icon={faPlus} />}
+            {expanded && <FontAwesomeIcon className="fa-icon" icon={faMinus} />}
+            {!expanded && 'Expand'}
+            {expanded && 'Collapse'}
+            <b
+              style={{
+                fontWeight: 700,
+              }}
+            >
+              {comment.comments.length !== 1 ? 'comments' : 'comment'}
+            </b>
+          </ExpandGroup>
+        )}
 
         {showCommentGroup && props.user_id && (
           <CommentGroup>
@@ -606,7 +620,7 @@ const Comment = (props) => {
       </Container>
       {expanded &&
         comment.comments
-          .sort(sort('ownFirst', {user_id: props.user_id}))
+          .sort(sort('ownFirst', { user_id: props.user_id }))
           .map((comment) => {
             return (
               <Reply key={comment._id}>

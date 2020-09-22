@@ -279,7 +279,6 @@ const NameBar = styled.span`
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
   text-align: left;
   h1 {
@@ -355,6 +354,8 @@ const TagItem = styled.span`
   padding: 0.5rem;
   background: ${(props) => props.theme.colors.yellow};
   margin-left: 0.5rem;
+  border: none;
+  border-radius: 4px;
   box-shadow: 2px 4px 10px ${(props) => props.theme.colors.dark_background_20};
   color: ${(props) => props.theme.colors.dark_background};
   &:first-child {
@@ -469,6 +470,64 @@ const User = (props) => {
           </Alert>
         );
       })}
+      {user_found && (
+        <UserProfile background_cover_image={user.background_cover_imagemnb}>
+          <UserModal>
+            <UserDetailsContainer>
+              <UserImage src={user.photo || defaultImage} />
+              <UserDetails>
+                <NameBar>
+                  {!user.firstname && !user.lastname && user.username && (
+                    <h1>{user.username.toLowerCase()}</h1>
+                  )}
+                  {(user.firstname || user.lastname) && (
+                    <>
+                      <h2>{user.firstname && user.firstname}</h2>
+                      <h1>{user.lastname && user.lastname.toUpperCase()}</h1>
+                    </>
+                  )}
+                </NameBar>
+                <Handle_And_Rating>
+                  <Handle>@{user.username || ''}</Handle>
+                  <Rating>
+                    <strong>{user.rating > 0 || '0'}%</strong> VENDOR SCORE
+                  </Rating>
+                </Handle_And_Rating>
+                <Bio>{user.bio ? user.bio : 'No bio'}</Bio>
+                <Tags>
+                  {user.categories && user.categories.length === 0 && (
+                    <EmptyStateText>No Category Tags</EmptyStateText>
+                  )}
+                  {user.categories &&
+                    user.categories.map((category) => {
+                      return <TagItem key={category}>{category}</TagItem>;
+                    })}
+                </Tags>
+                {user.accountType === 'Vendor' && (
+                  <>
+                    <ProfileActions>
+                      <Action to={'#'}>
+                        New Transaction
+                        <FontAwesomeIcon
+                          className="fa-icon"
+                          icon={faLongArrowAltRight}
+                        />
+                      </Action>
+                      <Action to={'#'}>
+                        Send Mail{' '}
+                        <FontAwesomeIcon
+                          className="fa-icon"
+                          icon={faEnvelope}
+                        />
+                      </Action>
+                    </ProfileActions>
+                  </>
+                )}
+              </UserDetails>
+            </UserDetailsContainer>
+          </UserModal>
+        </UserProfile>
+      )}
 
       <Container>
         {isLoading && <Loader />}
@@ -489,99 +548,35 @@ const User = (props) => {
         )}
 
         {user_found && (
-          <>
-            <UserProfile
-              background_cover_image={user.background_cover_imagemnb}
-            >
-              <UserModal>
-                <UserDetailsContainer>
-                  <UserImage src={user.photo || defaultImage} />
-                  <UserDetails>
-                    <NameBar>
-                      {!user.firstname && !user.lastname && user.username && (
-                        <h1>{user.username.toLowerCase()}</h1>
-                      )}
-                      {(user.firstname || user.lastname) && (
-                        <>
-                          <h2>{user.firstname && user.firstname}</h2>
-                          <h1>
-                            {user.lastname && user.lastname.toUpperCase()}
-                          </h1>
-                        </>
-                      )}
-                    </NameBar>
-                    <Handle_And_Rating>
-                      <Handle>@{user.username || ''}</Handle>
-                      <Rating>
-                        <strong>{user.rating > 0 || '0'}%</strong> VENDOR SCORE
-                      </Rating>
-                    </Handle_And_Rating>
-                    <Bio>{user.bio ? user.bio : 'No bio'}</Bio>
-                    <Tags>
-                      {user.categories && user.categories.length === 0 && (
-                        <EmptyStateText>No Category Tags</EmptyStateText>
-                      )}
-                      {user.categories &&
-                        user.categories.map((category) => {
-                          return <TagItem key={category}>{category}</TagItem>;
-                        })}
-                    </Tags>
-                    {user.accountType === 'Vendor' && (
-                      <>
-                        <ProfileActions>
-                          <Action to={'#'}>
-                            New Transaction
-                            <FontAwesomeIcon
-                              className="fa-icon"
-                              icon={faLongArrowAltRight}
-                            />
-                          </Action>
-                          <Action to={'#'}>
-                            Send Mail{' '}
-                            <FontAwesomeIcon
-                              className="fa-icon"
-                              icon={faEnvelope}
-                            />
-                          </Action>
-                        </ProfileActions>
-                      </>
-                    )}
-                  </UserDetails>
-                </UserDetailsContainer>
-              </UserModal>
-            </UserProfile>
-            {/* <Router> */}
-            <Switch>
-              <Route
-                path={`${match.url}`}
-                exact
-                component={() => {
-                  return (
-                    <UserIndex
-                      user={user}
-                      updater={addAlert}
-                      loggedinUser={props.user.user}
-                    />
-                  );
-                }}
-              />
-              <Route
-                path={`${match.url}/transactions`}
-                component={() => {
-                  return (
-                    <ConnectedTransactions
-                      user={user}
-                      user_name={target_user_name}
-                      user_id={target_user_id}
-                      updater={addAlert}
-                      loggedinUser={props.user.user}
-                    />
-                  );
-                }}
-              />
-            </Switch>
-            {/* </Router> */}
-          </>
+          <Switch>
+            <Route
+              path={`${match.url}`}
+              exact
+              component={() => {
+                return (
+                  <UserIndex
+                    user={user}
+                    updater={addAlert}
+                    loggedinUser={props.user.user}
+                  />
+                );
+              }}
+            />
+            <Route
+              path={`${match.url}/transactions`}
+              component={() => {
+                return (
+                  <ConnectedTransactions
+                    user={user}
+                    user_name={target_user_name}
+                    user_id={target_user_id}
+                    updater={addAlert}
+                    loggedinUser={props.user.user}
+                  />
+                );
+              }}
+            />
+          </Switch>
         )}
       </Container>
       <Footer />
