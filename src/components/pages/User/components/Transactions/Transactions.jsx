@@ -25,8 +25,7 @@ const ParentContainer = styled.div`
 
 const Container = styled.div`
   width: 880px;
-  margin: 40px auto;
-  padding: 40px 0px;
+  margin: 0px auto;
   box-sizing: border-box;
   background: ${(props) => props.theme.colors.dark_background};
   @media (max-width: 900px) {
@@ -37,12 +36,12 @@ const Container = styled.div`
   }
   @media (max-width: 700px) {
     flex-flow: column nowrap;
-    padding: 40px 50px;
+    padding: 0px 50px;
     width: calc(100% - 100px);
   }
   @media (max-width: 500px) {
     flex-flow: column nowrap;
-    padding: 40px 10px;
+    padding: 0px 10px;
     box-sizing: border-box;
     width: calc(100% - 40px);
   }
@@ -90,8 +89,10 @@ const Transactions = (props) => {
     // get all user transactions
     const fetchTransactions = async (_id) => {
       let foundTransactions = await props.getTransactionsByUserID(_id);
+      const copyTransactions = [...foundTransactions];
+      const sortedTransactions = copyTransactions.sort(sort('latestFirst'));
       if (mounted) {
-        setTransactions(foundTransactions);
+        setTransactions(sortedTransactions);
         setFetching(false);
       }
     };
@@ -161,7 +162,7 @@ const Transactions = (props) => {
           </>
         )}
         {transactions &&
-          transactions.sort(sort('latestFirst')).map((transaction) => {
+          transactions.map((transaction) => {
             return (
               <TransactionItem
                 id={transaction._id}

@@ -70,34 +70,34 @@ const Container = styled.div`
   @media (max-width: 700px) {
     width: 37rem;
     flex-flow: column nowrap;
-    padding: 40px 50px;
+    padding: 2rem 3rem;
   }
   @media (max-width: 620px) {
     width: 33rem;
     flex-flow: column nowrap;
-    padding: 40px 10px;
+    padding: 2rem 1rem;
     box-sizing: border-box;
   }
 
   @media (max-width: 540px) {
     width: 30rem;
     flex-flow: column nowrap;
-    padding: 40px 10px;
+    padding: 1rem;
     box-sizing: border-box;
   }
   @media (max-width: 500px) {
-    padding: 40px 5px;
+    padding: 1rem;
     width: 27rem;
     flex-flow: column nowrap;
   }
   @media (max-width: 440px) {
-    padding: 40px 5px;
+    padding: 1rem;
     width: 23rem;
     flex-flow: column nowrap;
   }
   @media (max-width: 400px) {
     width: 100%;
-    padding: 0.5rem;
+    padding: 1rem;
     flex-flow: column nowrap;
   }
 `;
@@ -227,7 +227,7 @@ const StoreDetails = styled.div`
   flex-flow: column nowrap;
   margin-left: auto;
   box-sizing: border-box;
-  padding: 16px;
+  padding: 1rem;
   border-bottom: 2px solid ${(props) => props.theme.colors.light_background};
   @media (max-width: 900px) {
     width: calc(100% - 132px);

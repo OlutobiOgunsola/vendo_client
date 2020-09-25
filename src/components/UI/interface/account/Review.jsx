@@ -501,7 +501,7 @@ const ReviewItem = (props) => {
   const date = new Date();
   return (
     <>
-      <ParentContainer data-aos="fade-up" id={`review-${review._id}`}>
+      <ParentContainer data-aos="fade-in" id={`review-${review._id}`}>
         <Container>
           <TextContainer>
             <Votes>

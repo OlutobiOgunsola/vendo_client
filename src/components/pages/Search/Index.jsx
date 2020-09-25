@@ -58,6 +58,8 @@ const Container = styled.div`
   margin: 40px auto;
   display: flex;
   flex-flow: row nowrap;
+  background: ${(props) => props.theme.colors.light_background};
+
   @media (max-width: 900px) {
     width: 50rem;
   }
@@ -73,17 +75,14 @@ const Container = styled.div`
   }
 
   @media (max-width: 540px) {
-    width: 30rem;
+    width: 100%;
   }
   @media (max-width: 500px) {
-    padding: 1rem;
-    width: 27rem;
+    width: 100%;
+    padding: 1rem 0.5rem;
   }
   @media (max-width: 440px) {
-    width: 20rem;
-  }
-  @media (max-width: 400px) {
-    padding: 1rem 0.5rem;
+    width: 100%;
   }
 `;
 const Filters = styled.div`
@@ -93,7 +92,6 @@ const Filters = styled.div`
   flex-flow: column nowrap;
   margin-right: 1rem;
   border-radius: 4px;
-  background: ${(props) => props.theme.colors.light_background};
   box-shadow: 1px 2px 5px ${(props) => props.theme.colors.light_background_40},
     0px 2px 30px ${(props) => props.theme.colors.light_background_60};
   padding: 1rem;
@@ -123,7 +121,6 @@ const SearchContainer = styled.div`
   height: auto;
   padding: 1rem;
   box-sizing: border-box;
-  background: ${(props) => props.theme.colors.light_background};
   hr {
     width: 100%;
     height: 0.1px;
@@ -138,7 +135,6 @@ const SearchContainer = styled.div`
   }
   @media (max-width: 620px) {
     width: 100%;
-    padding: 0.5rem;
     hr {
       margin: 0.5rem auto;
     }
@@ -306,22 +302,24 @@ const Search = (props) => {
 
   let query = useQuery();
 
-  useEffect(() => {
-    // check for filters upon render
-    const filter = query.get('filter');
-    if (filter) {
-      setFilter(filter);
-    }
-  }, []);
+  // useEffect(() => {
+  //   // check for filters upon render
+  //   const filter = query.get('filter');
+  //   if (filter) {
+  //     setFilter(filter);
+  //   }
+  // }, []);
 
   useEffect(() => {
     const string = query.get('query');
     const filter = query.get('filter');
-    console.log('string crazy', string, 'filter crazy', filter);
+    if (filter) {
+      setFilter(filter);
+    }
 
     if (string) {
       setSearchString(string);
-      getStores(searchString, filter);
+      getStores(searchString);
     }
     return () => null;
   }, []);
@@ -335,7 +333,7 @@ const Search = (props) => {
   }, [searchString]);
 
   const getStores = useCallback(
-    debounce((string, filter) => {
+    debounce((string) => {
       console.log('string', string, 'filter', filter);
       setLoading(true);
       setNoResult(false);
@@ -375,9 +373,9 @@ const Search = (props) => {
         })
         .finally(() => {
           if (!filter) {
-            // props.history.push(`${match.url}?query=${string}`);
+            props.history.push(`${match.url}?query=${string}`);
           } else {
-            // props.history.push(`${match.url}?query=${string}&filter=${filter}`);
+            props.history.push(`${match.url}?query=${string}&filter=${filter}`);
           }
           return;
         });
@@ -420,15 +418,18 @@ const Search = (props) => {
   };
 
   const handleNavigation = (nav) => {
-    setFilter(nav);
+    console.log(nav);
+    setFilter((prev) => {
+      return nav;
+    });
     return props.history.push(
-      `${match.url}?query=${searchString}&filter=${filter}`,
+      `${match.url}?query=${searchString}&filter=${nav}`,
     );
   };
 
   return (
     <>
-      <ParentContainer id="add_transaction">
+      <ParentContainer id="search">
         <Header useOwnBackground usePagePadding />
         <SplashScreen>
           <Modal>

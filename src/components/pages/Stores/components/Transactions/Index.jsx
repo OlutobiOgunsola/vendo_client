@@ -52,11 +52,11 @@ const Container = styled.div`
   }
   @media (max-width: 700px) {
     flex-flow: column nowrap;
-    padding: 40px 50px;
+    padding: 1rem 50px;
   }
   @media (max-width: 500px) {
     flex-flow: column nowrap;
-    padding: 40px 10px;
+    padding: 1rem 10px;
     box-sizing: border-box;
   }
   @media (max-width: 400px) {

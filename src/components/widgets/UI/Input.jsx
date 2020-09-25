@@ -596,8 +596,12 @@ const Input = React.forwardRef((props, ref) => {
       id={`${props.class.name}-group`}
       grp_margin={props.class.grp_margin}
       grp_padding={props.class.grp_padding}
+      data-aos="fade-in"
+      data-aos-duration="1000"
     >
       <Label
+        data-aos="fade-in"
+        data-aos-duration="2000"
         htmlFor={props.class.name || ''}
         display={props.class.label.display || 'none '}
       >

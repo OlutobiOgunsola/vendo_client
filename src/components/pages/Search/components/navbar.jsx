@@ -121,7 +121,6 @@ const LinkItem = styled.button`
 
   @media (max-width: 480px) {
     font-size: 10px;
-    padding: 0.75rem 0.25rem;
   }
 `;
 
@@ -156,6 +155,7 @@ const Navbar = (props) => {
     const target = e.target;
     const value = target.dataset.name;
     target.classList.add('selected');
+    console.log(value, 'valur');
     return props.setDisplay(value);
   };
 

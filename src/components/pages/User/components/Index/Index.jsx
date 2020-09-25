@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { keyframes, withTheme } from 'styled-components';
 import ReactTooltip from 'react-tooltip';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { fadeIn } from 'react-animations';
 import Lottie from 'react-lottie';
 
@@ -61,58 +61,12 @@ const Section = styled.section`
 const Stores = styled.div`
   display: flex;
   flex-flow: row wrap;
+  justify-content: space-between;
   margin-bottom: 16px;
   .tooltip {
     font-size: 16px !important;
     font-family: 'Josefin Sans Light' !important;
     text-align: left !important;
-  }
-`;
-
-const StoreItem = styled.img`
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background-size: 100%;
-  animation: 1s ${storeAnimation};
-  box-sizing: border-box;
-  border-style: solid;
-  border-width: 3px;
-  display: block;
-  opacity: 0.8;
-  transition: all 0.25s ease-in-out;
-
-  border-color: ${(props) => {
-    switch (props.platform) {
-      case 'facebook':
-        return '#395185';
-
-      case 'twitter':
-        return '#55acee';
-
-      case 'instagram':
-        return '#d53f90';
-
-      default:
-        return `${props.theme.colors.yellow}`;
-    }
-  }};
-  margin-right: 8px;
-  margin-bottom: 16px;
-  &:last-child {
-    margin-right: 0px;
-  }
-  &:hover {
-    cursor: pointer;
-    opacity: 1;
-  }
-  @media (max-width: 580px) {
-    width: 75px;
-    height: 75px;
-  }
-  @media (max-width: 400px) {
-    width: 50px;
-    height: 50px;
   }
 `;
 
@@ -194,6 +148,7 @@ const Action = styled(Link)`
 
 const UserIndex = (props) => {
   const user = props.user;
+  const { match } = props;
   const emptyReviewLottieOptions = {
     loop: true,
     autoplay: true,
@@ -218,6 +173,12 @@ const UserIndex = (props) => {
   const topReview = sortedReviews ? sortedReviews[0] : {};
   const topTransaction = sortedTransactions ? sortedTransactions[0] : {};
 
+  const openStore = (e) => {
+    const name = e.target.id;
+    console.log(name);
+    return props.history.push(`/stores/${name}`);
+  };
+
   return (
     <ParentContainer>
       {user.accountType === 'Vendor' && (
@@ -228,33 +189,24 @@ const UserIndex = (props) => {
             {user.registered_stores && user.registered_stores.length === 0 && (
               <EmptyStateText>No Registered Stores</EmptyStateText>
             )}
-            {user.registered_stores &&
-              user.registered_stores.map((store, index) => {
-                store.duration = index * 1000;
-                return (
-                  <React.Fragment key={store._id}>
-                    <ReactTooltip effect="solid" />
-                    <StoreItem
-                      data-tip={`${store.name.toUpperCase()} <br />${store.category.map(
-                        (cat) => {
-                          return cat;
-                        },
-                      )} <br /> ${store.rating} of 5 <br /> ${
-                        store.transactions.length
-                      } transactions completed <br />  ${
-                        store.reviews.length
-                      } reviews received`}
-                      data-class="tooltip"
-                      data-multiline={true}
-                      data-aos="fade-up"
-                      data-aos-duration={store.duration}
-                      key={store._id}
-                      src={store.photo || defaultStoreImage}
-                      platform={store.platform}
-                    />
-                  </React.Fragment>
-                );
-              })}
+            {user.registered_stores && (
+              <ProfileActions>
+                <Action
+                  data-aos="fade-in"
+                  data-aos-duration="250"
+                  to={`${match.url}/stores`}
+                  borders="true"
+                  width="200px"
+                  hover_width="220px"
+                >
+                  View all Stores
+                  <FontAwesomeIcon
+                    className="fa-icon"
+                    icon={faLongArrowAltRight}
+                  />
+                </Action>
+              </ProfileActions>
+            )}
           </Stores>
         </Section>
       )}
@@ -284,7 +236,7 @@ const UserIndex = (props) => {
         {topReview && (
           <ProfileActions>
             <Action
-              data-aos="fade-up"
+              data-aos="fade-in"
               data-aos-duration="250"
               to={'#'}
               borders="true"
@@ -339,13 +291,23 @@ const UserIndex = (props) => {
         )}
         <ProfileActions>
           {topTransaction && (
-            <Action to={'#'} borders="true" width="200px" hover_width="220px">
+            <Action
+              to={`${match.url}/transactions`}
+              borders="true"
+              width="200px"
+              hover_width="220px"
+            >
               View all transactions
               <FontAwesomeIcon className="fa-icon" icon={faLongArrowAltRight} />
             </Action>
           )}
           {!topTransaction && (
-            <Action to={'#'} borders="true" width="200px" hover_width="220px">
+            <Action
+              to={'/search'}
+              borders="true"
+              width="200px"
+              hover_width="220px"
+            >
               Begin a transaction
               <FontAwesomeIcon className="fa-icon" icon={faLongArrowAltRight} />
             </Action>
@@ -362,4 +324,4 @@ UserIndex.propTypes = {
   loggedinUser: PropTypes.object,
 };
 
-export default withTheme(UserIndex);
+export default withTheme(withRouter(UserIndex));

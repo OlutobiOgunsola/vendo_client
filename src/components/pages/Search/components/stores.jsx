@@ -8,8 +8,7 @@ import { slideInUp } from 'react-animations';
 
 import { faHeart, faStore } from '@fortawesome/free-solid-svg-icons';
 
-import defaultStoreImage from '@/assets/images/store/DefaultImage.png';
-import defaultImage from '@/assets/images/icons/account/Profile.svg';
+import defaultImage from '@/assets/images/store/DefaultImage.png';
 import StarRatings from 'react-star-ratings/build/star-ratings';
 import ReactTooltip from 'react-tooltip';
 
@@ -45,12 +44,12 @@ const PhotoFancyBorder = styled.span`
   border-radius: 50%;
   border: solid 2px ${(props) => props.theme.colors.yellow};
   @media (max-width: 620px) {
-    width: 4rem;
-    height: 4rem;
-  }
-  @media (max-width: 400px) {
     width: 3rem;
     height: 3rem;
+  }
+  @media (max-width: 400px) {
+    width: 2rem;
+    height: 2rem;
   }
 `;
 

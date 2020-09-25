@@ -36,7 +36,7 @@ const fadeInUpAnimation = keyframes`${fadeIn}`;
 const slideInUpAnimation = keyframes`${slideInUp}`;
 
 const ParentContainer = styled.div`
-  background: ${(props) => props.theme.colors.review_background};
+  /* background: ${(props) => props.theme.colors.review_background}; */
   width: 100%;
   height: auto;
   position: relative;
@@ -45,13 +45,8 @@ const ParentContainer = styled.div`
   font-size: 16px;
   transition: all 0.25s ease-in-out;
   margin: 0 auto;
-  animation: 0.5s ${slideInUpAnimation};
-  @media (max-width: 500px) {
-    padding: 16px;
-  }
-  @media (max-width: 400px) {
-    padding: 16px 8px;
-  }
+  /* animation: 0.5s ${slideInUpAnimation}; */
+ 
 `;
 
 const Container = styled.div`
@@ -119,12 +114,19 @@ const ProfileActions = styled.div`
   margin: 16px auto;
   display: flex;
   justify-content: space-between;
+  @media (max-width: 500px) {
+    height: 30px;
+  }
 `;
 
 const Action = styled(Link)`
   display: inline-block;
   height: 100%;
   line-height: 50px;
+  @media (max-width: 500px) {
+    line-height: 30px;
+    font-size: 0.75rem;
+  }
   width: ${(props) => (props.width ? props.width : '48%')};
   margin: 0 auto;
   text-align: center;
@@ -157,6 +159,9 @@ const Action = styled(Link)`
       left: 16px;
       margin-left: 12px;
       opacity: 1;
+      @media (max-width: 500px) {
+        left: 8px;
+      }
     }
   }
 `;
@@ -178,8 +183,6 @@ const StoreImage = styled.img`
   border-width: 8px;
   border-radius: 50%;
   display: inline-block;
-  position: absolute;
-  top: 10%;
   border-color: ${(props) => {
     switch (props.platform) {
       case 'facebook':
@@ -195,6 +198,21 @@ const StoreImage = styled.img`
         return `${props.theme.colors.yellow}`;
     }
   }};
+  @media (max-width: 900px) {
+    height: 100px;
+    width: 100px;
+  }
+
+  @media (max-width: 540px) {
+    height: 75px;
+    width: 75px;
+    border-width: 3px;
+  }
+  @media (max-width: 380px) {
+    height: 50px;
+    width: 50px;
+    border-width: 2px;
+  }
 `;
 const TransactionDetails = styled.div`
   width: calc(100% - 182px);
@@ -203,7 +221,18 @@ const TransactionDetails = styled.div`
   flex-flow: column nowrap;
   margin-left: auto;
   box-sizing: border-box;
-  padding: 16px;
+  padding: 1rem;
+  @media (max-width: 900px) {
+    width: calc(100% - 132px);
+  }
+
+  @media (max-width: 540px) {
+    width: calc(100% - 91px);
+  }
+
+  @media (max-width: 380px) {
+    width: calc(100% - 58px);
+  }
 `;
 const TransactionDetailsContainer = styled.div`
   max-width: 880px;
@@ -221,16 +250,22 @@ const NameBar = styled.span`
     margin: 0;
     display: inline-block;
     font-family: 'Noto Sans Regular';
-    font-size: 32px;
+    font-size: 2rem;
     color: ${(props) => props.theme.colors.yellow};
+    @media (max-width: 500px) {
+      font-size: 1rem;
+    }
   }
   h2 {
     display: inline-block;
     font-family: 'Noto Sans Regular';
     font-weight: 300;
-    font-size: 32px;
+    font-size: 2rem;
     color: ${(props) => props.theme.colors.saturated_contrast};
     margin: 0;
+    @media (max-width: 500px) {
+      font-size: 1rem;
+    }
   }
 `;
 
@@ -248,9 +283,15 @@ const Requested = styled.h5`
     display: inline-block;
     margin: 0;
   }
+  @media (max-width: 500px) {
+    margin: 2px 0px;
+  }
 `;
 const Handle_And_Rating = styled.div`
-  margin: 8px 0px;
+  margin: 4px 0px;
+  @media (max-width: 500px) {
+    margin: 2px 0px;
+  }
 `;
 const Handle = styled.span`
   margin: 0;
@@ -272,6 +313,9 @@ const Bio = styled.p`
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
   overflow: hidden;
+  @media (max-width: 500px) {
+    padding: 2px 0px;
+  }
 `;
 
 const Tags = styled.span`
@@ -284,6 +328,10 @@ const Tags = styled.span`
     margin-left: 0px;
   }
   width: 100%;
+  @media (max-width: 500px) {
+    margin: 0.5rem;
+    padding: 2px;
+  }
 `;
 const EmptyStateText = styled.h5`
   text-align: center;
@@ -303,8 +351,11 @@ const ReviewContainer = styled.div`
   width: 100%;
   height: auto;
   background: ${(props) => props.theme.colors.dark_background};
-  padding: 16px 0px;
+  padding: 0.5rem 0rem;
   box-sizing: border-box;
+  @media (max-width: 500px) {
+    padding: 0.5rem 0rem;
+  }
 `;
 
 const TransactionPage = (props) => {
@@ -331,7 +382,10 @@ const TransactionPage = (props) => {
 
   const transaction_found = transaction && transaction._id !== '';
   const transaction_id = transaction_found ? transaction._id : '';
-  const review_id = transaction_found ? transaction.review[0]._id : 0;
+  const review_id =
+    transaction_found && transaction.review.length > 0
+      ? transaction.review[0]._id
+      : 0;
 
   // manually trigger rerender with state update
   const [render, setRender] = useState(false);
@@ -489,7 +543,7 @@ const TransactionPage = (props) => {
                     {transaction.title && <h1>{transaction.title}</h1>}
                   </NameBar>
                   <Requested>
-                    Transaction opened by
+                    Transaction opened by{" "}
                     <span>{transaction.author_id.username}</span>
                   </Requested>
                   <Handle_And_Rating>
@@ -508,11 +562,11 @@ const TransactionPage = (props) => {
                       ? transaction.store_id.description
                       : 'No store description'}
                   </Bio>
-                  <Tags color={color} background={background}>
+                  {/* <Tags color={color} background={background}>
                     {transaction.status}
-                  </Tags>
+                  </Tags> */}
 
-                  <ProfileActions>
+                  {/* <ProfileActions>
                     <Action to={'#'}>
                       View Store
                       <FontAwesomeIcon className="fa-icon" icon={faStore} />
@@ -521,7 +575,7 @@ const TransactionPage = (props) => {
                       Send Mail
                       <FontAwesomeIcon className="fa-icon" icon={faEnvelope} />
                     </Action>
-                  </ProfileActions>
+                  </ProfileActions> */}
                 </TransactionDetails>
               </TransactionDetailsContainer>
             </TransactionProfile>
@@ -535,7 +589,7 @@ const TransactionPage = (props) => {
                   user_token={props.loggedinUser.jwt}
                 />
               )}
-              {!transaction.review &&
+              {transaction.review.length === 0 &&
                 props.loggedinUser._id !== transaction.author_id._id && (
                   <>
                     <Lottie
@@ -549,7 +603,7 @@ const TransactionPage = (props) => {
                     </EmptyStateSubtext>
                   </>
                 )}
-              {!transaction.review &&
+              {transaction.review.length === 0 &&
                 transaction.author_id._id === props.loggedinUser._id && (
                   <AddReview
                     updater={props.updater}

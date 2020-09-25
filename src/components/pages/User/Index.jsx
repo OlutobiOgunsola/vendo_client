@@ -17,6 +17,7 @@ import {
 
 import UserIndex from './components/Index/Index';
 import ConnectedTransactions from './components/Transactions/Transactions';
+import ConnectedStores from './components/Stores/Stores';
 import withUser from '@/components/higher-order/withUser';
 import Footer from '@/components/UI/Footer';
 import Header from '@/components/UI/Header';
@@ -93,11 +94,10 @@ const Container = styled.div`
   }
   @media (max-width: 440px) {
     padding: 40px 5px;
-    width: 23rem;
+    width: 100%;
     flex-flow: column nowrap;
   }
   @media (max-width: 400px) {
-    width: 100%;
     flex-flow: column nowrap;
     padding: 0.5rem;
   }
@@ -471,7 +471,11 @@ const User = (props) => {
         );
       })}
       {user_found && (
-        <UserProfile background_cover_image={user.background_cover_imagemnb}>
+        <UserProfile
+          background_cover_image={user.background_cover_image}
+          data-aos="fade-in"
+          data-aos-duration="2000"
+        >
           <UserModal>
             <UserDetailsContainer>
               <UserImage src={user.photo || defaultImage} />
@@ -529,7 +533,7 @@ const User = (props) => {
         </UserProfile>
       )}
 
-      <Container>
+      <Container data-aos="fade-up" data-aos-duration="1000">
         {isLoading && <Loader />}
         {isFetching && <Loader transition={0.2} />}
         {!user._id && !isLoading && (
@@ -567,6 +571,21 @@ const User = (props) => {
               component={() => {
                 return (
                   <ConnectedTransactions
+                    user={user}
+                    user_name={target_user_name}
+                    user_id={target_user_id}
+                    updater={addAlert}
+                    loggedinUser={props.user.user}
+                  />
+                );
+              }}
+            />
+
+            <Route
+              path={`${match.url}/stores`}
+              component={() => {
+                return (
+                  <ConnectedStores
                     user={user}
                     user_name={target_user_name}
                     user_id={target_user_id}
