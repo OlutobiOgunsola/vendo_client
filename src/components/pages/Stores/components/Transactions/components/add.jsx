@@ -10,7 +10,6 @@ import Button from '@/components/UI/buttons/Button';
 import setAlert from '@/assets/helperFunctions/alerts';
 import withUser from '@/components/higher-order/withUser';
 
-
 const fadeInUpAnimation = keyframes`${fadeIn}`;
 
 const ParentContainer = styled.div`
@@ -84,7 +83,6 @@ const AddTransaction = (props) => {
       );
     }
 
-    console.log('store id', store_id);
     const transactionObj = {};
     transactionObj.title = title;
     transactionObj.description = desc;

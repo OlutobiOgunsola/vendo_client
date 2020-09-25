@@ -201,7 +201,7 @@ const StoreIndex = (props) => {
             <Action
               data-aos="fade-up"
               data-aos-duration="250"
-              to={'#'}
+              to={`${match.url}/reviews`}
               borders="true"
               width="200px"
               hover_width="220px"
@@ -216,7 +216,7 @@ const StoreIndex = (props) => {
             <Action
               data-aos="fade-up"
               data-aos-duration="250"
-              to={'#'}
+              to={`${match.url}/transactions/add`}
               borders="true"
               width="200px"
               hover_width="220px"
@@ -294,7 +294,7 @@ const StoreIndex = (props) => {
             </Action>
           )}
           {!topTransaction && (
-            <Action to={'#'} borders="true" width="200px" hover_width="220px">
+            <Action to={`${match.url}/transactions/add`} borders="true" width="200px" hover_width="220px">
               Begin a transaction
               <FontAwesomeIcon className="fa-icon" icon={faLongArrowAltRight} />
             </Action>

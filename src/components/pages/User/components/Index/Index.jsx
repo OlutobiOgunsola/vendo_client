@@ -238,7 +238,7 @@ const UserIndex = (props) => {
             <Action
               data-aos="fade-in"
               data-aos-duration="250"
-              to={'#'}
+              to={`${match.url}/reviews`}
               borders="true"
               width="200px"
               hover_width="220px"
@@ -253,7 +253,7 @@ const UserIndex = (props) => {
             <Action
               data-aos="fade-up"
               data-aos-duration="250"
-              to={'#'}
+              to={`${match.url}/stores`}
               borders="true"
               width="200px"
               hover_width="220px"
@@ -303,7 +303,7 @@ const UserIndex = (props) => {
           )}
           {!topTransaction && (
             <Action
-              to={'/search'}
+              to={'/stores'}
               borders="true"
               width="200px"
               hover_width="220px"
