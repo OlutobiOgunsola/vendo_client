@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { slideInUp, slideInDown, fadeIn } from 'react-animations';
 
@@ -7,6 +7,7 @@ import desktopLanding from '@/assets/images/backgrounds/desktopLandingMainSnippe
 import Header from '@/components/UI/Header';
 import Pen from '@/components/UI/interface/home/RectanglePen.jsx';
 import DownChevronIcon from '@/components/UI/interface/home/DownChevron.jsx';
+import { withRouter } from 'react-router';
 
 const fadeInAnimation = keyframes`${fadeIn}`;
 const slideInUpAnimation = keyframes`${slideInUp}`;
@@ -171,8 +172,26 @@ const DownChevron = styled.svg`
   animation: ${bubble} 2s ease-in-out infinite;
 `;
 
-const LandingScreen = () => {
+const LandingScreen = (props) => {
   const loading = <Loading />;
+  const [searchString, setSearchString] = useState('');
+  const handleInput = (e) => {
+    const value = e.target.value;
+    return setSearchString((prev) => {
+      return value;
+    });
+  };
+  const search = () => {
+    return props.history.push(`/search?query=${searchString}`);
+  };
+
+  const processSearch = (e) => {
+    if (e.key === 'Enter') {
+      return search();
+    }
+    return null;
+  };
+
   return (
     <ParentContainer>
       <Modal>
@@ -187,7 +206,13 @@ const LandingScreen = () => {
               Vendor reviews at your fingertips, anywhere, anytime
             </SubHeadingCopy>
           </SubHeading>
-          <SearchInput type="search" placeholder="Search for a vendor" />
+          <SearchInput
+            value={searchString}
+            onChange={handleInput}
+            onKeyDown={processSearch}
+            type="search"
+            placeholder="Search for a vendor"
+          />
         </CopyContainer>
         <DownChevronContainer>
           <DownChevron>
@@ -199,4 +224,4 @@ const LandingScreen = () => {
   );
 };
 
-export default LandingScreen;
+export default withRouter(LandingScreen);

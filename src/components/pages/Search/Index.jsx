@@ -292,6 +292,7 @@ const Search = (props) => {
   const [reviewResults, setReviewResults] = useState([]);
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(true);
   const [noResults, setNoResult] = useState(false);
 
   // A custom hook that builds on useLocation to parse
@@ -371,9 +372,9 @@ const Search = (props) => {
           return null;
         })
         .finally(() => {
-          if (!filter) {
+          if (!filter && mounted) {
             props.history.push(`${match.url}?query=${string}`);
-          } else {
+          } else if (mounted) {
             props.history.push(`${match.url}?query=${string}&filter=${filter}`);
           }
           return;
