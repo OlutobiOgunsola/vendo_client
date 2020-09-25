@@ -334,7 +334,6 @@ const Search = (props) => {
 
   const getStores = useCallback(
     debounce((string) => {
-      console.log('string', string, 'filter', filter);
       setLoading(true);
       setNoResult(false);
       return axios
@@ -411,14 +410,13 @@ const Search = (props) => {
   };
 
   const processSearch = (e) => {
-    if (e.key === 'Enter') {
+    if (searchString && e.key === 'Enter') {
       // enter key pressed, submit search
       return getStores();
     }
   };
 
   const handleNavigation = (nav) => {
-    console.log(nav);
     setFilter((prev) => {
       return nav;
     });
