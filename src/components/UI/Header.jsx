@@ -52,8 +52,9 @@ const LogoContainer = styled.svg`
   margin: 0px 40px 0px 0px;
   display: inline-block;
   @media (max-width: 400px) {
-    margin: 0px 10px 0px 0px;
-    box-sizing: border-box;
+    /* margin: 0px 10px 0px 0px;
+    box-sizing: border-box; */
+    display: none;
   }
 `;
 

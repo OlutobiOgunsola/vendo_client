@@ -35,16 +35,7 @@ const ParentContainer = styled.div`
 const Modal = styled.div`
   height: 640px;
   background: ${(props) => props.theme.colors.dark_background};
-  padding: 10px 100px;
-  @media (max-width: 900px) {
-    padding: 10px 100px;
-  }
-  @media (max-width: 700px) {
-    padding: 10px 50px;
-  }
-  @media (max-width: 500px) {
-    padding: 10px 20px;
-  }
+  padding: 10px 0px;
 
   .copy-enter {
     opacity: 0.01;
@@ -80,11 +71,12 @@ const CopyContainer = styled.div`
   animation: 1s ${slideInDownAnimation};
   @media (max-width: 700px) {
     height: 300;
+    width: 400px;
     margin: 130px auto 38px auto;
   }
   @media (max-width: 500px) {
-    width: 300px;
-    height: 300;
+    width: 340px;
+    height: 300px;
     margin: 150px auto 28px auto;
     align-items: flex-start;
   }
@@ -95,19 +87,21 @@ const Jumbo = styled.h1`
   font-family: 'Oxygen Bold', 'Sans Serif';
   font-size: 2.5rem;
   margin: 1rem 0rem;
+  width: 100%;
+  text-align: left;
   @media (max-width: 700px) {
     font-size: 2rem;
   }
 `;
 
 const SubHeading = styled.div`
-  width: 386px;
+  width: 100%;
   height: 40px;
   @media (max-width: 700px) {
-    width: 368px;
+    width: 100%;
   }
   @media (max-width: 900px) {
-    width: 368px;
+    width: 100%;
   }
   @media (max-width: 400px) {
     width: 320px;
@@ -137,7 +131,7 @@ const SubHeadingCopy = styled.p`
 
 const SearchInput = styled.input`
   background: rgba(255, 255, 255, 0.3);
-  width: 386px;
+  width: 400px;
   height: 40px;
   border: none;
   border-radius: 4px;
@@ -159,15 +153,8 @@ const SearchInput = styled.input`
     color: rgba(255, 255, 255, 0.7);
   }
 
-  @media (max-width: 970px) {
-    width: 386px;
-  }
-  @media (max-width: 740px) {
-    margin-right: 32px;
-  }
-  @media (max-width: 480px) {
-    width: 270px;
-    margin-right: 32px;
+  @media (max-width: 600px) {
+    width: 100%;
   }
 `;
 
@@ -189,7 +176,7 @@ const LandingScreen = () => {
   return (
     <ParentContainer>
       <Modal>
-        <Header usePagePadding />
+        <Header />
         <CopyContainer>
           <Jumbo>Shop smart on the internet</Jumbo>
           <SubHeading>
