@@ -3,8 +3,11 @@ import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
 
 const Button = styled(Link)`
-  width: 100px;
+  width: 120px;
   height: 40px;
+  padding: 0.25rem;
+  font-size: 16px;
+  font-family: 'Josefin Sans Light';
   border: 1px solid white;
   border-radius: 4px;
   line-height: 40px;
@@ -16,6 +19,9 @@ const Button = styled(Link)`
   &:hover {
     background: white;
     color: #182a30;
+  }
+  @media (max-width: 500px) {
+    font-size: 12px;
   }
 `;
 

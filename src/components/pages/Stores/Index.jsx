@@ -23,6 +23,7 @@ import Header from '@/components/UI/Header';
 import Loader from '@/components/widgets/UI/Loader';
 import Alert from '@/components/widgets/UI/Alert';
 import TransactionsIndex from './components/Transactions/Index';
+import ReviewsIndex from './components/Reviews/Index';
 
 import empty404 from '@/assets/images/lottie/404.json';
 import defaultImage from '@/assets/images/icons/account/Profile.svg';
@@ -671,6 +672,23 @@ const Store = (props) => {
                     handle={store.address}
                     owner={owner}
                     setRoute={setTransactionPath}
+                  />
+                );
+              }}
+            />
+
+            <Route
+              path={`${match.url}/reviews`}
+              component={() => {
+                return (
+                  <ReviewsIndex
+                    updater={addAlert}
+                    user={props.user.user}
+                    store_id={store._id}
+                    store_owner_id={owner_id}
+                    handle={store.address}
+                    owner={owner}
+                    reviews={store.reviews}
                   />
                 );
               }}

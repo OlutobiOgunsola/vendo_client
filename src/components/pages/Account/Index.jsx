@@ -23,7 +23,7 @@ import Transactions from './components/transactions';
 const ParentContainer = styled.div`
   width: 100%;
   /* background: red; */
-  background: ${(props) => props.theme.colors.page_background};
+  background: ${(props) => props.theme.colors.review_background};
   height: auto;
   display: flex;
   flex-flow: column wrap;

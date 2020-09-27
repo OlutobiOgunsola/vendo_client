@@ -35,8 +35,8 @@ const ParentContainer = styled.div`
 const Container = styled.div`
   width: 100%;
   box-sizing: border-box;
-  /* padding: 20px; */
-
+  /* padding: 1rem; */
+  background: rgba(0, 0, 0, 0.2);
   hr {
     width: 100%;
     height: 0.1px;
@@ -46,10 +46,6 @@ const Container = styled.div`
     background: ${(props) => props.theme.colors.alternate_light_background_10};
   }
 
-  @media (max-width: 900px) {
-  }
-  @media (max-width: 800px) {
-  }
   @media (max-width: 700px) {
     flex-flow: column nowrap;
     padding: 1rem 50px;

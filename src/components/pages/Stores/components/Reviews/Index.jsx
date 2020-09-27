@@ -16,7 +16,7 @@ import withUser from '@/components/higher-order/withUser';
 import Loader from '@/components/widgets/UI/Loader';
 import Alert from '@/components/widgets/UI/Alert';
 
-import ReviewPage from './components/review';
+import ReviewList from './components/list';
 import AddReview from './components/add';
 
 import defaultImage from '@/assets/images/icons/account/Profile.svg';
@@ -31,7 +31,7 @@ const Container = styled.div`
   width: 100%;
   box-sizing: border-box;
   background: ${(props) => props.theme.colors.dark_background};
-  /* padding: 20px; */
+  padding: 20px;
 
   hr {
     width: 100%;
@@ -90,6 +90,7 @@ const ReviewsIndex = (props) => {
     upvotes: [],
     downvotes: [],
   });
+  const reviews = props.reviews;
 
   const { match } = props;
 
@@ -140,25 +141,13 @@ const ReviewsIndex = (props) => {
 
         <Switch>
           <Route
-            path={`${match.url}/add`}
-            exact
+            path={`${match.url}/`}
             component={() => {
               return (
-                <AddReview
+                <ReviewList
                   updater={addAlert}
-                  loggedinUser={props.loggedinUser}
-                />
-              );
-            }}
-          />
-          <Route
-            path={`${match.url}/:review_id`}
-            component={() => {
-              return (
-                <ReviewPage
-                  updater={addAlert}
-                  loggedinUser={props.loggedinUser}
-                  //   review={review}
+                  loggedinUser={props.user}
+                  reviews={reviews}
                 />
               );
             }}

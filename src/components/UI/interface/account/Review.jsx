@@ -14,6 +14,7 @@ import {
   faReply,
   faShare,
   faMinus,
+  faPlaneDeparture,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { fadeIn, slideInUp } from 'react-animations';
@@ -29,6 +30,7 @@ import { connect } from 'react-redux';
 import Alert from '@/components/widgets/UI/Alert';
 import setAlert from '@/assets/helperFunctions/alerts';
 import { sort } from '@/assets/helperFunctions/sort';
+import { withRouter } from 'react-router';
 
 const fadeInUpAnimation = keyframes`${fadeIn}`;
 
@@ -501,6 +503,8 @@ const ReviewItem = (props) => {
   };
 
   const date = new Date();
+
+  console.log('review', review);
   return (
     <>
       <ParentContainer data-aos="fade-in" id={`review-${review._id}`}>
@@ -580,6 +584,18 @@ const ReviewItem = (props) => {
             Share
           </ExpandGroup>
 
+          {props.domain !== 'transaction' && (
+            <ExpandGroup
+              onClick={() => {
+                return props.history.push(
+                  `/stores/${review.transaction_id.store_id.address}/transactions/${review.transaction_id._id}`,
+                );
+              }}
+            >
+              <FontAwesomeIcon className="fa-icon" icon={faPlaneDeparture} />
+              View Transaction
+            </ExpandGroup>
+          )}
           {showCommentGroup && props.user_id && (
             <CommentGroup>
               <Image>
@@ -690,4 +706,4 @@ ReviewItem.propTypes = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withTheme(ReviewItem));
+)(withRouter(withTheme(ReviewItem)));

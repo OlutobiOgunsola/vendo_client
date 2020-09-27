@@ -59,6 +59,7 @@ const Container = styled.div`
   display: flex;
   flex-flow: row nowrap;
   background: ${(props) => props.theme.colors.light_background};
+  box-sizing: border-box;
 
   @media (max-width: 900px) {
     width: 50rem;
@@ -135,6 +136,7 @@ const SearchContainer = styled.div`
   }
   @media (max-width: 620px) {
     width: 100%;
+    padding: 0rem;
     hr {
       margin: 0.5rem auto;
     }

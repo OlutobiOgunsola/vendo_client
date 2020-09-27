@@ -162,8 +162,8 @@ const Transactions = (props) => {
                       domain="owner"
                       type="received"
                       user_id={props.user.user._id}
-                      key={transaction._id}
-                      id={transaction._id}
+                      key={transaction}
+                      id={transaction}
                       updater={props.updater}
                       user_token={props.user.user.jwt}
                     />
@@ -201,8 +201,8 @@ const Transactions = (props) => {
                     <TransactionItem
                       type="given"
                       user_id={props.user.user._id}
-                      key={transaction._id}
-                      id={transaction._id}
+                      key={transaction}
+                      id={transaction}
                       domain="owner"
                       updater={props.updater}
                       user_token={props.user.user.jwt}

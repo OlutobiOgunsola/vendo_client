@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import Loader from '@/components/widgets/UI/Loader';
 
 import DefaultImage from '@/assets/images/icons/account/Profile.svg';
-import TransactionItem from '@/components/UI/interface/account/Transaction.jsx';
 import ReviewItem from '@/components/UI/interface/account/Review.jsx';
 
 import FilterComponent from '@/components/widgets/UI/Filters';
@@ -37,25 +36,25 @@ const EmptyStateSubtext = styled.p`
   color: ${(props) => props.theme.colors.saturated_contrast};
 `;
 
-const TransactionList = (props) => {
-  const transactionsArray = props.transactions;
+const ReviewList = (props) => {
+  const reviewsArray = props.reviews;
 
-  const [transactions, setTransactions] = useState(transactionsArray);
+  const [reviews, setReviews] = useState(reviewsArray);
 
   const sortBy = (sortOrder) => {
-    const transactionClone = [...transactions];
+    const reviewsClone = [...reviews];
 
     switch (sortOrder) {
       case 'rating':
-        const sortedRating = transactionClone.sort((a, b) => {
+        const sortedRating = reviewsClone.sort((a, b) => {
           return a.rating > b.rating;
         });
-        return setTransactions(sortedRating);
+        return setReviews(sortedRating);
       case 'newest':
-        const sortedNewest = transactionClone.sort((a, b) => {
+        const sortedNewest = reviewsClone.sort((a, b) => {
           return a.createdAt > b.createdAt;
         });
-        return setTransactions(sortedNewest);
+        return setReviews(sortedNewest);
     }
   };
 
@@ -64,27 +63,26 @@ const TransactionList = (props) => {
       <ParentContainer id="list_transaction">
         <Container>
           <FilterComponent handleChange={sortBy} />
-          {transactions.map((transaction, index) => {
+          {reviews.map((review, index) => {
             return (
-              <TransactionItem
+              <ReviewItem
                 user_id={props.loggedinUser._id}
                 user_photo={props.loggedinUser.photo}
-                transaction={transaction}
-                id={transaction._id}
-                key={transaction._id}
+                id={review._id}
+                key={review._id}
                 updater={props.updater}
                 user_token={props.loggedinUser.jwt}
               />
             );
           })}
-          {!transactions && <Loader />}
+          {!reviews && <Loader />}
         </Container>
       </ParentContainer>
     </>
   );
 };
 
-TransactionList.propTypes = {
+ReviewList.propTypes = {
   //   user_id: PropTypes.string,
   //   review: PropTypes.object,
   //   user_photo: PropTypes.string,
@@ -92,4 +90,4 @@ TransactionList.propTypes = {
   //   getReview: PropTypes.func,
 };
 
-export default withTheme(withRouter(TransactionList));
+export default withTheme(withRouter(ReviewList));

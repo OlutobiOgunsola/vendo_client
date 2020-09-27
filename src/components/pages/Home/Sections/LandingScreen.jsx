@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { slideInUp, slideInDown, fadeIn } from 'react-animations';
 
@@ -8,6 +8,9 @@ import Header from '@/components/UI/Header';
 import Pen from '@/components/UI/interface/home/RectanglePen.jsx';
 import DownChevronIcon from '@/components/UI/interface/home/DownChevron.jsx';
 import { withRouter } from 'react-router';
+
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const fadeInAnimation = keyframes`${fadeIn}`;
 const slideInUpAnimation = keyframes`${slideInUp}`;
@@ -64,12 +67,12 @@ const Modal = styled.div`
 const CopyContainer = styled.div`
   height: 360px;
   width: 600px;
-  margin: 140px auto 0px auto;
+  margin: 120px auto 0px auto;
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
+  justify-content: center;
   text-align: left;
-  animation: 1s ${slideInDownAnimation};
   @media (max-width: 700px) {
     height: 300;
     width: 400px;
@@ -89,23 +92,30 @@ const Jumbo = styled.h1`
   font-size: 2.5rem;
   margin: 1rem 0rem;
   width: 100%;
-  text-align: left;
+  text-align: center;
   @media (max-width: 700px) {
     font-size: 2rem;
+    text-align: center;
+  }
+  @media (max-width: 500px) {
+    font-size: 1.5rem;
+    text-align: left;
   }
 `;
 
 const SubHeading = styled.div`
-  width: 100%;
+  /* width: 100%; */
   height: 40px;
+  margin: 0 auto;
   @media (max-width: 700px) {
     width: 100%;
   }
   @media (max-width: 900px) {
     width: 100%;
   }
-  @media (max-width: 400px) {
+  @media (max-width: 500px) {
     width: 320px;
+    margin: 0;
   }
 `;
 
@@ -113,12 +123,12 @@ const PenIcon = styled.svg`
   float: left;
   height: 40px;
   width: 40px;
-  display: inline;
+  display: inline-block;
   margin-right: 16px;
 `;
 
 const SubHeadingCopy = styled.p`
-  display: inline;
+  display: inline-block;
   height: 40px;
   color: white;
   font-family: 'Josefin Sans Light', 'Sans Serif';
@@ -136,15 +146,15 @@ const SearchInput = styled.input`
   height: 40px;
   border: none;
   border-radius: 4px;
-  padding: 0.5rem 1.5rem;
+  padding: 0.5rem 1rem;
   box-sizing: border-box;
-  line-height: 19px;
+  /* line-height: 19px; */
   outline: none;
-  margin-top: 1.5rem;
+  margin: 1.5rem auto 0rem auto;
   color: white;
   font-family: 'Josefin Sans Light', 'Sans Serif';
-  font-size: 18px;
-  display: inline-block;
+  font-size: 1.0125rem;
+  display: block;
 
   ::placeholder,
   ::-webkit-input-placeholder {
@@ -173,6 +183,10 @@ const DownChevron = styled.svg`
 `;
 
 const LandingScreen = (props) => {
+  useEffect(() => {
+    AOS.init({ duration: 500 });
+    AOS.refresh();
+  }, []);
   const loading = <Loading />;
   const [searchString, setSearchString] = useState('');
   const handleInput = (e) => {
@@ -196,7 +210,7 @@ const LandingScreen = (props) => {
     <ParentContainer>
       <Modal>
         <Header />
-        <CopyContainer>
+        <CopyContainer data-aos="fade-up" data-aos-duration="1000">
           <Jumbo>Shop smart on the internet</Jumbo>
           <SubHeading>
             <PenIcon>

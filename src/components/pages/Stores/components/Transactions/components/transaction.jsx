@@ -54,126 +54,16 @@ const Container = styled.div`
   height: auto;
 `;
 
-const TextContainer = styled.span`
-  width: 100%;
-  display: flex;
-  flex-flow: row nowrap;
-  margin-bottom: 16px;
-`;
-
-const Text = styled.p`
-  display: inline-block;
-  font-family: 'Josefin Sans Regular';
-  width: calc(100% - 124px);
-  font-size: 16px;
-  font-weight: 500;
-  box-sizing: border-box;
-  opacity: 0.8;
-  color: ${(props) => props.theme.colors.saturated_contrast};
-  margin: 0;
-  &:hover {
-    cursor: pointer;
-    opacity: 1;
-  }
-  @media (max-width: 500px) {
-    font-size: 12px;
-  }
-`;
-
-const ExpandGroup = styled(Link)`
-  width: 100%;
-  text-align: left;
-  color: ${(props) => props.theme.colors.saturated_font_darker};
-  font-family: 'Josefin Sans Light';
-  font-size: 12px;
-  opacity: 0.6;
-  transition: all 0.25s ease-in-out;
-  &:hover {
-    opacity: 1;
-    cursor: pointer;
-    text-decoration: underline;
-  }
-  .fa-icon {
-    margin-right: 4px;
-    opacity: 0.6;
-    transition: all 0.25s ease-in-out;
-    &:hover {
-      opacity: 1;
-      cursor: pointer;
-    }
-  }
-`;
-
-const CommentsContainer = styled.div`
-  width: 100%;
-`;
-
-const ProfileActions = styled.div`
-  height: 50px;
-  width: 100%;
-  margin: 16px auto;
-  display: flex;
-  justify-content: space-between;
-  @media (max-width: 500px) {
-    height: 30px;
-  }
-`;
-
-const Action = styled(Link)`
-  display: inline-block;
-  height: 100%;
-  line-height: 50px;
-  @media (max-width: 500px) {
-    line-height: 30px;
-    font-size: 0.75rem;
-  }
-  width: ${(props) => (props.width ? props.width : '48%')};
-  margin: 0 auto;
-  text-align: center;
-  box-sizing: border-box;
-  background: ${(props) => props.theme.colors.light_background};
-  color: ${(props) =>
-    props.borders
-      ? `${props.theme.colors.yellow}`
-      : `${props.theme.colors.saturated_contrast}`};
-  border: ${(props) =>
-    props.borders ? `1px solid ${props.theme.colors.yellow}` : 'none'};
-  border-radius: 4px;
-  transition: all 0.25s ease-in-out;
-  text-decoration: none;
-  .fa-icon {
-    position: relative;
-    left: 0px;
-    margin-left: 4px;
-    transition: all 0.25s ease-in-out;
-    opacity: 0;
-    color: ${(props) => props.theme.colors.dark_background};
-  }
-  &:hover {
-    cursor: pointer;
-    background: ${(props) => props.theme.colors.yellow};
-    color: ${(props) => props.theme.colors.dark_background};
-    width: ${(props) => (props.hover_width ? props.hover_width : '48.5%')};
-    box-shadow: 0px 4px 10px ${(props) => props.theme.colors.yellow_20};
-    .fa-icon {
-      left: 16px;
-      margin-left: 12px;
-      opacity: 1;
-      @media (max-width: 500px) {
-        left: 8px;
-      }
-    }
-  }
-`;
 const TransactionProfile = styled.section`
   width: 100%;
   height: auto;
-  background: ${(props) => {
-    return props.background_cover_image
-      ? `url(${props.background_cover_image})`
-      : props.theme.colors.dark_background;
-  }};
-  /* margin: 40px 0px; */
+  padding: 2rem;
+  @media (max-width: 500px) {
+    padding: 1rem;
+  }
+  @media (max-width: 300px) {
+    padding: 0.5rem;
+  }
 `;
 
 const StoreImage = styled.img`
@@ -350,11 +240,13 @@ const EmptyStateSubtext = styled.p`
 const ReviewContainer = styled.div`
   width: 100%;
   height: auto;
-  background: ${(props) => props.theme.colors.dark_background};
-  padding: 0.5rem 0rem;
   box-sizing: border-box;
+  padding: 2rem;
   @media (max-width: 500px) {
-    padding: 0.5rem 0rem;
+    padding: 1rem;
+  }
+  @media (max-width: 300px) {
+    padding: 0.5rem;
   }
 `;
 
@@ -523,8 +415,9 @@ const TransactionPage = (props) => {
       preserveAspectRatio: 'xMidYMid slice',
     },
   };
-
-  console.log('transaction shenaggni', transaction);
+  const transaction_review = transaction_found
+    ? transaction.review[0]
+    : { _id: '' };
   return (
     <>
       {transaction_found && (
@@ -560,20 +453,6 @@ const TransactionPage = (props) => {
                       ? transaction.store_id.description
                       : 'No store description'}
                   </Bio>
-                  {/* <Tags color={color} background={background}>
-                    {transaction.status}
-                  </Tags> */}
-
-                  {/* <ProfileActions>
-                    <Action to={'#'}>
-                      View Store
-                      <FontAwesomeIcon className="fa-icon" icon={faStore} />
-                    </Action>
-                    <Action to={'#'}>
-                      Send Mail
-                      <FontAwesomeIcon className="fa-icon" icon={faEnvelope} />
-                    </Action>
-                  </ProfileActions> */}
                 </TransactionDetails>
               </TransactionDetailsContainer>
             </TransactionProfile>
@@ -582,7 +461,8 @@ const TransactionPage = (props) => {
                 <ReviewItem
                   user_id={props.loggedinUser._id}
                   user_photo={props.loggedinUser.photo}
-                  id={review_id}
+                  id={transaction_review._id}
+                  domain="transaction"
                   updater={props.updater}
                   user_token={props.loggedinUser.jwt}
                 />

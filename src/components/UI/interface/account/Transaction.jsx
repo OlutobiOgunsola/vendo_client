@@ -11,7 +11,12 @@ import StarRatings from 'react-star-ratings';
 import DefaultImage from '@/assets/images/icons/account/Profile.svg';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCheck,
+  faClipboardCheck,
+  faMinus,
+  faPlus,
+} from '@fortawesome/free-solid-svg-icons';
 
 import Input from '@/components/widgets/UI/Input';
 
@@ -359,6 +364,31 @@ const TransactionItem = (props) => {
           .catch((err) => {
             setAlert(props.updater, 'error', 'Error rejecting transaction');
           });
+
+      case 'complete':
+        setTransactionBorders('#72771b33');
+        setTimeout(() => {
+          setTransactionBorders('rgba(0,0,0,0)');
+        }, 2000);
+        return axios
+          .put(
+            `${process.env.REACT_APP_API_PREFIX}/api/transactions/${_id}/action_status/complete`,
+            null,
+            { headers },
+          )
+          .then((res) => {
+            if (res.status === 200) {
+              setAlert(
+                props.updater,
+                'success',
+                'Transaction completed successfully',
+              );
+              setTransaction(res.data.data);
+            }
+          })
+          .catch((err) => {
+            setAlert(props.updater, 'error', 'Error rejecting transaction');
+          });
       case 'ignore':
         setTransactionBorders('white');
         setTimeout(() => {
@@ -371,12 +401,14 @@ const TransactionItem = (props) => {
   };
 
   const openTransaction = () => {
-    const store_owner = transaction.store_id.name;
+    const store_owner = transaction.store_id.address;
     const transaction_id = transaction._id;
     return props.history.push(
       `/stores/${store_owner}/transactions/${transaction_id}`,
     );
   };
+
+  console.log('type', props.type, transactionStatus, transaction);
 
   return (
     <>
@@ -394,7 +426,7 @@ const TransactionItem = (props) => {
                 starEmptyColor={props.theme.colors.dark_background}
               />
             )}
-            {(!transaction.review || transaction.review.rating === 0) &&
+            {transaction.review.length === 0 &&
               props.type === 'received' &&
               transactionStatus === 'new' && (
                 <>
@@ -421,6 +453,20 @@ const TransactionItem = (props) => {
                   </Action>
                 </>
               )}
+            {transaction.status === 'accepted' && (
+              <Action
+                color={props.theme.colors.alert_text_amber}
+                background={props.theme.colors.alert_background_amber}
+                data-action={'complete'}
+                onClick={actionTransaction}
+              >
+                <FontAwesomeIcon
+                  className="fa-icon rotate-tiny"
+                  icon={faClipboardCheck}
+                />
+                Complete
+              </Action>
+            )}
             {(!transaction.review || transaction.review.rating === 0) &&
               props.type === 'given' &&
               transactionStatus === 'new' && (
