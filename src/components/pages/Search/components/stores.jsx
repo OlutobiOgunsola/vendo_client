@@ -103,7 +103,7 @@ const Rating = styled.p`
   margin: 0.5rem 0rem;
   font-size: 0.75rem;
   font-family: 'Josefin Sans Light';
-  color: ${(props) => props.theme.colors.saturated_contrast};
+  color: ${(props) => props.theme.colors.yellow};
 `;
 
 const Bio = styled.p`
@@ -186,7 +186,7 @@ const Stores = (props) => {
                   <StoreCategory>{store.category}</StoreCategory>
                 )}
               </TitleBar>
-              <Rating>{`${store.rating ? store.rating : 0}% rating`}</Rating>
+              <Rating>{`@${store.address ? store.address : ''}`}</Rating>
               <Bio>{store.bio ? store.bio : 'No bio'}</Bio>
               <ProfileActions>
                 <Action to={`/stores/${store.address}`}>

@@ -98,7 +98,6 @@ const TransactionsIndex = (props) => {
   const owner = props.owner;
   const handle = props.handle;
 
-
   const toggleLoading = (payload) => {
     return setLoading(payload);
   };
@@ -170,6 +169,7 @@ const TransactionsIndex = (props) => {
                   updater={addAlert}
                   loggedinUser={props.user}
                   store_id={props.store_id}
+                  handle={props.handle}
                 />
               );
             }}

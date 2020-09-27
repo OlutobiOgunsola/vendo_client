@@ -137,7 +137,7 @@ const Transactions = (props) => {
                 <FontAwesomeIcon
                   className="fa-icon received"
                   icon={faSignInAlt}
-                />{' '}
+                />
                 Received
               </Collection>
               <Collection
@@ -156,12 +156,12 @@ const Transactions = (props) => {
             {collection === 'received' && r_transactions && (
               <>
                 {r_transactions.sort(sort('latestFirst')).map((transaction) => {
+                  console.log('transaction from space', transaction);
                   return (
                     <TransactionItem
                       domain="owner"
                       type="received"
                       user_id={props.user.user._id}
-                      transaction={transaction}
                       key={transaction._id}
                       id={transaction._id}
                       updater={props.updater}
@@ -196,15 +196,14 @@ const Transactions = (props) => {
                   </Button>
                 </InputRow>
                 {i_transactions.sort(sort('latestFirst')).map((transaction) => {
+                  console.log('transaction from space', transaction);
                   return (
                     <TransactionItem
-                      domain="visitor"
                       type="given"
                       user_id={props.user.user._id}
-                      transaction={transaction}
                       key={transaction._id}
                       id={transaction._id}
-                      domain='owner'
+                      domain="owner"
                       updater={props.updater}
                       user_token={props.user.user.jwt}
                     />

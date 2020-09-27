@@ -36,7 +36,7 @@ import { setAlert } from '@/actions/alerts';
 
 const ParentContainer = styled.div`
   width: 100%;
-  background: ${(props) => props.theme.colors.page_background};
+  background: ${(props) => props.theme.colors.review_background};
   height: auto;
   font-size: 16px;
 `;
@@ -87,12 +87,12 @@ const Container = styled.div`
   }
   @media (max-width: 500px) {
     padding: 1rem;
-    width: 27rem;
+    width: 100%;
     flex-flow: column nowrap;
   }
   @media (max-width: 440px) {
     padding: 1rem;
-    width: 23rem;
+    width: 100%;
     flex-flow: column nowrap;
   }
   @media (max-width: 400px) {
@@ -228,7 +228,7 @@ const StoreDetails = styled.div`
   margin-left: auto;
   box-sizing: border-box;
   padding: 1rem;
-  border-bottom: 2px solid ${(props) => props.theme.colors.light_background};
+  border-bottom: 1px solid ${(props) => props.theme.colors.light_background_60};
   @media (max-width: 900px) {
     width: calc(100% - 132px);
   }
@@ -524,7 +524,13 @@ const Store = (props) => {
                     <Handle_And_Rating>
                       <Handle>@{store.address || ''}</Handle>
                       <Rating>
-                        <strong>{store.rating > 0 || '0'}%</strong>
+                        <StarRatings
+                          starDimension={'12px'}
+                          starSpacing={'2px'}
+                          rating={store.rating}
+                          starRatedColor={props.theme.colors.yellow}
+                          starEmptyColor={props.theme.colors.light_background}
+                        />
                       </Rating>
                     </Handle_And_Rating>
                     <Bio>{store.bio ? store.bio : 'No bio'}</Bio>

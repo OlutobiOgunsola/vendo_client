@@ -19,6 +19,7 @@ import { getTransactionsByUserID } from '@/actions/transaction';
 
 import FilterComponent from '@/components/widgets/UI/Filters';
 import { sort } from '@/assets/helperFunctions/sort';
+import StarRatings from 'react-star-ratings';
 
 const slideIn = keyframes`${slideInUp}`;
 const ParentContainer = styled.div`
@@ -29,30 +30,11 @@ const ParentContainer = styled.div`
 `;
 
 const Container = styled.div`
-  width: 880px;
+  width: 100%;
   margin: 0px auto;
   box-sizing: border-box;
   background: ${(props) => props.theme.colors.dark_background};
-  @media (max-width: 900px) {
-    width: 747px;
-  }
-  @media (max-width: 800px) {
-    width: 647px;
-  }
-  @media (max-width: 700px) {
-    flex-flow: column nowrap;
-  }
-  @media (max-width: 670px) {
-    flex-flow: column nowrap;
-    width: 100%;
-  }
-  @media (max-width: 570px) {
-    flex-flow: column nowrap;
-    box-sizing: border-box;
-  }
-  @media (max-width: 400px) {
-    flex-flow: column nowrap;
-  }
+  flex-flow: column nowrap;
 `;
 
 const EmptyStateText = styled.h5`
@@ -329,9 +311,15 @@ const Stores = (props) => {
                       <StoreCategory>{store.category}</StoreCategory>
                     )}
                   </TitleBar>
-                  <Rating>{`${
-                    store.rating ? store.rating : 0
-                  }% rating`}</Rating>
+                  <Rating>
+                  <StarRatings
+                        starDimension={'10px'}
+                        starSpacing={'2px'}
+                        rating={store.rating}
+                        starRatedColor={props.theme.colors.yellow}
+                        starEmptyColor={props.theme.colors.light_background}
+                      />
+                  </Rating>
                   <Bio>{store.bio ? store.bio : 'No bio'}</Bio>
                   <ProfileActions>
                     <Action to={`/stores/${store.address}`}>

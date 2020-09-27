@@ -20,6 +20,9 @@ const storeAnimation = keyframes(fadeIn);
 const ParentContainer = styled.div`
   max-width: 880px;
   margin: 0 auto;
+  @media (max-width: 500px) {
+    width: 100%;
+  }
 `;
 
 const EmptyStateText = styled.h5`
@@ -136,7 +139,7 @@ const Action = styled(Link)`
     -webkit-transform-origin: 0 50%;
     transform-origin: 0 50%;
     -webkit-transition-property: transform;
-    transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: t7ransform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
   &:hover:before {
     transform: scaleX(1);
@@ -155,15 +158,16 @@ const StoreIndex = (props) => {
     },
   };
 
+  console.log('store', store);
   const sortedReviews = store.reviews.sort((a, b) => {
-    return a.rating - b.rating;
+    return b.upvotes.length - a.upvotes.length;
   });
 
   const sortedTransactions = store.transactions.sort((a, b) => {
-    if (a.review) {
-      return a.review.rating - b.review.rating;
+    if (b.review && a.review) {
+      return b.review.rating - a.review.rating;
     } else {
-      return a - b;
+      return b.createdAt - a.createdAt;
     }
   });
 
@@ -232,7 +236,7 @@ const StoreIndex = (props) => {
         <hr />
         {store.reviews
           .sort(sort('latestFirst'))
-          .slice(0, 4)
+          .slice(0, 3)
           .map((review) => {
             return (
               <ReviewItem
@@ -267,6 +271,7 @@ const StoreIndex = (props) => {
             user_photo={props.loggedinUser.photo}
             id={topTransaction._id}
             updater={props.updater}
+            domain="visitor"
             user_token={props.loggedinUser.jwt}
           />
         )}
@@ -294,7 +299,12 @@ const StoreIndex = (props) => {
             </Action>
           )}
           {!topTransaction && (
-            <Action to={`${match.url}/transactions/add`} borders="true" width="200px" hover_width="220px">
+            <Action
+              to={`${match.url}/transactions/add`}
+              borders="true"
+              width="200px"
+              hover_width="220px"
+            >
               Begin a transaction
               <FontAwesomeIcon className="fa-icon" icon={faLongArrowAltRight} />
             </Action>

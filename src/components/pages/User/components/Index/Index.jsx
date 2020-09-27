@@ -158,6 +158,8 @@ const UserIndex = (props) => {
     },
   };
 
+  console.log('user', user);
+
   const sortedReviews = user.r_reviews.sort((a, b) => {
     return a.rating - b.rating;
   });

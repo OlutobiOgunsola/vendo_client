@@ -39,6 +39,7 @@ const getTransactionByUIDSuccess = () => {
 };
 
 export const getTransaction = (id) => {
+  console.log('begin get transaction');
   return (dispatch) => {
     dispatch(beginGetTransaction);
     return axios

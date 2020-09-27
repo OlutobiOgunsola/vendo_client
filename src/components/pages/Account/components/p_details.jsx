@@ -141,7 +141,7 @@ const Store = styled.img`
   @media (max-width: 500px) {
     width: 35px;
     height: 35px;
-    margin-left: 2px 4px;
+    margin: 2px 4px;
     border-width: 1px;
   }
 `;
@@ -167,6 +167,20 @@ const AddStoreButton = styled(Button)`
     bottom: 0;
     display: grid;
     place-items: center;
+  }
+  @media (max-width: 700px) {
+    width: 55px;
+    height: 55px;
+    margin: 2px 4px;
+    border-width: 3px;
+    &:before {
+      font-size: 1rem;
+    }
+  }
+  @media (max-width: 500px) {
+    width: 35px;
+    height: 35px;
+    margin: 2px 4px;
   }
 `;
 
@@ -432,6 +446,10 @@ const P_Details = (props) => {
       });
   };
 
+  const openStore = (e) => {
+    const address = e.target.dataset.address;
+    return props.history.push(`/stores/${address}`);
+  };
   return (
     <ParentContainer>
       <Container>
@@ -447,10 +465,16 @@ const P_Details = (props) => {
                 storesArray.map((store) => {
                   return (
                     <Store
+                      role="button"
+                      aria-role="button"
+                      focusables
                       data-tip={store.name}
                       key={store._id}
+                      id={`${store.name}-store`}
                       src={store.photo || DefaultImage}
                       platform={store.platform}
+                      data-address={store.address}
+                      onClick={openStore}
                     />
                   );
                 })}

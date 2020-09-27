@@ -31,9 +31,8 @@ const slideInUpAnimation = keyframes`${slideInUp}`;
 const ParentContainer = styled.div`
   font-size: 16px;
   background: ${(props) => props.theme.colors.review_background};
-  width: calc(100% - 10px);
+  width: 100%;
   &:hover {
-    width: 100%;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   }
   height: auto;
@@ -265,6 +264,7 @@ const TransactionItem = (props) => {
   const [transactionBorders, setTransactionBorders] = useState('rgba(0,0,0,0)');
 
   useEffect(() => {
+    console.log('id', _id);
     const fetchTransaction = async (_id) => {
       const foundTransaction = await props.getTransaction(_id);
       if (mounted) {
@@ -272,12 +272,17 @@ const TransactionItem = (props) => {
       }
     };
     if (_id) {
+      console.log('olorun gba mi!');
       if (props.transaction) {
+        console.log('setting transactio');
         setTransaction(props.transaction);
       } else {
+        console.log('fetching transactio');
         fetchTransaction(_id);
       }
     }
+
+    console.log('transaction', transaction);
     return () => {
       setMounted(false);
     };
@@ -508,6 +513,7 @@ TransactionItem.propTypes = {
   getReview: PropTypes.func,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps, null, {
-  forwardRef: true,
-})(withTheme(withRouter(TransactionItem)));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withTheme(withRouter(TransactionItem)));

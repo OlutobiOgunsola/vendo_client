@@ -397,9 +397,7 @@ const TransactionPage = (props) => {
   const [opacity, setOpacity] = useState(0.6);
   const [submitted, setSubmitted] = useState(false);
 
-  const transactionRating = transaction.rating
-    ? Math.ceil(transaction.rating)
-    : 0;
+  const transactionRating = transaction ? Math.ceil(transaction.rating) : 0;
 
   const [transactionBorders, setTransactionBorders] = useState('rgba(0,0,0,0)');
 
@@ -543,7 +541,7 @@ const TransactionPage = (props) => {
                     {transaction.title && <h1>{transaction.title}</h1>}
                   </NameBar>
                   <Requested>
-                    Transaction opened by{" "}
+                    Transaction opened by{' '}
                     <span>{transaction.author_id.username}</span>
                   </Requested>
                   <Handle_And_Rating>
@@ -603,8 +601,20 @@ const TransactionPage = (props) => {
                     </EmptyStateSubtext>
                   </>
                 )}
+
               {transaction.review.length === 0 &&
-                transaction.author_id._id === props.loggedinUser._id && (
+                transaction.author_id._id === props.loggedinUser._id &&
+                transaction.status !== 'completed' && (
+                  <>
+                    <EmptyStateText>Unavailable!</EmptyStateText>
+                    <EmptyStateSubtext>
+                      Transaction is not yet completed by vendor.
+                    </EmptyStateSubtext>
+                  </>
+                )}
+              {transaction.review.length === 0 &&
+                transaction.author_id._id === props.loggedinUser._id &&
+                transaction.status === 'completed' && (
                   <AddReview
                     updater={props.updater}
                     loggedinUser={props.loggedinUser}

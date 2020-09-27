@@ -28,6 +28,7 @@ const ParentContainer = styled.div`
   display: flex;
   flex-flow: column wrap;
   justify-content: space-between;
+  font-size: 16px;
 `;
 
 const Container = styled.div`
@@ -50,8 +51,8 @@ const Container = styled.div`
   }
   @media (max-width: 500px) {
     flex-flow: column nowrap;
-    padding: 0px 10px;
     box-sizing: border-box;
+    padding: 0px;
     width: 100%;
   }
   @media (max-width: 400px) {
@@ -64,7 +65,7 @@ const ActionContainer = styled.div`
   width: 633px;
   height: auto;
   box-sizing: border-box;
-  padding: 40px 32px;
+  padding: 32px;
   border-radius: 4px;
   position: relative;
   z-index: 1;
@@ -80,11 +81,7 @@ const ActionContainer = styled.div`
   }
   @media (max-width: 500px) {
     width: 100%;
-    padding: 40px 16px;
-  }
-  @media (max-width: 400px) {
-    width: 100%;
-    padding: 40px 8px;
+    padding: 2rem 1rem;
   }
 `;
 
@@ -149,7 +146,7 @@ const Account = (props) => {
 
   return (
     <ParentContainer>
-      <Header useOwnBackground usePagePadding/>
+      <Header useOwnBackground usePagePadding />
       {alerts.map((alert) => {
         return (
           <Alert type={alert.type} key={alert.text}>

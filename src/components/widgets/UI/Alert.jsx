@@ -6,10 +6,11 @@ const slideInAnimation = keyframes`${slideInLeft}`;
 
 const ParentContainer = styled.div`
   width: 40%;
-  height: 30px;
+  height: auto;
   position: fixed;
   top: 36px;
   left: 30%;
+  font-size: 16px;
   z-index: 9999999999999;
   transition: all 1s ease-in-out;
   background: ${(props) => {
@@ -18,6 +19,10 @@ const ParentContainer = styled.div`
         return `${props.theme.colors.alert_background_red}`;
       case 'success':
         return `${props.theme.colors.alert_background_green}`;
+      case 'warning':
+        return `${props.theme.colors.alert_background_amber}`;
+      default:
+        return null;
     }
   }};
   animation: 1s ${slideInAnimation};
@@ -25,12 +30,13 @@ const ParentContainer = styled.div`
 
 const Container = styled.div`
   width: 100%;
+  height: auto;
   text-align: center;
+  padding: 0.5rem;
 `;
 
 const Text = styled.p`
   font-size: 14px;
-  line-height: 30px;
   font-family: 'Josefin Sans Light';
   color: ${(props) => {
     switch (props.type) {
@@ -40,6 +46,8 @@ const Text = styled.p`
         return `${props.theme.colors.alert_text_green}`;
       case 'warning':
         return `${props.theme.colors.alert_text_amber}`;
+      default:
+        return null;
     }
   }};
   @media (max-width: 700px) {

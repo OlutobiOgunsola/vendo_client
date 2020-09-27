@@ -105,6 +105,7 @@ const AddReview = (props) => {
     reviewObj.token = token;
     reviewObj.recipient_id = store_owner_id;
     reviewObj.transaction_id = transaction_id;
+
     const headers = {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${props.loggedinUser.jwt}`,

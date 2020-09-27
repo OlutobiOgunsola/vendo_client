@@ -38,7 +38,7 @@ const fadeInAnimation = keyframes`${fadeIn}`;
 
 const ParentContainer = styled.div`
   width: 100%;
-  background: ${(props) => props.theme.colors.dark_background};
+  background: ${(props) => props.theme.colors.review_background};
   height: auto;
   font-size: 16px;
 `;
@@ -89,7 +89,7 @@ const Container = styled.div`
   }
   @media (max-width: 500px) {
     padding: 40px 5px;
-    width: 27rem;
+    width: 100%;
     flex-flow: column nowrap;
   }
   @media (max-width: 440px) {
@@ -230,7 +230,7 @@ const UserDetails = styled.div`
   margin-left: auto;
   box-sizing: border-box;
   padding: 16px;
-  border-bottom: 2px solid ${(props) => props.theme.colors.light_background};
+  border-bottom: 1px solid ${(props) => props.theme.colors.light_background_60};
   @media (max-width: 900px) {
     width: calc(100% - 132px);
   }
@@ -327,7 +327,7 @@ const Rating = styled.span`
     font-size: 14px;
     font-family: 'Noto Sans Regular';
     font-weight: 500;
-    color: ${(props) => props.theme.colors.celtic_blue};
+    color: ${(props) => props.color};
   }
 `;
 const Bio = styled.p`
@@ -408,6 +408,8 @@ const User = (props) => {
 
   const user_found = user._id !== '' && user._id !== undefined;
 
+  console.log(user);
+
   const { match } = props;
   const target_user_name = match.params.user_name;
   const target_user_id = user._id;
@@ -460,6 +462,22 @@ const User = (props) => {
     },
   };
 
+  const getColor = () => {
+    const rating = user_found ? user.rating * 20 : 0;
+    console.log(rating, 'user rating');
+    switch (rating) {
+      case rating > 0 && rating <= 40:
+        console.log(props.theme.colors.alert_text_red, 'color');
+        return `${props.theme.colors.alert_text_red}`;
+      case rating > 40 && rating <= 70:
+        console.log(props.theme.colors.alert_text_red, 'color');
+        return `${props.theme.colors.alert_text_amber}`;
+      case rating > 70:
+        return `${props.theme.colors.alert_text_green}`;
+      default:
+        return `${props.theme.colors.alert_text_green}`;
+    }
+  };
   return (
     <ParentContainer>
       <Header useOwnBackground usePagePadding />
@@ -494,7 +512,8 @@ const User = (props) => {
                 <Handle_And_Rating>
                   <Handle>@{user.username || ''}</Handle>
                   <Rating>
-                    <strong>{user.rating > 0 || '0'}%</strong> VENDOR SCORE
+                    <strong color={getColor()}>{user.rating * 20} %</strong>{' '}
+                    VENDOR SCORE
                   </Rating>
                 </Handle_And_Rating>
                 <Bio>{user.bio ? user.bio : 'No bio'}</Bio>

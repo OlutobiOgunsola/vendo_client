@@ -34,15 +34,18 @@ const fadeInUpAnimation = keyframes`${fadeIn}`;
 
 const ParentContainer = styled.div`
   background: ${(props) => props.theme.colors.review_background};
-  width: calc(100% - 10px);
+  width: 100%;
   &:hover {
-    width: 100%;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   }
   height: auto;
   position: relative;
   z-index: 9;
   border-radius: 2px;
+  border-bottom: solid 1px
+    ${(props) => props.theme.colors.saturated_contrast_60};
+  &:last-child {
+  }
   box-sizing: border-box;
   transition: all 0.25s ease-in-out;
   margin: 16px 0px 16px 0px;
@@ -298,7 +301,6 @@ const ReviewItem = (props) => {
     },
   });
   const author_id = review.author_id._id;
-
 
   // manually trigger rerender with state update
   const [render, setRender] = useState(false);

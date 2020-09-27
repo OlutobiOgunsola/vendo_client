@@ -111,7 +111,8 @@ const AddStore = (props) => {
 
   const [success, setSuccess] = useState(false);
 
-  const user_id = props.user._id ? props.user._id : '';
+  const { user } = props;
+  const user_id = user._id ? user._id : '';
   const store_owner_id = storeProp ? storeProp.owner_id : '';
   useEffect(() => {
     if (storeProp) {
@@ -304,8 +305,6 @@ const AddStore = (props) => {
       return setAlert(addAlert, 'error', 'Please fill out all fields');
     }
 
-    // props.loading(true);
-
     if (validated && !storeProp) {
       return axios
         .post(`${process.env.REACT_APP_API_PREFIX}/api/stores/add`, storeObj, {
@@ -314,19 +313,14 @@ const AddStore = (props) => {
         })
         .then(async (res) => {
           if (res.status === 200) {
-            // props.loading(false);
             setAlert(addAlert, 'success', 'You have successfully added store');
             setSuccess(true);
-            return props.history.push(`/stores/${res.data.data.address}/edit`);
+            return props.history.push(`/users/${user.username}/stores`);
           }
         })
         .catch((err) => {
-          // props.loading(false);
           console.log(err);
           return setAlert(addAlert, 'error', 'Error adding store.');
-        })
-        .finally(() => {
-          // props.loading(false);
         });
     } else if (validated && storeProp) {
       return axios
@@ -340,18 +334,13 @@ const AddStore = (props) => {
         )
         .then(async (res) => {
           if (res.status === 200) {
-            // props.loading(false);
             setAlert(addAlert, 'success', 'You have successfully added store');
-            return props.history.push(`/stores/${res.data.data.address}`);
+            return props.history.push(`/stores/${storeProp.address}`);
           }
         })
         .catch((err) => {
-          // props.loading(false);
           console.log(err);
           return setAlert(addAlert, 'error', 'Error adding store.');
-        })
-        .finally(() => {
-          // props.loading(false);
         });
     }
   };
