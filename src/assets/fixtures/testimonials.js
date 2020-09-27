@@ -8,7 +8,7 @@ const t_array = [
     id: 'user1',
     username: 'username1',
     profile: Profile5,
-    f_name: 'Adeoba',
+    f_name: 'Lindsay',
     l_name: 'Mustapha',
     copy:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem.',

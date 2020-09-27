@@ -198,14 +198,15 @@ const UserModal = styled.span`
   box-sizing: border-box;
 `;
 
-const UserImage = styled.img`
+const UserImageFancyBorder = styled.span`
   height: 150px;
   width: 150px;
-  border: solid 8px ${(props) => props.theme.colors.yellow};
-  border-radius: 50%;
   display: inline-block;
   position: absolute;
   top: 10%;
+  border: solid 2px ${(props) => props.theme.colors.yellow};
+  border-radius: 50%;
+  padding: 0.3rem;
   @media (max-width: 900px) {
     height: 100px;
     width: 100px;
@@ -214,13 +215,21 @@ const UserImage = styled.img`
   @media (max-width: 540px) {
     height: 75px;
     width: 75px;
-    border: solid 4px ${(props) => props.theme.colors.yellow};
+    border: solid 2px ${(props) => props.theme.colors.yellow};
+    padding: 0.25rem;
   }
   @media (max-width: 380px) {
     height: 50px;
     width: 50px;
-    border: solid 2px ${(props) => props.theme.colors.yellow};
+    border: solid 1px ${(props) => props.theme.colors.yellow};
+    padding: 0.25rem;
   }
+`;
+
+const UserImage = styled.img`
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
 `;
 const UserDetails = styled.div`
   width: calc(100% - 182px);
@@ -496,7 +505,9 @@ const User = (props) => {
         >
           <UserModal>
             <UserDetailsContainer>
-              <UserImage src={user.photo || defaultImage} />
+              <UserImageFancyBorder>
+                <UserImage src={user.photo || defaultImage} />
+              </UserImageFancyBorder>
               <UserDetails>
                 <NameBar>
                   {!user.firstname && !user.lastname && user.username && (

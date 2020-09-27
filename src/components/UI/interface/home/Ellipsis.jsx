@@ -40,6 +40,7 @@ const Circle = styled.span`
 
 export default function Ellipsis(props) {
   const children = document.querySelectorAll('.circles');
+  const count = props.count;
 
   //NOT THE BEST SOLUTION. REFACTOR WHEN YOU CAN
   const setCircle = (e) => {
@@ -52,6 +53,19 @@ export default function Ellipsis(props) {
 
     props.setId(e.target.dataset.id);
   };
+
+  useEffect(() => {
+    // check which childs id matches active and remove 'active' class from child
+    children.forEach((child) => {
+      child.classList.remove('active');
+    });
+    children.forEach((child) => {
+      console.log(child.dataset.id, count);
+      if (child.dataset.id.toString() === count.toString()) {
+        child.classList.add('active');
+      }
+    });
+  }, [count]);
   return (
     <Container>
       <Circle data-id="0" className="active circles" onClick={setCircle} />

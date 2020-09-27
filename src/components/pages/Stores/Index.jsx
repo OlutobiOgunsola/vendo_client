@@ -196,14 +196,15 @@ const StoreModal = styled.span`
   box-sizing: border-box;
 `;
 
-const StoreImage = styled.img`
+const StoreImageFancyBorder = styled.span`
   height: 150px;
   width: 150px;
-  border: solid 8px ${(props) => props.theme.colors.yellow};
-  border-radius: 50%;
   display: inline-block;
   position: absolute;
   top: 10%;
+  border: solid 2px ${(props) => props.theme.colors.yellow};
+  border-radius: 50%;
+  padding: 0.3rem;
   @media (max-width: 900px) {
     height: 100px;
     width: 100px;
@@ -212,13 +213,21 @@ const StoreImage = styled.img`
   @media (max-width: 540px) {
     height: 75px;
     width: 75px;
-    border: solid 4px ${(props) => props.theme.colors.yellow};
+    border: solid 2px ${(props) => props.theme.colors.yellow};
+    padding: 0.25rem;
   }
   @media (max-width: 380px) {
     height: 50px;
     width: 50px;
-    border: solid 2px ${(props) => props.theme.colors.yellow};
+    border: solid 1px ${(props) => props.theme.colors.yellow};
+    padding: 0.25rem;
   }
+`;
+
+const StoreImage = styled.img`
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
 `;
 const StoreDetails = styled.div`
   width: calc(100% - 182px);
@@ -504,7 +513,9 @@ const Store = (props) => {
             <StoreProfile background_cover_image={store.background_cover_image}>
               <StoreModal>
                 <StoreDetailsContainer>
-                  <StoreImage src={storePhoto || defaultImage} />
+                  <StoreImageFancyBorder>
+                    <StoreImage src={storePhoto || defaultImage} />
+                  </StoreImageFancyBorder>
                   <StoreDetails>
                     <NameBar>
                       <h1 onClick={navigateToStore}>

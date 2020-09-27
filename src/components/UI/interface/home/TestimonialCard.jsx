@@ -10,20 +10,30 @@ const ParentContainer = styled.div`
   display: flex;
   flex-flow: row wrap;
   padding: 10px;
+  font-size: 16px;
   box-sizing: border-box;
   align-items: start;
   opacity: ${(props) => (props.open ? '1' : '0')};
   transition: all 0.5s ease-in-out;
 `;
 
-const Picture = styled.img`
+const PictureFancyBorder = styled.span`
   width: 100px;
   height: 100px;
+  padding: 0.25rem;
   border-radius: 50%;
-  margin: 0px auto;
+  border: solid 2px ${(props) => props.theme.colors.yellow};
   box-sizing: border-box;
-  background: ${(props) => props.theme.colors.yellow};
+  margin: 0px auto;
+  transition: all 0.1s ease-in-out;
   box-shadow: 0px 2px 4px ${(props) => props.theme.colors.dark_background_20};
+  opacity: ${(props) => (props.open ? '1' : '0')};
+`;
+
+const Picture = styled.img`
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
   opacity: ${(props) => (props.open ? '1' : '0')};
   transition: all 0.1s ease-in-out;
 `;
@@ -76,16 +86,22 @@ const Copy = styled.p`
 const Card = (props) => {
   return (
     <ParentContainer open={props.open}>
-      <Picture
-        src={props.testimonial.profile}
-        alt={`An image of ${props.testimonial.f_name}`}
-        open={props.open}
-      />
+      <PictureFancyBorder open={props.open}>
+        <Picture
+          src={props.testimonial.profile}
+          alt={`An image of ${props.testimonial.f_name}`}
+          open={props.open}
+        />
+      </PictureFancyBorder>
       <NameBar open={props.open}>
-        {props.testimonial.f_name}{' '}
+        {props.testimonial.f_name}
         <b
           className="no-margin"
-          style={{ color: `${props.theme.colors.yellow}`, fontWeight: '700' }}
+          style={{
+            color: `${props.theme.colors.yellow}`,
+            fontWeight: '700',
+            marginLeft: '4px',
+          }}
         >
           {props.testimonial.l_name}
         </b>

@@ -105,22 +105,25 @@ const Testimonials = (props) => {
       select.l_name = name.toUpperCase();
       setSelected(select);
       setOpen(true);
+      return clearTimeout(timeOut);
     }, 500);
-
-    return clearTimeout(timeOut);
   };
 
   useEffect(() => {
     AOS.init({ duration: 2000 });
     AOS.refresh();
 
-    setActive(0);
+    setActive(2);
 
     const slider = setInterval(() => {
-      if (count === 3) {
-        setCount((count) => (count -= 3));
+      if (count >= 3) {
+        setCount((prev) => {
+          return (count = 0);
+        });
       } else {
-        setCount((count) => count++);
+        setCount((prev) => {
+          return (count += 1);
+        });
       }
       setActive(count);
     }, 5000);
@@ -139,7 +142,7 @@ const Testimonials = (props) => {
       <Span2 data-aos="fade-up-left" data-aos-duration="4000" />
       <Container data-aos="fade-up-right">
         <TestimonialCard open={open} testimonial={selected} />
-        <Ellipsis setId={setActive} />
+        <Ellipsis setId={setActive} count={count} />
       </Container>
     </ParentContainer>
   );
