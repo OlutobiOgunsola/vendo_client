@@ -49,8 +49,6 @@ const Container = styled.div`
   border-radius: 4px;
   border: none;
   padding: 4rem 3rem;
-  background: ${(props) => props.theme.colors.dark_background};
-  /* padding: 20px; */
 
   hr {
     width: 100%;
@@ -86,18 +84,15 @@ const Container = styled.div`
     box-sizing: border-box;
   }
   @media (max-width: 500px) {
-    padding: 1rem;
     width: 100%;
     flex-flow: column nowrap;
   }
   @media (max-width: 440px) {
-    padding: 1rem;
     width: 100%;
     flex-flow: column nowrap;
   }
   @media (max-width: 400px) {
     width: 100%;
-    padding: 1rem;
     flex-flow: column nowrap;
   }
 `;

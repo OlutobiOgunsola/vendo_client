@@ -20,6 +20,7 @@ const storeAnimation = keyframes(fadeIn);
 const ParentContainer = styled.div`
   max-width: 880px;
   margin: 0 auto;
+  font-size: 16px;
   @media (max-width: 500px) {
     width: 100%;
   }
@@ -52,13 +53,23 @@ const S_Head = styled.h3`
 const Section = styled.section`
   max-width: 880px;
   height: auto;
-  margin: 40px auto 24px auto;
   box-sizing: border-box;
-  padding: 32px;
+  padding: 2rem;
   border: none;
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.2);
+  margin-bottom: 1.5rem;
   /* box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.3); */
+  @media (max-width: 700px) {
+    padding: 1.5rem;
+  }
+  @media (max-width: 540px) {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  @media (max-width: 440px) {
+    padding: 0.75rem;
+  }
 
   hr {
     width: 100%;
@@ -67,6 +78,9 @@ const Section = styled.section`
     border: none;
     opacity: 0.6;
     background: ${(props) => props.theme.colors.alternate_light_background_10};
+  }
+  @media (max-width: 500px) {
+    width: 100%;
   }
 `;
 
