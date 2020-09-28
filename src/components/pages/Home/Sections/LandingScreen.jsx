@@ -8,7 +8,7 @@ import Header from '@/components/UI/Header';
 import Pen from '@/components/UI/interface/home/RectanglePen.jsx';
 import DownChevronIcon from '@/components/UI/interface/home/DownChevron.jsx';
 import { withRouter } from 'react-router';
-import { TimelineMax } from 'gsap/all';
+import { TimelineMax, CSSPlugin } from 'gsap/all';
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
