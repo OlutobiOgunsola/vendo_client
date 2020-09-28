@@ -94,7 +94,6 @@ const Transactions = (props) => {
   };
 
   const user = props.user;
-  console.log('user', user);
   useEffect(() => {
     if (mounted) {
       setR_Transactions(props.user.user.r_transactions);
@@ -156,7 +155,6 @@ const Transactions = (props) => {
             {collection === 'received' && r_transactions && (
               <>
                 {r_transactions.sort(sort('latestFirst')).map((transaction) => {
-                  console.log('transaction from space', transaction);
                   return (
                     <TransactionItem
                       domain="owner"
@@ -196,7 +194,6 @@ const Transactions = (props) => {
                   </Button>
                 </InputRow>
                 {i_transactions.sort(sort('latestFirst')).map((transaction) => {
-                  console.log('transaction from space', transaction);
                   return (
                     <TransactionItem
                       type="given"

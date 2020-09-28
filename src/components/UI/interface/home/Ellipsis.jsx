@@ -60,7 +60,6 @@ export default function Ellipsis(props) {
       child.classList.remove('active');
     });
     children.forEach((child) => {
-      console.log(child.dataset.id, count);
       if (child.dataset.id.toString() === count.toString()) {
         child.classList.add('active');
       }

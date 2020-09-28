@@ -417,8 +417,6 @@ const User = (props) => {
 
   const user_found = user._id !== '' && user._id !== undefined;
 
-  console.log(user);
-
   const { match } = props;
   const target_user_name = match.params.user_name;
   const target_user_id = user._id;
@@ -473,13 +471,10 @@ const User = (props) => {
 
   const getColor = () => {
     const rating = user_found ? user.rating * 20 : 0;
-    console.log(rating, 'user rating');
     switch (rating) {
       case rating > 0 && rating <= 40:
-        console.log(props.theme.colors.alert_text_red, 'color');
         return `${props.theme.colors.alert_text_red}`;
       case rating > 40 && rating <= 70:
-        console.log(props.theme.colors.alert_text_red, 'color');
         return `${props.theme.colors.alert_text_amber}`;
       case rating > 70:
         return `${props.theme.colors.alert_text_green}`;

@@ -219,7 +219,7 @@ const Description = styled.p`
 `;
 const TransactionItem = (props) => {
   const _id = props.id;
-  const transactions = props.transactions;
+  const transactionProp = props.transaction;
   const [actioned, setActioned] = useState(false);
   const [transaction, setTransaction] = useState({
     title: '',
@@ -269,25 +269,20 @@ const TransactionItem = (props) => {
   const [transactionBorders, setTransactionBorders] = useState('rgba(0,0,0,0)');
 
   useEffect(() => {
-    console.log('id', _id);
     const fetchTransaction = async (_id) => {
       const foundTransaction = await props.getTransaction(_id);
       if (mounted) {
         setTransaction(foundTransaction);
       }
     };
-    if (_id) {
-      console.log('olorun gba mi!');
+    if (_id || transactionProp) {
       if (props.transaction) {
-        console.log('setting transactio');
         setTransaction(props.transaction);
       } else {
-        console.log('fetching transactio');
         fetchTransaction(_id);
       }
     }
 
-    console.log('transaction', transaction);
     return () => {
       setMounted(false);
     };
@@ -401,14 +396,13 @@ const TransactionItem = (props) => {
   };
 
   const openTransaction = () => {
-    const store_owner = transaction.store_id.address;
+    const store_address = transaction.store_id.address;
     const transaction_id = transaction._id;
     return props.history.push(
-      `/stores/${store_owner}/transactions/${transaction_id}`,
+      `/stores/${store_address}/transactions/${transaction_id}`,
     );
   };
 
-  console.log('type', props.type, transactionStatus, transaction);
 
   return (
     <>

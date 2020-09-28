@@ -12,11 +12,11 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 import signin_400 from '@/assets/images/backgrounds/auth/signin_400.jpg';
-import signin_200 from '@/assets/images/backgrounds/auth/signin_200.jpg';
 import signup_400 from '@/assets/images/backgrounds/auth/signup_400.jpg';
-import signup_200 from '@/assets/images/backgrounds/auth/signup_200.jpg';
 import Logo from '@/components/UI/interface/home/Logo';
 import Button from '@/components/UI/buttons/Button';
+import Alert from '@/components/widgets/UI/Alert';
+import setAlert from '@/assets/helperFunctions/alerts';
 
 const Spin = keyframes`
   from{
@@ -391,25 +391,8 @@ const Auth = (props) => {
   const [error, setError] = useState('');
   const [pwdStrength, setPwdStrength] = useState('weak');
   const [loginValid, setLoginValid] = useState(true);
+  const [alerts, addAlert] = useState([]);
 
-  // cleanup after unmounting from dom
-  useEffect(() => {
-    // return () => {
-    //   setLogin(true);
-    //   setUsername('');
-    //   setPassword('');
-    //   setRepeatPassword('');
-    //   setPwdType('password');
-    //   setAcctType('Client');
-    //   setPersist(false);
-    //   setValidating(false);
-    //   setUsernameValid(true);
-    //   setPasswordValid(true);
-    //   setError('');
-    //   setPwdStrength('weak');
-    //   setLoginValid(true);
-    // };
-  }, []);
   useEffect(() => {
     AOS.init({ duration: 500 });
     AOS.refresh();
@@ -489,15 +472,19 @@ const Auth = (props) => {
             }
             props.setUser(result.data.data);
             props.loadUser(result.data.data._id);
+            setAlert(addAlert, 'success', 'Successfully logged in!');
             const destination = JSON.parse(
               localStorage.getItem('vendo_prev_location_url'),
             );
-            if (!destination) {
-              props.history.push('/account/settings');
-            }
-            if (destination) {
-              props.history.push(destination);
-            }
+            const timer = setTimeout(() => {
+              if (!destination) {
+                props.history.push('/account/settings');
+              }
+              if (destination) {
+                props.history.push(destination);
+              }
+              return clearTimeout(timer);
+            }, 2000);
             return;
           } else {
             setError('Invalid credentials');
@@ -548,16 +535,19 @@ const Auth = (props) => {
           localStorage.setItem('vendo_id', res.data.data._id);
           props.setUser(res.data.data);
           props.loadUser(res.data.data._id);
+          setAlert(addAlert, 'success', 'Successfully signed up!');
           const destination = JSON.parse(
             localStorage.getItem('vendo_prev_location_url'),
           );
-          console.log('destination', destination);
-          if (!destination) {
-            props.history.push('/account/settings');
-          }
-          if (destination) {
-            props.history.push(destination);
-          }
+          const timer = setTimeout(() => {
+            if (!destination) {
+              props.history.push('/account/settings');
+            }
+            if (destination) {
+              props.history.push(destination);
+            }
+            return clearTimeout(timer);
+          }, 2000);
           return;
         })
         .catch((err) => {
@@ -677,6 +667,13 @@ const Auth = (props) => {
 
   return (
     <ParentContainer>
+      {alerts.map((alert) => {
+        return (
+          <Alert type={alert.type} key={alert.text}>
+            {alert.text}
+          </Alert>
+        );
+      })}
       <Container>
         <Presentation login={login}>
           <Modal>
@@ -720,7 +717,6 @@ const Auth = (props) => {
 
           {!login && (
             <>
-              {' '}
               <Header className="toggle">
                 Create a{' '}
                 <b

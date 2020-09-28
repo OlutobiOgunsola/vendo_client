@@ -180,7 +180,6 @@ const Header = (props) => {
   }, [user]);
 
   const logout = () => {
-    console.log('logout clicked');
     return axios
       .get(`${process.env.REACT_APP_API_PREFIX}/api/auth/logout`, {
         cancelToken: source.token,
@@ -236,7 +235,7 @@ const Header = (props) => {
         );
       })}
       {window.location.pathname === '/' && (
-        <LogoContainer data-aos="fade-right">
+        <LogoContainer data-aos="fade-right" data-aos-duration="2000">
           <Logo />
         </LogoContainer>
       )}

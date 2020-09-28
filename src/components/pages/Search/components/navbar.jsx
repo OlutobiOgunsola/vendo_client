@@ -155,7 +155,6 @@ const Navbar = (props) => {
     const target = e.target;
     const value = target.dataset.name;
     target.classList.add('selected');
-    console.log(value, 'valur');
     return props.setDisplay(value);
   };
 

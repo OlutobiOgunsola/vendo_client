@@ -39,7 +39,6 @@ const getTransactionByUIDSuccess = () => {
 };
 
 export const getTransaction = (id) => {
-  console.log('begin get transaction');
   return (dispatch) => {
     dispatch(beginGetTransaction);
     return axios
@@ -68,7 +67,6 @@ export const getTransaction = (id) => {
 };
 
 export const getTransactionsByUserID = (id) => {
-  console.log('fired');
   return (dispatch) => {
     dispatch(beginGetTransactionsByUID);
     return axios

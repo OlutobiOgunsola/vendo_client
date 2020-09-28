@@ -132,7 +132,6 @@ const AddStore = (props) => {
   const handleStore_Handle = (store_handle) => {
     const regex = /^[-\w\.\$@\*\!]{1,30}$/;
     const handle_Regex_Test = regex.test(store_handle);
-    console.log(handle_Regex_Test);
     if (!handle_Regex_Test) {
       setEmailValid(false);
       return setAlert(addAlert, 'error', 'Handle cannot contain spaces!"');
@@ -233,7 +232,7 @@ const AddStore = (props) => {
           }
         })
         .catch((err) => {
-          console.log('unsuccessful res', err);
+          console.log('Invalid details', err);
         });
     }
   };
@@ -319,7 +318,6 @@ const AddStore = (props) => {
           }
         })
         .catch((err) => {
-          console.log(err);
           return setAlert(addAlert, 'error', 'Error adding store.');
         });
     } else if (validated && storeProp) {
@@ -339,7 +337,6 @@ const AddStore = (props) => {
           }
         })
         .catch((err) => {
-          console.log(err);
           return setAlert(addAlert, 'error', 'Error adding store.');
         });
     }

@@ -538,7 +538,6 @@ const Input = React.forwardRef((props, ref) => {
     // prevent default
     e.preventDefault();
 
-    console.log(props.class.name);
 
     // destructure files element from the input
     const { files } = document.querySelector(
@@ -562,7 +561,6 @@ const Input = React.forwardRef((props, ref) => {
           'File is not a valid image. Please select a .jpg or .png image',
         );
       }
-      console.log('files are valid');
     }
     if (files.length !== 0) {
       reader.readAsDataURL(files[0]);
@@ -587,8 +585,6 @@ const Input = React.forwardRef((props, ref) => {
       return props.verify(value);
     }
   };
-
-  // console.log('refs');
 
   return (
     <InputGroup

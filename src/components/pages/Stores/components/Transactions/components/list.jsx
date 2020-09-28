@@ -21,6 +21,14 @@ const ParentContainer = styled.div`
 
 const Container = styled.div`
   width: 100%;
+  box-sizing: border-box;
+  padding: 2rem;
+  @media (max-width: 500px) {
+    padding: 1rem;
+  }
+  @media (max-width: 300px) {
+    padding: 1rem 0.5rem;
+  }
 `;
 
 const EmptyStateText = styled.h5`
@@ -70,7 +78,6 @@ const TransactionList = (props) => {
                 user_id={props.loggedinUser._id}
                 user_photo={props.loggedinUser.photo}
                 transaction={transaction}
-                id={transaction._id}
                 key={transaction._id}
                 updater={props.updater}
                 user_token={props.loggedinUser.jwt}

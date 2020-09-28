@@ -294,7 +294,6 @@ const Stores = (props) => {
         )}
         {stores &&
           stores.map((store) => {
-            console.log(store);
             return (
               <StoreContainer key={store._id}>
                 <PhotoFancyBorder>

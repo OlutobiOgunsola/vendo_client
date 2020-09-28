@@ -32,6 +32,14 @@ const Container = styled.div`
     opacity: 0.6;
     background: ${(props) => props.theme.colors.alternate_light_background_10};
   }
+  box-sizing: border-box;
+  padding: 2rem;
+  @media (max-width: 500px) {
+    padding: 1rem;
+  }
+  @media (max-width: 300px) {
+    padding: 1rem 0.5rem;
+  }
 `;
 
 const Header = styled.span`

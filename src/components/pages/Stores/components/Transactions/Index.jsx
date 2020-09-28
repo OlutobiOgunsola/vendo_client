@@ -35,7 +35,7 @@ const ParentContainer = styled.div`
 const Container = styled.div`
   width: 100%;
   box-sizing: border-box;
-  /* padding: 1rem; */
+  padding: 0.25rem;
   background: rgba(0, 0, 0, 0.2);
   hr {
     width: 100%;
@@ -48,11 +48,11 @@ const Container = styled.div`
 
   @media (max-width: 700px) {
     flex-flow: column nowrap;
-    padding: 1rem 50px;
+    /* padding: 1rem 50px; */
   }
   @media (max-width: 500px) {
     flex-flow: column nowrap;
-    padding: 1rem 10px;
+    /* padding: 1rem 10px; */
     box-sizing: border-box;
   }
   @media (max-width: 400px) {
@@ -156,20 +156,38 @@ const TransactionsIndex = (props) => {
               );
             }}
           />
-          <Route
-            path={`${match.url}/add`}
-            exact
-            component={() => {
-              return (
-                <AddTransaction
-                  updater={addAlert}
-                  loggedinUser={props.user}
-                  store_id={props.store_id}
-                  handle={props.handle}
-                />
-              );
-            }}
-          />
+          {!owner && (
+            <Route
+              path={`${match.url}/add`}
+              exact
+              component={() => {
+                return (
+                  <AddTransaction
+                    updater={addAlert}
+                    loggedinUser={props.user}
+                    store_id={props.store_id}
+                    handle={props.handle}
+                  />
+                );
+              }}
+            />
+          )}
+          {owner && (
+            <Route
+              path={`${match.url}/add`}
+              exact
+              component={() => {
+                return (
+                  <>
+                    <EmptyStateText>Unauthorized boss!</EmptyStateText>
+                    <EmptyStateSubtext>
+                      You cannot open transactions at YOUR OWN STORE!
+                    </EmptyStateSubtext>
+                  </>
+                );
+              }}
+            />
+          )}
           <Route
             path={`${match.url}/:transaction_id`}
             component={() => {

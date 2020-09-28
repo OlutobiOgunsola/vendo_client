@@ -172,7 +172,6 @@ const StoreIndex = (props) => {
     },
   };
 
-  console.log('store', store);
   const sortedReviews = store.reviews.sort((a, b) => {
     return b.upvotes.length - a.upvotes.length;
   });

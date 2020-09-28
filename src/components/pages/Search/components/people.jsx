@@ -192,7 +192,6 @@ const People = (props) => {
   return (
     <ParentContainer>
       {People.map((person) => {
-        console.log('person', person);
         return (
           <PersonContainer key={person._id}>
             <PhotoFancyBorder>

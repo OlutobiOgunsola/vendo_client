@@ -303,7 +303,6 @@ const P_Details = (props) => {
           headers,
         )
         .then((res) => {
-          console.log(res.data.data);
           if (res.data.data === false) {
             setEmailValid(true);
             props.loading(false);
@@ -323,23 +322,17 @@ const P_Details = (props) => {
           }
         })
         .catch((err) => {
-          console.log('unsuccessful res', err);
+          console.log('Invalid details', err);
         });
     }
   };
 
   const submit = () => {
-    console.log('submitting form');
     const userObj = {};
-    // console.log(f_name, l_name, bio, email);
 
-    // if (f_name !== props.user.user.firstname) {
     userObj.firstname = f_name;
-    // } else if (l_name !== props.user.user.lastname) {
     userObj.lastname = l_name;
-    // } else if (bio !== props.user.user.bio) {
     userObj.bio = bio;
-    // } else
     if (email && emailValid) {
       userObj.email = validatedEmail.toLowerCase();
     }
@@ -380,7 +373,6 @@ const P_Details = (props) => {
           { headers, withCredentials: true },
         )
         .then((res) => {
-          console.log('response reveived');
           if (res.status === 200) {
             props.editUser(userObj);
             props.loading(false);

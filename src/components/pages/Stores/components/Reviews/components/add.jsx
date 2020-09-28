@@ -115,7 +115,6 @@ const AddReview = (props) => {
         headers,
       })
       .then((res) => {
-        console.log(res);
         if (res.status === 200) {
           props.history.push(`${match.url}`);
         }

@@ -503,8 +503,6 @@ const ReviewItem = (props) => {
   };
 
   const date = new Date();
-
-  console.log('review', review);
   return (
     <>
       <ParentContainer data-aos="fade-in" id={`review-${review._id}`}>

@@ -98,33 +98,6 @@ const ReviewsIndex = (props) => {
   const owner = props.owner;
   const handle = props.handle;
 
-  //   useEffect(() => {
-  //     setLoading(true);
-  //     const getStoreTransactions = async (store_id) => {
-  //       return axios
-  //         .get(
-  //           `${process.env.REACT_APP_API_PREFIX}/api/reviews/all/${store_id}`,
-  //         )
-  //         .then((res) => {
-  //           if (res.status === 200) {
-  //             const result = res.data.data;
-  //             setTransactionsArray(result);
-  //             return;
-  //           }
-  //         })
-  //         .catch((err) => {
-  //           console.log(err);
-  //         })
-  //         .finally(() => {
-  //           setLoading(false);
-  //         });
-  //     };
-
-  //     if (store_id) {
-  //       getStoreTransactions(store_id);
-  //     }
-  //   }, [store_id]);
-
   return (
     <ParentContainer>
       {alerts.map((alert) => {

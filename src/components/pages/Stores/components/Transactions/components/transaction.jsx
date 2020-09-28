@@ -57,12 +57,13 @@ const Container = styled.div`
 const TransactionProfile = styled.section`
   width: 100%;
   height: auto;
-  padding: 2rem;
+  box-sizing: border-box;
+  padding: 2rem 2rem 1rem 2rem;
   @media (max-width: 500px) {
-    padding: 1rem;
+    padding: 1rem 1rem;
   }
   @media (max-width: 300px) {
-    padding: 0.5rem;
+    padding: 1rem 0.5rem;
   }
 `;
 
@@ -241,12 +242,12 @@ const ReviewContainer = styled.div`
   width: 100%;
   height: auto;
   box-sizing: border-box;
-  padding: 2rem;
+  padding: 2rem 1rem 2rem 2rem;
   @media (max-width: 500px) {
-    padding: 1rem;
+    padding: 1rem 1rem;
   }
   @media (max-width: 300px) {
-    padding: 0.5rem;
+    padding: 1rem 0.5rem;
   }
 `;
 

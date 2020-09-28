@@ -157,9 +157,6 @@ const UserIndex = (props) => {
       preserveAspectRatio: 'xMidYMid slice',
     },
   };
-
-  console.log('user', user);
-
   const sortedReviews = user.r_reviews.sort((a, b) => {
     return a.rating - b.rating;
   });
@@ -177,7 +174,6 @@ const UserIndex = (props) => {
 
   const openStore = (e) => {
     const name = e.target.id;
-    console.log(name);
     return props.history.push(`/stores/${name}`);
   };
 

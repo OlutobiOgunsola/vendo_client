@@ -1,13 +1,14 @@
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { slideInUp, slideInDown, fadeIn } from 'react-animations';
 
 import Loading from '@/components/UI/interface/home/Loading';
-import desktopLanding from '@/assets/images/backgrounds/desktopLandingMainSnipped.jpg';
+import landingImage from '@/assets/images/backgrounds/LandingImage.jpg';
 import Header from '@/components/UI/Header';
 import Pen from '@/components/UI/interface/home/RectanglePen.jsx';
 import DownChevronIcon from '@/components/UI/interface/home/DownChevron.jsx';
 import { withRouter } from 'react-router';
+import { TimelineMax } from 'gsap/all';
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -31,10 +32,12 @@ const bubble = keyframes`
 const ParentContainer = styled.div`
   width: 100%;
   height: 660px;
-  /* background: url(${desktopLanding}); */
-  background-size: cover;
   margin: 0px;
   font-size: 16px;
+  .stagger {
+    opacity: 1;
+  }
+  overflow: hidden;
 `;
 const Modal = styled.div`
   height: 640px;
@@ -67,7 +70,8 @@ const Modal = styled.div`
 const CopyContainer = styled.div`
   height: 360px;
   width: 600px;
-  margin: 120px auto 0px auto;
+  margin: 60px auto 0px 100px;
+  box-sizing: border-box;
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
@@ -76,23 +80,48 @@ const CopyContainer = styled.div`
   @media (max-width: 700px) {
     height: 300;
     width: 400px;
-    margin: 130px auto 38px auto;
+    margin: 130px auto 38px 50px;
   }
   @media (max-width: 500px) {
     width: 340px;
     height: 300px;
-    margin: 150px auto 28px auto;
+    margin: 150px auto 28px 20px;
     align-items: flex-start;
   }
 `;
-
+const JumboContainer = styled.span`
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: start;
+`;
 const Jumbo = styled.h1`
   color: ${(props) => props.theme.colors.yellow};
   font-family: 'Oxygen Bold', 'Sans Serif';
   font-size: 2.5rem;
   margin: 1rem 0rem;
-  width: 100%;
+  width: calc(100%-110px);
+  text-align: left;
+  display: inline-block;
+  @media (max-width: 700px) {
+    font-size: 2rem;
+  }
+  @media (max-width: 500px) {
+    font-size: 1.5rem;
+    text-align: left;
+  }
+`;
+
+const Bold = styled.b`
+  color: white;
+  font-family: 'Oxygen Bold', 'Sans Serif';
+  font-size: 2.5rem;
+  width: 110px;
+  margin: 1rem 0.5rem;
   text-align: center;
+  display: inline-block;
+  position: relative;
+  z-index: 9;
   @media (max-width: 700px) {
     font-size: 2rem;
     text-align: center;
@@ -182,10 +211,66 @@ const DownChevron = styled.svg`
   animation: ${bubble} 2s ease-in-out infinite;
 `;
 
+const Image = styled.img`
+  width: 600px;
+  height: 400px;
+  position: absolute;
+  top: 150px;
+  left: 60%;
+  opacity: 1;
+  border-radius: 4px;
+  border: none;
+  box-shadow: 2px 10px 20px rgba(0, 0, 0, 0.4);
+  z-index: 999;
+`;
+
 const LandingScreen = (props) => {
   useEffect(() => {
     AOS.init({ duration: 500 });
     AOS.refresh();
+  }, []);
+  useEffect(() => {
+    const tl = new TimelineMax();
+    tl.from('#copy-container', {
+      duration: 1,
+      opacity: 0,
+      x: 300,
+      ease: 'ease',
+    })
+      .to(
+        '.stagger',
+        {
+          opacity: 1,
+          marginLeft: 0,
+          stagger: 0.4,
+          duration: 1,
+          ease: 'ease',
+        },
+        '<-0.2',
+      )
+      .from('#jumbo-bold', {
+        x: 300,
+        duration: 1,
+        opacity: 0,
+        ease: 'bounce',
+      })
+      .from(
+        '#landing-image',
+        {
+          x: '70%',
+          top: '200px',
+          opacity: 0,
+          duration: 3,
+          scaleY: 0,
+          ease: 'ease-in',
+        },
+        '<-2',
+      )
+      .from('#down-chevron', {
+        duration: 3,
+        opacity: 1,
+        y: 200,
+      });
   }, []);
   const loading = <Loading />;
   const [searchString, setSearchString] = useState('');
@@ -210,13 +295,22 @@ const LandingScreen = (props) => {
     <ParentContainer>
       <Modal>
         <Header />
-        <CopyContainer data-aos="fade-up" data-aos-duration="1000">
-          <Jumbo>Shop smart on the internet</Jumbo>
-          <SubHeading>
-            <PenIcon>
+        <Image src={landingImage} id="landing-image" />
+        <CopyContainer id="copy-container">
+          <JumboContainer id="jumbo-container" className="anim stagger">
+            <Jumbo id="jumbo-text" className="anim1">
+              All your reviews, in one{' '}
+            </Jumbo>
+            <Bold id="jumbo-bold" className="anim1">
+              place
+            </Bold>
+          </JumboContainer>
+
+          <SubHeading id="subheading-container" className="anim stagger">
+            <PenIcon id="pen-icon" className="anim2">
               <Pen />
             </PenIcon>
-            <SubHeadingCopy>
+            <SubHeadingCopy id="subheading-copy" className="anim2">
               Vendor reviews at your fingertips, anywhere, anytime
             </SubHeadingCopy>
           </SubHeading>
@@ -226,10 +320,12 @@ const LandingScreen = (props) => {
             onKeyDown={processSearch}
             type="search"
             placeholder="Search for a vendor"
+            id="search"
+            className="anim stagger"
           />
         </CopyContainer>
         <DownChevronContainer>
-          <DownChevron>
+          <DownChevron id="down-chevron">
             <DownChevronIcon />
           </DownChevron>
         </DownChevronContainer>
