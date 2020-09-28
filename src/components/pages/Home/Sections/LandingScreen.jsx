@@ -8,7 +8,7 @@ import Header from '@/components/UI/Header';
 import Pen from '@/components/UI/interface/home/RectanglePen.jsx';
 import DownChevronIcon from '@/components/UI/interface/home/DownChevron.jsx';
 import { withRouter } from 'react-router';
-import { TimelineMax, CSSPlugin } from 'gsap/all';
+import { TimelineMax, CSSPlugin, gsap } from 'gsap/all';
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -230,6 +230,7 @@ const LandingScreen = (props) => {
     AOS.refresh();
   }, []);
   useEffect(() => {
+    gsap.registerPlugin(CSSPlugin);
     const tl = new TimelineMax();
     tl.from('#copy-container', {
       duration: 1,

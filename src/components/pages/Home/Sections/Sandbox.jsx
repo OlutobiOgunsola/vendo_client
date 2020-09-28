@@ -7,32 +7,40 @@ import 'aos/dist/aos.css';
 import SandboxLogo from '@/components/UI/interface/home/SandboxLogo';
 import PadLogoSmall from '@/assets/images/icons/sandbox/Padlock_2.svg';
 import PadLogoBig from '@/assets/images/icons/sandbox/Padlock.svg';
+import SandboxBG from '@/assets/images/backgrounds/home/sandboxImage.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons';
 
 const ParentContainer = styled.div`
-  background: ${(props) => props.theme.colors.dark_background};
   display: flex;
+  /* background: url(${SandboxBG}); */
   align-items: center;
+  width: 100%;
   @media (min-width: 1280px) {
-    padding: 0px 200px;
     height: 500px;
   }
   @media (min-width: 880px) and (max-width: 1279px) {
-    padding: 0px 100px;
     height: 500px;
   }
   @media (min-width: 533px) and (max-width: 879px) {
-    padding: 0px 50px;
     height: 500px;
   }
   @media (max-width: 532px) {
-    padding: 0px 20px;
     height: 500px;
   }
   @media (max-width: 670px) {
     height: 700px;
   }
+`;
+
+const Modal = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  background: ${(props) => props.theme.colors.dark_background};
+  padding: 0;
 `;
 
 const Container = styled.div`
@@ -252,36 +260,38 @@ const Sandbox = (props) => {
   }, []);
   return (
     <ParentContainer>
-      <Container>
-        <BigPadlock
-          src={PadLogoBig}
-          data-aos="fade-up-left"
-          data-aos-duration="3000"
-        />
-        <LogoContainer data-aos="fade-right" data-aos-duration="3000">
-          <SandboxLogo />
-        </LogoContainer>
-        <CopyContainer>
-          <Header data-aos="fade-down" data-aos-duration="3000">
-            <Headline>Sandbox</Headline>
-            <Padlock src={PadLogoSmall} />
-          </Header>
-          <Copy>
-            Deposit the funds with us for your transactions. We hold on to the
-            money and pay the vendor when you are both satisfied with the
-            service rendered.
-          </Copy>
-          <Action
+      <Modal>
+        <Container>
+          <BigPadlock
+            src={PadLogoBig}
             data-aos="fade-up-left"
-            data-aos-duration="1000"
-            to={'#'}
-            borders="true"
-          >
-            Try for <strong>FREE</strong>
-            <FontAwesomeIcon className="fa-icon" icon={faLongArrowAltRight} />
-          </Action>
-        </CopyContainer>
-      </Container>
+            data-aos-duration="3000"
+          />
+          <LogoContainer data-aos="fade-right" data-aos-duration="3000">
+            <SandboxLogo />
+          </LogoContainer>
+          <CopyContainer>
+            <Header data-aos="fade-down" data-aos-duration="3000">
+              <Headline>Sandbox</Headline>
+              <Padlock src={PadLogoSmall} />
+            </Header>
+            <Copy>
+              Deposit the funds with us for your transactions. We hold on to the
+              money and pay the vendor when you are both satisfied with the
+              service rendered.
+            </Copy>
+            <Action
+              data-aos="fade-up-left"
+              data-aos-duration="1000"
+              to={'#'}
+              borders="true"
+            >
+              Try for <strong>FREE</strong>
+              <FontAwesomeIcon className="fa-icon" icon={faLongArrowAltRight} />
+            </Action>
+          </CopyContainer>
+        </Container>
+      </Modal>
     </ParentContainer>
   );
 };
