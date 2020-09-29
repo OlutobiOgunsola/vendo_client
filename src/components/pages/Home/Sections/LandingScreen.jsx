@@ -77,10 +77,10 @@ const CopyContainer = styled.div`
   align-items: center;
   justify-content: center;
   text-align: left;
-  @media (max-width: 700px) {
+  @media (max-width: 1000px) {
     height: 300;
     width: 400px;
-    margin: 130px auto 38px 50px;
+    margin: 70px auto 38px 50px;
   }
   @media (max-width: 500px) {
     width: 340px;
@@ -103,28 +103,16 @@ const Jumbo = styled.h1`
   width: calc(100%-110px);
   text-align: left;
   display: inline-block;
-  @media (max-width: 700px) {
-    font-size: 2rem;
+  b {
+    color: white;
+    font-family: 'Oxygen Bold', 'Sans Serif';
+    width: 110px;
+    display: inline-block;
+    position: relative;
+    z-index: 9;
   }
-  @media (max-width: 500px) {
-    font-size: 1.5rem;
-    text-align: left;
-  }
-`;
-
-const Bold = styled.b`
-  color: white;
-  font-family: 'Oxygen Bold', 'Sans Serif';
-  font-size: 2.5rem;
-  width: 110px;
-  margin: 1rem 0.5rem;
-  text-align: center;
-  display: inline-block;
-  position: relative;
-  z-index: 9;
-  @media (max-width: 700px) {
+  @media (max-width: 1100px) {
     font-size: 2rem;
-    text-align: center;
   }
   @media (max-width: 500px) {
     font-size: 1.5rem;
@@ -136,6 +124,8 @@ const SubHeading = styled.div`
   /* width: 100%; */
   height: 40px;
   margin: 0 auto;
+  display: inherit;
+  flex-flow: row nowrap;
   @media (max-width: 700px) {
     width: 100%;
   }
@@ -164,6 +154,9 @@ const SubHeadingCopy = styled.p`
   font-weight: 'lighter';
   font-size: 20px;
   margin: 0.5rem 0rem;
+  @media (max-width: 1000px) {
+    font-size: 18px;
+  }
   @media (max-width: 400px) {
     font-size: 16px;
   }
@@ -212,16 +205,26 @@ const DownChevron = styled.svg`
 `;
 
 const Image = styled.img`
-  width: 600px;
-  height: 400px;
+  width: 40%;
+  height: 60%;
   position: absolute;
-  top: 150px;
+  top: 20%;
   left: 60%;
   opacity: 1;
   border-radius: 4px;
   border: none;
   box-shadow: 2px 10px 20px rgba(0, 0, 0, 0.4);
   z-index: 999;
+  @media (max-width: 1000px) {
+    width: 40%;
+    height: 40%;
+    top: 30%;
+    left: 6 0%;
+  }
+  @media (max-width: 500px) {
+    width: 200px;
+    height: 200px;
+  }
 `;
 
 const LandingScreen = (props) => {
@@ -262,10 +265,9 @@ const LandingScreen = (props) => {
           top: '200px',
           opacity: 0,
           duration: 3,
-          scaleY: 0,
           ease: 'ease-in',
         },
-        '<-2',
+        '<-1',
       )
       .from('#down-chevron', {
         duration: 3,
@@ -296,15 +298,15 @@ const LandingScreen = (props) => {
     <ParentContainer>
       <Modal>
         <Header />
-        <Image src={landingImage} id="landing-image" />
+        {/* <Image src={landingImage} id="landing-image" /> */}
         <CopyContainer id="copy-container">
           <JumboContainer id="jumbo-container" className="anim stagger">
             <Jumbo id="jumbo-text" className="anim1">
               All your reviews, in one{' '}
+              <b id="jumbo-bold" className="anim1">
+                place
+              </b>
             </Jumbo>
-            <Bold id="jumbo-bold" className="anim1">
-              place
-            </Bold>
           </JumboContainer>
 
           <SubHeading id="subheading-container" className="anim stagger">
