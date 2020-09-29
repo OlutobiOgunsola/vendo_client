@@ -225,13 +225,10 @@ const Image = styled.img`
     width: 40%;
     height: 40%;
     top: 30%;
-    left: 6 0%;
+    left: 60%;
   }
-  @media (max-width: 500px) {
-    width: calc(100% - 40px);
-    height: calc(100% - 500px);
-    top: 80px;
-    left: 20px;
+  @media (max-width: 760px) {
+    display: none;
   }
 `;
 
