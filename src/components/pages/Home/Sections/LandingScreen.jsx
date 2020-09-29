@@ -85,7 +85,13 @@ const CopyContainer = styled.div`
   @media (max-width: 500px) {
     width: 340px;
     height: 300px;
-    margin: 150px auto 28px 20px;
+    margin: 166px auto 28px 20px;
+    align-items: flex-start;
+  }
+  @media (max-width: 360px) {
+    width: 300px;
+    height: 300px;
+    margin: 166px auto 28px 20px;
     align-items: flex-start;
   }
 `;
@@ -222,8 +228,10 @@ const Image = styled.img`
     left: 6 0%;
   }
   @media (max-width: 500px) {
-    width: 200px;
-    height: 200px;
+    width: calc(100% - 40px);
+    height: calc(100% - 500px);
+    top: 80px;
+    left: 20px;
   }
 `;
 
@@ -253,7 +261,7 @@ const LandingScreen = (props) => {
         '<-0.2',
       )
       .from('#jumbo-bold', {
-        x: 300,
+        x: window.innerWidth < 1000 ? 1000 : 2000,
         duration: 1,
         opacity: 0,
         ease: 'bounce',
@@ -298,7 +306,7 @@ const LandingScreen = (props) => {
     <ParentContainer>
       <Modal>
         <Header />
-        {/* <Image src={landingImage} id="landing-image" /> */}
+        <Image src={landingImage} id="landing-image" />
         <CopyContainer id="copy-container">
           <JumboContainer id="jumbo-container" className="anim stagger">
             <Jumbo id="jumbo-text" className="anim1">
