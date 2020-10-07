@@ -172,6 +172,9 @@ const UserIndex = (props) => {
   const topReview = sortedReviews ? sortedReviews[0] : {};
   const topTransaction = sortedTransactions ? sortedTransactions[0] : {};
 
+  console.log('topReview', topReview);
+  console.log('topTransaction', topTransaction);
+
   const openStore = (e) => {
     const name = e.target.id;
     return props.history.push(`/stores/${name}`);

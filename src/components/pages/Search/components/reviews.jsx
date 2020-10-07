@@ -16,16 +16,19 @@ const ParentContainer = styled.div`
 
 const Reviews = (props) => {
   const Reviews = props.dataset;
+  console.log('user', props.loggedinUser);
   return (
     <ParentContainer>
       {Reviews.map((review) => {
+        console.log('review', review);
         return (
           <ReviewItem
-            user_id={props.loggedinUser._id}
-            user_photo={props.loggedinUser.photo}
+            user_id={props.loggedinUser ? props.loggedinUser._id : ''}
+            user_photo={props.loggedinUser ? props.loggedinUser.photo : ''}
             id={review._id}
+            review={review}
             updater={props.updater}
-            user_token={props.loggedinUser.jwt}
+            user_token={props.loggedinUser ? props.loggedinUser.jwt : ''}
           />
         );
       })}

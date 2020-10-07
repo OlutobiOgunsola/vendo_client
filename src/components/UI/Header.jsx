@@ -219,6 +219,14 @@ const Header = (props) => {
     }
   };
 
+  const goHome = () => {
+    if (props.user.loggedIn) {
+      return props.history.push('/account/settings');
+    } else {
+      return props.history.push('/');
+    }
+  };
+
   const firstName = userObj.name || 'User';
   const photo = userObj.photo || defaultPhoto;
 
@@ -241,7 +249,7 @@ const Header = (props) => {
       )}
       {window.location.pathname !== '/' && (
         <>
-          <LogoContainer>
+          <LogoContainer onClick={goHome}>
             <Logo />
           </LogoContainer>
           <SearchBox

@@ -37,6 +37,7 @@ import People from './components/people';
 import Stores from './components/stores';
 import Reviews from './components/reviews';
 import Transactions from './components/transactions';
+import withUser from '@/components/higher-order/withUser';
 
 const fadeInUpAnimation = keyframes`${fadeIn}`;
 const slideInUpAnimation = keyframes`${slideInUp}`;
@@ -400,12 +401,17 @@ const Search = (props) => {
           <>
             <People dataset={userResults} />
             <Stores dataset={storeResults} />
+            <Reviews loggedinUser={props.user.user} dataset={reviewResults} />
           </>
         );
       case 'users':
         return <People dataset={userResults} />;
       case 'stores':
         return <Stores dataset={storeResults} />;
+      case 'reviews':
+        return (
+          <Reviews loggedinUser={props.user.user} dataset={reviewResults} />
+        );
 
       default:
         return null;
@@ -497,4 +503,4 @@ Search.propTypes = {
   //   getReview: PropTypes.func,
 };
 
-export default withTheme(withRouter(Search));
+export default withTheme(withRouter(withUser(Search)));

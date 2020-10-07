@@ -187,6 +187,7 @@ const StoreIndex = (props) => {
   const topReview = sortedReviews ? sortedReviews[0] : {};
   const topTransaction = sortedTransactions ? sortedTransactions[0] : {};
 
+
   return (
     <ParentContainer>
       <Section>
@@ -283,6 +284,7 @@ const StoreIndex = (props) => {
             user_id={props.loggedinUser._id}
             user_photo={props.loggedinUser.photo}
             id={topTransaction._id}
+            transaction={topTransaction}
             updater={props.updater}
             domain="visitor"
             user_token={props.loggedinUser.jwt}

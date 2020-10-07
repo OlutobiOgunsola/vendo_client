@@ -34,6 +34,7 @@ const PersonContainer = styled.div`
   border: none;
   border-radius: 4px;
   padding: 1rem;
+  margin-bottom: 8px;
   box-sizing: border-box;
   animation: 0.25s ${slideIn};
   @media (max-width: 620px) {

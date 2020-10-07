@@ -14,6 +14,7 @@ import setAlert from '@/assets/helperFunctions/alerts';
 import InputRow from '@/components/widgets/UI/InputRow';
 // import storesArray from '@/assets/fixtures/stores';
 import DefaultImage from '@/assets/images/store/DefaultImage.png';
+import { withRouter } from 'react-router';
 
 const storeAnimation = keyframes`${fadeIn}`;
 
@@ -716,4 +717,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(withTheme(P_Details));
+export default connect(
+  null,
+  mapDispatchToProps,
+)(withRouter(withTheme(P_Details)));

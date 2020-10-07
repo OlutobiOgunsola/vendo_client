@@ -276,12 +276,16 @@ const TransactionItem = (props) => {
       }
     };
     if (_id || transactionProp) {
-      if (props.transaction) {
+      if (transactionProp) {
         setTransaction(props.transaction);
       } else {
         fetchTransaction(_id);
       }
     }
+
+    console.log('transactions', transaction);
+    console.log('id', props.id);
+    console.log('transactions', transaction);
 
     return () => {
       setMounted(false);
@@ -402,7 +406,6 @@ const TransactionItem = (props) => {
       `/stores/${store_address}/transactions/${transaction_id}`,
     );
   };
-
 
   return (
     <>

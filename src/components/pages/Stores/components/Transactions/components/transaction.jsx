@@ -106,7 +106,7 @@ const StoreImage = styled.img`
   }
 `;
 const TransactionDetails = styled.div`
-  width: calc(100% - 182px);
+  width: 100%;
   display: inline-block;
   display: inherit;
   flex-flow: column nowrap;
@@ -426,10 +426,6 @@ const TransactionPage = (props) => {
           <Container>
             <TransactionProfile>
               <TransactionDetailsContainer>
-                <StoreImage
-                  platform={transaction.store_id.platform || 'local'}
-                  src={transaction.store_id.photo || DefaultImage}
-                />
                 <TransactionDetails>
                   <NameBar>
                     {transaction.title && <h1>{transaction.title}</h1>}
@@ -446,6 +442,8 @@ const TransactionPage = (props) => {
                         rating={transactionRating}
                         starRatedColor={props.theme.colors.yellow}
                         starEmptyColor={props.theme.colors.light_background}
+                        svgIconPath="M7.5 15C11.6421 15 15 11.6421 15 7.5C15 3.35786 11.6421 0 7.5 0C3.35786 0 0 3.35786 0 7.5C0 11.6421 3.35786 15 7.5 15ZM7.5 14.0693C3.87186 14.0693 0.930675 11.1281 0.930675 7.5C0.930675 3.87186 3.87186 0.930675 7.5 0.930675C11.1281 0.930675 14.0693 3.87186 14.0693 7.5C14.0693 11.1281 11.1281 14.0693 7.5 14.0693ZM4.54109 5.13201H9.01042C9.01042 5.13201 8.45738 6.09041 8.32765 6.29659C7.48197 7.59902 5.49551 6.943 4.54109 6.02427C3.58667 5.10555 4.54109 5.13201 4.54109 5.13201ZM5.65498 11.281L9.22574 5.13201C9.22574 5.13201 11.2594 5.25958 9.5749 7.66756C7.8904 10.0755 5.65498 11.281 5.65498 11.281Z"
+                        svgIconViewBox="0 0 15 15"
                       />
                     </Rating>
                   </Handle_And_Rating>

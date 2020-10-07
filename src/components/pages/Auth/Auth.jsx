@@ -488,6 +488,7 @@ const Auth = (props) => {
             return;
           } else {
             setError('Invalid credentials');
+            setAlert(addAlert, 'error', 'Error logging in!');
           }
         })
         .catch((err) => {
@@ -669,7 +670,7 @@ const Auth = (props) => {
     <ParentContainer>
       {alerts.map((alert) => {
         return (
-          <Alert type={alert.type} key={alert.text}>
+          <Alert position={'fixed'} type={alert.type} key={alert.text}>
             {alert.text}
           </Alert>
         );
@@ -677,7 +678,11 @@ const Auth = (props) => {
       <Container>
         <Presentation login={login}>
           <Modal>
-            <LogoContainer>
+            <LogoContainer
+              onClick={() => {
+                return props.history.push('/');
+              }}
+            >
               <Logo />
             </LogoContainer>
             <Copy>

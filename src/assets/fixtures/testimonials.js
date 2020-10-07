@@ -8,28 +8,28 @@ const t_array = [
     id: 'user1',
     username: 'username1',
     profile: Profile5,
-    f_name: 'Lindsay',
-    l_name: 'Mustapha',
+    f_name: 'Gloria',
+    l_name: 'Chidozie',
     copy:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem.',
+      'Vendo has really been instrumental in getting my business out there. Customers can easily see my business through other shoppers eyes, and it really does make our business deals smoother!',
   },
   {
     id: 'user2',
     username: 'username2',
     profile: Profile2,
-    f_name: 'Seun',
-    l_name: 'Kuti',
+    f_name: 'Sola',
+    l_name: 'Adeolu',
     copy:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem.',
+      'Vendo is a must for every business owner. It will boost your business, I promise you',
   },
   {
     id: 'user3',
     username: 'username3',
     profile: Profile3,
     f_name: 'Chika',
-    l_name: 'Adiebeb',
+    l_name: 'Akwuaka',
     copy:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem.',
+      'This is exactly what the internet needs right now! Enough of getting scammed every time I shop on instagram.',
   },
   {
     id: 'user4',
@@ -37,8 +37,7 @@ const t_array = [
     profile: Profile4,
     f_name: 'Multak',
     l_name: 'Menten',
-    copy:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus at odio vel tempor pulvinar vestibulum quisque mauris lorem.',
+    copy: 'My new favorite line is "Give me your Vendo ID"',
   },
 ];
 

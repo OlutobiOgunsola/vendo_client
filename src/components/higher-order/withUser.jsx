@@ -30,6 +30,7 @@ function withUser(WrappedComponent, authRequired = false) {
             );
             this.props.history.push('/auth');
           }
+          console.log('user object from withuser', userObj);
           return this.setState((state) => {
             return {
               user: {
@@ -60,6 +61,7 @@ function withUser(WrappedComponent, authRequired = false) {
         };
       });
     }
+
     render() {
       return <WrappedComponent user={this.state.foundUser} {...this.props} />;
     }
