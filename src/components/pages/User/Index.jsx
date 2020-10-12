@@ -517,10 +517,10 @@ const User = (props) => {
                 </NameBar>
                 <Handle_And_Rating>
                   <Handle>@{user.username || ''}</Handle>
-                  <Rating>
+                  {/* <Rating>
                     <strong color={getColor()}>{user.rating * 20} %</strong>{' '}
                     VENDOR SCORE
-                  </Rating>
+                  </Rating> */}
                 </Handle_And_Rating>
                 <Bio>{user.bio ? user.bio : 'No bio'}</Bio>
                 <Tags>

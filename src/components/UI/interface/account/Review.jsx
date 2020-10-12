@@ -352,6 +352,8 @@ const ReviewItem = (props) => {
     } else if (downvotefilter.length > 0) {
       setDownvoted(true);
     }
+
+    console.log('review item', review);
   }, [review]);
 
   useEffect(() => {

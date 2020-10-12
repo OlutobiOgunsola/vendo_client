@@ -17,11 +17,14 @@ import { clearUser } from '@/actions/user';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
+import NotificationSVG from './interface/home/Notification';
+import NotificationItem from '../widgets/UI/Notification';
+import { sort } from '@/assets/helperFunctions/sort';
 
 const ParentContainer = styled.header`
   width: 100%;
   height: 70px;
-  overflow: hidden;
+  /* overflow: hidden; */
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -110,6 +113,7 @@ const IconsBox = styled.div`
   display: flex;
   align-items: center;
   margin: 0px 16px;
+  position: relative;
   @media (max-width: 970px) {
     margin: 0px 8px;
   }
@@ -127,7 +131,7 @@ const Add = styled.img`
     opacity: 1;
   }
 `;
-const Notification = styled.img`
+const Notification = styled.svg`
   margin: 0px 8px;
   opacity: 0.6;
   transition: all 0.25s ease-in-out;
@@ -153,11 +157,29 @@ const FloatRight = styled.div`
   margin-left: auto;
 `;
 
+const NotifDropdown = styled.div`
+  width: 300px;
+  height: auto;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  background: ${(props) => props.theme.colors.light_background};
+  border: none;
+  border-radius: 4px;
+  position: absolute;
+  z-index: 999999999999999999999999;
+  left: -100px;
+  top: 30px;
+  box-shadow: 0px 20x 4px rgba(0, 0, 0, 0.2);
+`;
+
 const Header = (props) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [searchString, setSearchString] = useState('');
   const [userObj, setUserObj] = useState({});
   const [alerts, addAlert] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [newNotifications, setNewNotifications] = useState(false);
+  const [showNotifs, setShowNotifs] = useState(false);
   const [mounted, setMounted] = useState(true);
   const user = props.user;
 
@@ -172,8 +194,22 @@ const Header = (props) => {
           name: props.user.user.firstname || props.user.user.username,
           photo: props.user.user.photo,
         });
+
+        //get new notifications
+        const newNotifications = props.user.user.notifications.filter(
+          (notif) => {
+            return notif.status === 'new';
+          },
+        );
+        if (newNotifications.length > 0) {
+          setNewNotifications(true);
+        }
+        if (user.loggedIn) {
+          setNotifications(user.user.notifications);
+        }
       }
     }
+
     return () => {
       source.cancel();
     };
@@ -227,8 +263,16 @@ const Header = (props) => {
     }
   };
 
+  const viewNotifs = () => {
+    return setShowNotifs(true);
+  };
+  const hideNotifs = () => {
+    return setShowNotifs(false);
+  };
+
   const firstName = userObj.name || 'User';
   const photo = userObj.photo || defaultPhoto;
+  console.log('notificaioint', notifications);
 
   return (
     <ParentContainer
@@ -265,11 +309,32 @@ const Header = (props) => {
           <FloatRight>
             <NameBox>Hello, {firstName} </NameBox>
             <IconsBox>
+              {showNotifs && (
+                <NotifDropdown
+                  onMouseEnter={viewNotifs}
+                  onMouseLeave={hideNotifs}
+                >
+                  {console.log('here')}
+                  {notifications
+                    .sort(sort('latestFirst'))
+                    .map((notification) => {
+                      return (
+                        <NotificationItem
+                          notification={notification}
+                          photo={notification.author_id.photo}
+                        />
+                      );
+                    })}
+                </NotifDropdown>
+              )}
               <Add src={AddIcon} />
               <Notification
-                src={NotificationIcon}
                 onClick={openNotifications}
-              />
+                onMouseEnter={viewNotifs}
+                onMouseLeave={hideNotifs}
+              >
+                <NotificationSVG notif={newNotifications} />
+              </Notification>
               <Transaction src={TransactionIcon} onClick={openTransactions} />
             </IconsBox>
             <HeaderProfile
