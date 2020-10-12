@@ -16,7 +16,11 @@ import Alert from '../widgets/UI/Alert';
 import { clearUser } from '@/actions/user';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPlus,
+  faSearch,
+  faLongArrowAltRight,
+} from '@fortawesome/free-solid-svg-icons';
 import NotificationSVG from './interface/home/Notification';
 import NotificationItem from '../widgets/UI/Notification';
 import { sort } from '@/assets/helperFunctions/sort';
@@ -26,6 +30,8 @@ const ParentContainer = styled.header`
   height: 70px;
   /* overflow: hidden; */
   display: flex;
+  flex-flow: row nowrap;
+  font-size: 16px;
   align-items: center;
   box-sizing: border-box;
   margin: 0;
@@ -170,6 +176,85 @@ const NotifDropdown = styled.div`
   left: -100px;
   top: 30px;
   box-shadow: 0px 20x 4px rgba(0, 0, 0, 0.2);
+`;
+
+const ProfileActions = styled.div`
+  height: 40px;
+  width: 150px;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-left: auto;
+  @media (max-width: 500px) {
+    width: 100px;
+    font-size: 0.75rem;
+  }
+`;
+
+const Action = styled(Link)`
+  position: relative;
+  z-index: 9;
+  display: inline-block;
+  height: 100%;
+  line-height: 40px;
+  width: ${(props) => (props.width ? props.width : '48%')};
+  margin: 0 auto;
+  text-align: center;
+  box-sizing: border-box;
+  color: ${(props) =>
+    props.borders
+      ? `${props.theme.colors.yellow}`
+      : `${props.theme.colors.saturated_contrast}`};
+  border: ${(props) =>
+    props.borders ? `1px solid ${props.theme.colors.yellow}` : 'none'};
+  border-radius: 4px;
+  transition: all 0.5s ease-in-out;
+  text-decoration: none;
+  .fa-icon {
+    width: 0px;
+    position: relative;
+    left: 0px;
+    margin-left: 0px;
+    transition: all 1s ease-in-out;
+    opacity: 0;
+    color: ${(props) => props.theme.colors.dark_background};
+    display: none;
+  }
+  &:hover {
+    cursor: pointer;
+    color: ${(props) => props.theme.colors.dark_background};
+    /* box-shadow: 0px 4px 10px ${(props) => props.theme.colors.yellow_20}; */
+    .fa-icon {
+      width: 24px;
+      left: 8px;
+      margin-left: 0px;
+      opacity: 1;
+      display: inline-block;
+    }
+    border: none;
+  }
+  &:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    top: -0.5px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: ${(props) => props.theme.colors.yellow};
+    z-index: -1;
+    transform: scaleX(0);
+    transition-property: transform;
+    -webkit-transform-origin: 0 50%;
+    transform-origin: 0 50%;
+    -webkit-transition-property: transform;
+    transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+  &:hover:before {
+    transform: scaleX(1);
+  }
 `;
 
 const Header = (props) => {
@@ -345,7 +430,14 @@ const Header = (props) => {
           </FloatRight>
         </>
       )}
-      {!loggedIn && <HeaderSignIn component={Link}>Sign In</HeaderSignIn>}
+      {!loggedIn && (
+        <ProfileActions>
+          <Action to={`/auth`} borders="true" width="200px" hover_width="220px">
+            Sign in
+            <FontAwesomeIcon className="fa-icon" icon={faLongArrowAltRight} />
+          </Action>
+        </ProfileActions>
+      )}
     </ParentContainer>
   );
 };

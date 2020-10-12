@@ -60,7 +60,7 @@ const ReviewList = (props) => {
 
   return (
     <>
-      <ParentContainer id="list_transaction">
+      <ParentContainer id="list_reviews">
         <Container>
           <FilterComponent handleChange={sortBy} />
           {reviews.map((review, index) => {
@@ -69,6 +69,7 @@ const ReviewList = (props) => {
                 user_id={props.loggedinUser._id}
                 user_photo={props.loggedinUser.photo}
                 id={review._id}
+                review={review}
                 key={review._id}
                 updater={props.updater}
                 user_token={props.loggedinUser.jwt}

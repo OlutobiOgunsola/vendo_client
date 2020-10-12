@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import styled, { withTheme, keyframes } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faLock, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import {
+  faUser,
+  faLock,
+  faEyeSlash,
+  faLongArrowAltRight,
+} from '@fortawesome/free-solid-svg-icons';
 import { fadeIn } from 'react-animations';
 import axios from 'axios';
 import { connect } from 'react-redux';
@@ -44,7 +49,7 @@ const Container = styled.div`
   width: 100%;
   height: 100vh;
   /* background: ${(props) => props.theme.colors.page_background}; */
-  background: white;
+  background: #637b84;
   border: none;
   border-radius: 0px 4px 4px 0px;
   display: flex;
@@ -54,18 +59,17 @@ const Container = styled.div`
   z-index: 99;
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.25);
   @media (max-width: 880px) {
-    width: 600px;
-    height: calc(100vh - 100px);
+    width: 100%;
+    height: 100%;
     flex-flow: column nowrap;
   }
   @media (max-width: 630px) {
-    width: 400px;
-    height: 600px;
-    flex-flow: column nowrap;
+    width: 100%;
+    height: 100%;
   }
   @media (max-width: 430px) {
-    width: 300px;
-    height: 600px;
+    width: 100%;
+    height: 100%;
     flex-flow: column nowrap;
   }
 `;
@@ -95,11 +99,11 @@ const Presentation = styled.div`
     height: 300px;
   }
   @media (max-width: 630px) {
-    width: 400px;
+    width: 100%;
     height: 300px;
   }
   @media (max-width: 430px) {
-    width: 300px;
+    width: 100%;
     height: 300px;
   }
 `;
@@ -123,11 +127,11 @@ const Inputs = styled.div`
     height: calc(100% - 300px);
   }
   @media (max-width: 630px) {
-    width: 400px;
+    width: 100%;
     height: calc(100% - 200px);
   }
   @media (max-width: 430px) {
-    width: 300px;
+    width: 100%;
     height: calc(100% - 200px);
   }
 `;
@@ -145,12 +149,12 @@ const Modal = styled.div`
   flex-flow: column nowrap;
   justify-content: space-between;
   @media (max-width: 630px) {
-    width: 400px;
+    width: 100%;
     height: 100%;
     flex-flow: column nowrap;
   }
   @media (max-width: 430px) {
-    width: 300px;
+    width: 100%;
     padding: 16px;
   }
 `;
@@ -216,7 +220,7 @@ const Header = styled.h2`
   margin: 0;
   font-family: 'Noto Sans Bold';
   font-size: 20px;
-  color: ${(props) => props.theme.colors.dark_background_40};
+  color: ${(props) => props.theme.colors.saturated_contrast};
   text-align: center;
   transition: all 0.25s ease-in-out;
 `;
@@ -224,7 +228,9 @@ const Header = styled.h2`
 const Input = styled.input`
   width: 250px;
   height: 40px;
-  background: ${(props) => props.theme.colors.alternate_light_background_10};
+  background: rgba(255,255,255,0.1);
+  /* background: ${(props) =>
+    props.theme.colors.alternate_light_background_10}; */
   border-radius: 4px;
   border: ${(props) => {
     const col = props.pwdCol;
@@ -274,7 +280,7 @@ const Label = styled.label`
   display: ${(props) => props.display};
   font-family: 'Josefin Sans Regular';
   font-size: 14px;
-  color: ${(props) => props.theme.colors.saturated_contrast};
+  color: ${(props) => props.theme.colors.yellow};
   width: ${(props) => props.width || '100px'};
   transition: all 0.25s ease-in-out;
   line-height: 20px;
@@ -375,6 +381,86 @@ const Big4Circle = styled.span`
   background: ${(props) => props.theme.colors.alternate_light_background_40};
   border: none;
   border-radius: 50%;
+`;
+
+const ProfileActions = styled.div`
+  height: 40px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-top: 16px;
+  @media (max-width: 500px) {
+    width: 100px;
+    font-size: 0.75rem;
+  }
+`;
+
+const Action = styled(Link)`
+  position: relative;
+  z-index: 9;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  line-height: 40px;
+  width: ${(props) => (props.width ? props.width : '100%')};
+  margin: 0 auto;
+  text-align: center;
+  box-sizing: border-box;
+  color: ${(props) =>
+    props.borders
+      ? `${props.theme.colors.yellow}`
+      : `${props.theme.colors.saturated_contrast}`};
+  border: ${(props) =>
+    props.borders ? `1px solid ${props.theme.colors.yellow}` : 'none'};
+  border-radius: 4px;
+  transition: all 0.5s ease-in-out;
+  text-decoration: none;
+  .fa-icon {
+    width: 0px;
+    position: relative;
+    left: 0px;
+    margin-left: 0px;
+    transition: all 1s ease-in-out;
+    opacity: 0;
+    color: ${(props) => props.theme.colors.dark_background};
+    display: none;
+  }
+  &:hover {
+    cursor: pointer;
+    color: ${(props) => props.theme.colors.dark_background};
+    /* box-shadow: 0px 4px 10px ${(props) => props.theme.colors.yellow_20}; */
+    .fa-icon {
+      width: 24px;
+      left: 8px;
+      margin-left: 0px;
+      opacity: 1;
+      display: inline-block;
+    }
+    border: none;
+  }
+  &:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    top: -0.5px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: ${(props) => props.theme.colors.yellow};
+    z-index: -1;
+    transform: scaleX(0);
+    transition-property: transform;
+    -webkit-transform-origin: 0 50%;
+    transform-origin: 0 50%;
+    -webkit-transition-property: transform;
+    transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+  &:hover:before {
+    transform: scaleX(1);
+  }
 `;
 
 const Auth = (props) => {
@@ -796,22 +882,15 @@ const Auth = (props) => {
               >
                 Keep me signed in
               </Label>
-              <Button
-                width={250}
-                height={40}
-                fill={props.theme.colors.dark_background}
-                color={'white'}
-                className="toggle"
-                display={'block'}
-                transition_fill={props.theme.colors.yellow}
-                transition_color={'white'}
-                border={'none'}
-                onClick={loginSubmit}
-                margin={'16px 0px'}
-                to={'#'}
-              >
-                Submit
-              </Button>
+              <ProfileActions>
+                <Action onClick={loginSubmit} to={`#`} borders="true">
+                  Submit
+                  <FontAwesomeIcon
+                    className="fa-icon"
+                    icon={faLongArrowAltRight}
+                  />
+                </Action>
+              </ProfileActions>
             </FormGroup>
           )}
           {!login && (
@@ -906,22 +985,15 @@ const Auth = (props) => {
               >
                 Client account
               </Label>
-              <Button
-                width={250}
-                height={40}
-                fill={props.theme.colors.dark_background}
-                className="toggle"
-                color={'white'}
-                display={'block'}
-                transition_fill={props.theme.colors.yellow}
-                transition_color={'white'}
-                border={'none'}
-                margin={'16px 0px'}
-                onClick={signupSubmit}
-                to={'#'}
-              >
-                Proceed
-              </Button>
+              <ProfileActions>
+                <Action onClick={signupSubmit} to={`#`} borders="true">
+                  Proceed
+                  <FontAwesomeIcon
+                    className="fa-icon"
+                    icon={faLongArrowAltRight}
+                  />
+                </Action>
+              </ProfileActions>
             </FormGroup>
           )}
         </Inputs>
