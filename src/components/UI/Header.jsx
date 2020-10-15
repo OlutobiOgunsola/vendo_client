@@ -180,9 +180,9 @@ const NotifDropdown = styled.div`
 `;
 
 const Menu = styled.div`
-  width: 300px;
+  width: 200px;
   height: auto;
-  padding: 0.5rem;
+  padding: 1rem;
   box-sizing: border-box;
   background: ${(props) => props.theme.colors.light_background};
   border: none;
@@ -192,11 +192,31 @@ const Menu = styled.div`
   flex-flow: column nowrap;
   z-index: 999999999999999999999999;
   left: -100px;
-  top: 30px;
+  top: 40px;
   box-shadow: 0px 20x 4px rgba(0, 0, 0, 0.2);
 
   .fa-icon {
-    display: inline;
+    display: inline-block;
+    margin-left: auto;
+  }
+  ul {
+    margin: 0;
+    width: 100%;
+    padding: 0;
+    text-decoration: none;
+  }
+
+  li {
+    list-style-type: none;
+    margin: 0.25rem 0rem;
+    padding: 0.25rem;
+    box-sizing: border-box;
+    text-decoration: none !important;
+  }
+
+  @media (max-width: 500px) {
+    left: -170px;
+    display: flex !important;
   }
 `;
 
@@ -204,12 +224,18 @@ const MenuLink = styled(Link)`
   color: ${(props) => props.theme.colors.saturated_contrast};
   display: block;
   height: 2rem;
+  line-height: 2rem;
   width: 100%;
   border-bottom: solid 0.5px ${(props) => props.theme.colors.saturated_contrast};
   opacity: 0.8;
+  margin: 0;
+  font-family: 'Josefin Sans Regular';
+  font-size: 0.8rem;
+  transition: all 0.25s ease-in-out;
   &:hover {
     opacity: 1;
     cursor: pointer;
+    background: rgba(0, 0, 0, 0.2);
   }
 `;
 
@@ -306,6 +332,10 @@ const EmptyStateSubtext = styled.p`
   color: ${(props) => props.theme.colors.saturated_contrast};
 `;
 
+const Profile = styled.span`
+  position: relative;
+`;
+
 const Header = (props) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [searchString, setSearchString] = useState('');
@@ -349,6 +379,10 @@ const Header = (props) => {
       source.cancel();
     };
   }, [user]);
+
+  const goToOverview = () => {
+    return props.history.push('/account/overview');
+  };
 
   const logout = () => {
     return axios
@@ -477,33 +511,6 @@ const Header = (props) => {
                   )}
                 </NotifDropdown>
               )}
-              {showMenu && (
-                <Menu onMouseEnter={showMenuItems} onMouseLeave={hideMenuItems}>
-                  <ul>
-                    <li>
-                      <MenuLink>Overview</MenuLink>
-                    </li>
-                    <li>
-                      <MenuLink>Transactions</MenuLink>
-                    </li>
-                    <li>
-                      <MenuLink>My Profile</MenuLink>
-                    </li>
-                    <li>
-                      <MenuLink>Billing</MenuLink>
-                    </li>
-                    <li>
-                      <MenuLink>Notifications</MenuLink>
-                    </li>
-                    <li>
-                      <MenuLink>
-                        <FontAwesomeIcon className="fa-icon" icon={faUpload} />
-                        Logout
-                      </MenuLink>
-                    </li>
-                  </ul>
-                </Menu>
-              )}
               <Add src={AddIcon} />
               <Notification
                 onClick={openNotifications}
@@ -514,12 +521,42 @@ const Header = (props) => {
               </Notification>
               <Transaction src={TransactionIcon} onClick={openTransactions} />
             </IconsBox>
-            <HeaderProfile
-              username={firstName}
-              profilePhoto={photo}
-              mouseenter={showMenuItems}
-              mouseleave={hideMenuItems}
-            />
+            <Profile>
+              {showMenu && (
+                <Menu onMouseEnter={showMenuItems} onMouseLeave={hideMenuItems}>
+                  <ul>
+                    <li>
+                      <MenuLink to="/account/overview">Overview</MenuLink>
+                    </li>
+                    <li>
+                      <MenuLink to="/account/transactions">Transactions</MenuLink>
+                    </li>
+                    <li>
+                      <MenuLink to="/account/settings">My Profile</MenuLink>
+                    </li>
+                    <li>
+                      <MenuLink>Billing</MenuLink>
+                    </li>
+                    <li>
+                      <MenuLink>Notifications</MenuLink>
+                    </li>
+                    <li onClick={logout}>
+                      <MenuLink>
+                        Logout
+                        <FontAwesomeIcon className="fa-icon" icon={faUpload} />
+                      </MenuLink>
+                    </li>
+                  </ul>
+                </Menu>
+              )}
+              <HeaderProfile
+                username={firstName}
+                profilePhoto={photo}
+                mouseenter={showMenuItems}
+                mouseleave={hideMenuItems}
+                click={goToOverview}
+              />
+            </Profile>
           </FloatRight>
         </>
       )}

@@ -34,7 +34,7 @@ const ProfilePhoto = styled.img`
 
 const HeaderProfile = (props) => {
   const logout = () => {
-    props.click();
+    props.mouseenter();
   };
   const showMenu = () => {
     return props.mouseenter();
@@ -43,13 +43,12 @@ const HeaderProfile = (props) => {
     return props.mouseleave();
   };
   return (
-    <Container onMouseEnter={showMenu} onMouseLeave={hideMenu}>
+    <Container onMouseEnter={showMenu} onMouseLeave={hideMenu} onClick={logout}>
       {/* <Pin src={ProfilePin} /> */}
       <PhotoFancyBorder>
         <ProfilePhoto
           src={props.profilePhoto}
           alt={`A photo of ${props.username}`}
-          onClick={logout}
         />
       </PhotoFancyBorder>
     </Container>
