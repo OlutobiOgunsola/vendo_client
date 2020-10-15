@@ -459,7 +459,6 @@ const P_Details = (props) => {
                   return (
                     <Store
                       role="button"
-                      aria-role="button"
                       focusables
                       data-tip={store.name}
                       key={store._id}

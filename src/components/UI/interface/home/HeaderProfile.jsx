@@ -17,28 +17,41 @@ const Pin = styled.img`
   height: 35px;
   width: 35px;
 `;
-const ProfilePhoto = styled.img`
-  height: 30px;
-  width: 30px;
+
+const PhotoFancyBorder = styled.div`
+  width: 35px;
+  height: 35px;
+  padding: 4px;
+  box-sizing: border-box;
+  border: solid 1px ${(props) => props.theme.colors.yellow};
   border-radius: 50%;
-  position: absolute;
-  z-index: 2;
-  left: 2.5px;
-  top: 0.5px;
+`;
+const ProfilePhoto = styled.img`
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
 `;
 
 const HeaderProfile = (props) => {
   const logout = () => {
     props.click();
   };
+  const showMenu = () => {
+    return props.mouseenter();
+  };
+  const hideMenu = () => {
+    return props.mouseleave();
+  };
   return (
-    <Container>
-      <Pin src={ProfilePin} />
-      <ProfilePhoto
-        src={props.profilePhoto}
-        alt={`A photo of ${props.username}`}
-        onClick={logout}
-      />
+    <Container onMouseEnter={showMenu} onMouseLeave={hideMenu}>
+      {/* <Pin src={ProfilePin} /> */}
+      <PhotoFancyBorder>
+        <ProfilePhoto
+          src={props.profilePhoto}
+          alt={`A photo of ${props.username}`}
+          onClick={logout}
+        />
+      </PhotoFancyBorder>
     </Container>
   );
 };

@@ -20,6 +20,7 @@ import {
   faPlus,
   faSearch,
   faLongArrowAltRight,
+  faUpload,
 } from '@fortawesome/free-solid-svg-icons';
 import NotificationSVG from './interface/home/Notification';
 import NotificationItem from '../widgets/UI/Notification';
@@ -178,6 +179,40 @@ const NotifDropdown = styled.div`
   box-shadow: 0px 20x 4px rgba(0, 0, 0, 0.2);
 `;
 
+const Menu = styled.div`
+  width: 300px;
+  height: auto;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  background: ${(props) => props.theme.colors.light_background};
+  border: none;
+  border-radius: 4px;
+  position: absolute;
+  display: flex;
+  flex-flow: column nowrap;
+  z-index: 999999999999999999999999;
+  left: -100px;
+  top: 30px;
+  box-shadow: 0px 20x 4px rgba(0, 0, 0, 0.2);
+
+  .fa-icon {
+    display: inline;
+  }
+`;
+
+const MenuLink = styled(Link)`
+  color: ${(props) => props.theme.colors.saturated_contrast};
+  display: block;
+  height: 2rem;
+  width: 100%;
+  border-bottom: solid 0.5px ${(props) => props.theme.colors.saturated_contrast};
+  opacity: 0.8;
+  &:hover {
+    opacity: 1;
+    cursor: pointer;
+  }
+`;
+
 const ProfileActions = styled.div`
   height: 40px;
   width: 150px;
@@ -280,6 +315,7 @@ const Header = (props) => {
   const [newNotifications, setNewNotifications] = useState(false);
   const [showNotifs, setShowNotifs] = useState(false);
   const [mounted, setMounted] = useState(true);
+  const [showMenu, setShowMenu] = useState(false);
   const user = props.user;
 
   const cancel = axios.CancelToken;
@@ -369,6 +405,14 @@ const Header = (props) => {
     return setShowNotifs(false);
   };
 
+  const showMenuItems = () => {
+    return setShowMenu(true);
+  };
+
+  const hideMenuItems = () => {
+    return setShowMenu(false);
+  };
+
   const firstName = userObj.name || 'User';
   const photo = userObj.photo || defaultPhoto;
   console.log('notificaioint', notifications);
@@ -433,6 +477,33 @@ const Header = (props) => {
                   )}
                 </NotifDropdown>
               )}
+              {showMenu && (
+                <Menu onMouseEnter={showMenuItems} onMouseLeave={hideMenuItems}>
+                  <ul>
+                    <li>
+                      <MenuLink>Overview</MenuLink>
+                    </li>
+                    <li>
+                      <MenuLink>Transactions</MenuLink>
+                    </li>
+                    <li>
+                      <MenuLink>My Profile</MenuLink>
+                    </li>
+                    <li>
+                      <MenuLink>Billing</MenuLink>
+                    </li>
+                    <li>
+                      <MenuLink>Notifications</MenuLink>
+                    </li>
+                    <li>
+                      <MenuLink>
+                        <FontAwesomeIcon className="fa-icon" icon={faUpload} />
+                        Logout
+                      </MenuLink>
+                    </li>
+                  </ul>
+                </Menu>
+              )}
               <Add src={AddIcon} />
               <Notification
                 onClick={openNotifications}
@@ -446,7 +517,8 @@ const Header = (props) => {
             <HeaderProfile
               username={firstName}
               profilePhoto={photo}
-              click={logout}
+              mouseenter={showMenuItems}
+              mouseleave={hideMenuItems}
             />
           </FloatRight>
         </>
