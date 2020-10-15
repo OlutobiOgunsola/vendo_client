@@ -46,7 +46,8 @@ const ParentContainer = styled.header`
     padding: ${(props) => (props.usePagePadding ? '' : '10px 50px')};
   }
   @media (max-width: 500px) {
-    padding: ${(props) => (props.usePagePadding ? '' : '10px 20px')};
+    /* padding: ${(props) => (props.usePagePadding ? '' : '10px 20px')}; */
+    padding:10px;
   }
   @media (max-width: 400px) {
     width: 100%;
@@ -61,7 +62,7 @@ const LogoContainer = styled.svg`
   height: 38px;
   margin: 0px 40px 0px 0px;
   display: inline-block;
-  @media (max-width: 400px) {
+  @media (max-width: 500px) {
     /* margin: 0px 10px 0px 0px;
     box-sizing: border-box; */
     display: none;
@@ -182,7 +183,7 @@ const NotifDropdown = styled.div`
 const Menu = styled.div`
   width: 200px;
   height: auto;
-  padding: 1rem;
+  padding: 1rem 0.5rem;
   box-sizing: border-box;
   background: ${(props) => props.theme.colors.light_background};
   border: none;
@@ -198,6 +199,9 @@ const Menu = styled.div`
   .fa-icon {
     display: inline-block;
     margin-left: auto;
+    width: 20px;
+    height: 20px;
+    margin: 5px auto 5px 5px;
   }
   ul {
     margin: 0;
@@ -222,13 +226,18 @@ const Menu = styled.div`
 
 const MenuLink = styled(Link)`
   color: ${(props) => props.theme.colors.saturated_contrast};
-  display: block;
+  display: inline-block;
   height: 2rem;
   line-height: 2rem;
   width: 100%;
   border-bottom: solid 0.5px ${(props) => props.theme.colors.saturated_contrast};
   opacity: 0.8;
   margin: 0;
+  padding: 0rem 0.5rem;
+  box-sizing: border-box;
+  text-decoration: none;
+  display: inherit;
+  flex-flow: row nowrap;
   font-family: 'Josefin Sans Regular';
   font-size: 0.8rem;
   transition: all 0.25s ease-in-out;
@@ -236,6 +245,7 @@ const MenuLink = styled(Link)`
     opacity: 1;
     cursor: pointer;
     background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
   }
 `;
 
@@ -516,6 +526,7 @@ const Header = (props) => {
                 onClick={openNotifications}
                 onMouseEnter={viewNotifs}
                 onMouseLeave={hideNotifs}
+                id="notification-icon"
               >
                 <NotificationSVG notif={newNotifications} />
               </Notification>
@@ -529,22 +540,22 @@ const Header = (props) => {
                       <MenuLink to="/account/overview">Overview</MenuLink>
                     </li>
                     <li>
-                      <MenuLink to="/account/transactions">Transactions</MenuLink>
+                      <MenuLink to="/account/transactions">
+                        Transactions
+                      </MenuLink>
                     </li>
                     <li>
                       <MenuLink to="/account/settings">My Profile</MenuLink>
                     </li>
                     <li>
-                      <MenuLink>Billing</MenuLink>
+                      <MenuLink to="#">Billing</MenuLink>
                     </li>
                     <li>
-                      <MenuLink>Notifications</MenuLink>
+                      <MenuLink to="#">Notifications</MenuLink>
                     </li>
                     <li onClick={logout}>
-                      <MenuLink>
-                        Logout
-                        <FontAwesomeIcon className="fa-icon" icon={faUpload} />
-                      </MenuLink>
+                      <MenuLink to="#">Logout</MenuLink>
+                      {/* <FontAwesomeIcon className="fa-icon" icon={faUpload} /> */}
                     </li>
                   </ul>
                 </Menu>
