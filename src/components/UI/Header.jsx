@@ -257,6 +257,20 @@ const Action = styled(Link)`
   }
 `;
 
+const EmptyStateText = styled.h5`
+  text-align: center;
+  color: ${(props) => props.theme.colors.saturated_contrast};
+  margin: 16px 0px 8px 0px;
+  width: 100%;
+`;
+const EmptyStateSubtext = styled.p`
+  font-size: 12px;
+  text-align: center;
+  width: 100%;
+  margin: 0px 0px 16px 0px;
+  color: ${(props) => props.theme.colors.saturated_contrast};
+`;
+
 const Header = (props) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [searchString, setSearchString] = useState('');
@@ -399,7 +413,6 @@ const Header = (props) => {
                   onMouseEnter={viewNotifs}
                   onMouseLeave={hideNotifs}
                 >
-                  {console.log('here')}
                   {notifications
                     .sort(sort('latestFirst'))
                     .map((notification) => {
@@ -410,6 +423,14 @@ const Header = (props) => {
                         />
                       );
                     })}
+                  {notifications.length === 0 && (
+                    <>
+                      <EmptyStateText>No Notifications</EmptyStateText>
+                      <EmptyStateSubtext>
+                        You have no new notifications
+                      </EmptyStateSubtext>
+                    </>
+                  )}
                 </NotifDropdown>
               )}
               <Add src={AddIcon} />

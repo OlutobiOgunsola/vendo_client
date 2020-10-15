@@ -153,7 +153,7 @@ const Action = styled(Link)`
     -webkit-transform-origin: 0 50%;
     transform-origin: 0 50%;
     -webkit-transition-property: transform;
-    transition: t7ransform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
   &:hover:before {
     transform: scaleX(1);

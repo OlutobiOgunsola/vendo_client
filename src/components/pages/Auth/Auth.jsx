@@ -243,7 +243,7 @@ const Input = styled.input`
   box-sizing: border-box;
   padding: 8px 32px;
   transition: all 0.25s ease-in-out;
-  color: ${(props) => props.color || props.theme.colors.saturated_contrast};
+  color: ${(props) => props.theme.colors.saturated_contrast};
   font-family: 'Oxygen Regular', 'Font Awesome 5 Solid' !important;
   font-size: 14px;
   &::-webkit-input-placeholder {
@@ -265,7 +265,7 @@ const Input = styled.input`
       }
     }};
     background: ${(props) => props.theme.colors.light_background_10};
-    color: ${(props) => props.theme.colors.dark_background};
+    color: ${(props) => props.theme.colors.saturated_contrast};
   }
 `;
 

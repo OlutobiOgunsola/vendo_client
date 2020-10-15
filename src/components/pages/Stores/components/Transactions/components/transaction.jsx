@@ -113,16 +113,8 @@ const TransactionDetails = styled.div`
   margin-left: auto;
   box-sizing: border-box;
   padding: 1rem;
-  @media (max-width: 900px) {
-    width: calc(100% - 132px);
-  }
-
-  @media (max-width: 540px) {
-    width: calc(100% - 91px);
-  }
-
   @media (max-width: 380px) {
-    width: calc(100% - 58px);
+    padding: 0.5rem;
   }
 `;
 const TransactionDetailsContainer = styled.div`

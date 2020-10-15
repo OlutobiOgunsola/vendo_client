@@ -333,6 +333,8 @@ const ReviewItem = (props) => {
       } else {
         fetchReview(_id);
       }
+
+      console.log('review  body', review);
     }
 
     return () => {
